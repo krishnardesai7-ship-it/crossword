@@ -1,0 +1,431 @@
+{% extends 'customerapp/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- molla/blog-masonry-4cols.html  22 Nov 2019 10:04:31 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla - Bootstrap eCommerce Template</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'customerapp/images/icons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'customerapp/images/icons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'customerapp/images/icons/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'customerapp/images/icons/site.html' %}">
+    <link rel="mask-icon" href="{% static 'customerapp/images/icons/safari-pinned-tab.svg' %}" color="#666666">
+    <link rel="shortcut icon" href="{% static 'customerapp/images/icons/favicon.ico' %}">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="{% static 'customerapp/images/icons/browserconfig.xml' %}">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{% static 'customerapp/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'customerapp/css/plugins/owl-carousel/owl.carousel.css' %}">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'customerapp/css/style.css' %}">
+</head>
+
+{% block content %}
+
+<body>
+    <div class="page-wrapper">  
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}&quot;)">
+        		<div class="container">
+        			<h1 class="page-title">Blog<span>Blog</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Blog</a></li>
+                        
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+                <div class="container">
+                    <nav class="blog-nav">
+                        <ul class="menu-cat entry-filter justify-content-center">
+                            <li class="active"><a href="#" data-filter="*">All Blog Posts<span>12</span></a></li>
+                            <li><a href="#" data-filter=".lifestyle">Lifestyle<span>3</span></a></li>
+                            <li><a href="#" data-filter=".shopping">Shopping<span>1</span></a></li>
+                            <li><a href="#" data-filter=".fashion">Fashion<span>3</span></a></li>
+                            <li><a href="#" data-filter=".travel">Travel<span>6</span></a></li>
+                            <li><a href="#" data-filter=".hobbies">Hobbies<span>2</span></a></li>
+                        </ul><!-- End .blog-menu -->
+                    </nav><!-- End .blog-nav -->
+
+                    <div class="entry-container max-col-4">
+                        <div class="entry-item lifestyle shopping col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-1.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 22, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">2 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Cras ornare tristique elit.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Lifestyle</a>,
+                                        <a href="#">Shopping</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item lifestyle col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-2.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 21, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">0 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Aenean dignissim pellente squefelis.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Lifestyle</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item fashion lifestyle col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <div class="owl-carousel owl-simple owl-light owl-nav-inside" data-toggle="owl">
+                                        <a href="single.html">
+                                            <img src="{% static 'customerapp/images/blog/masonry/4cols/post-3.jpg' %}" alt="image desc">
+                                        </a>
+                                        <a href="single.html">
+                                            <img src="{% static 'customerapp/images/blog/masonry/4cols/post-3-2.jpg' %}" alt="image desc">
+                                        </a>
+                                    </div><!-- End .owl-carousel -->
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 18, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">3 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Utaliquam sollicitudin leo.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Fashion</a>,
+                                        <a href="#">Lifestyle</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item travel col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-4.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 15, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">4 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Quisque volutpat mattiseros.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Travel</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item travel hobbies col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media entry-video">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-5.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 11, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">2 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Vivamus vestibulum ntulla necante.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Travel</a>,
+                                        <a href="#">Hobbies</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item hobbies col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-6.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 10, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">4 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Quisque a lectus. </a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Hobbies</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item travel col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-7.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 11, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">3 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Fusce pellentesque suscipit.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Travel</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item fashion col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <div class="owl-carousel owl-simple owl-light owl-nav-inside" data-toggle="owl">
+                                        <a href="single.html">
+                                            <img src="{% static 'customerapp/images/blog/masonry/4cols/post-8.jpg' %}" alt="image desc">
+                                        </a>
+                                        <a href="single.html">
+                                            <img src="{% static 'customerapp/images/blog/masonry/4cols/post-8-2.jpg' %}" alt="image desc">
+                                        </a>
+                                    </div><!-- End .owl-carousel -->
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 08, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">0 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Utaliquam sollicitudin leo.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Fashion</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item travel col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-9.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 07, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">5 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Quisque volutpat mattiseros.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Travel</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item travel col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-10.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 07, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">1 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Donec quis duidolor tempor interdum.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Travel</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item travel col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-11.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 06, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">3 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Aliquam erat volutpat.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Travel</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+
+                        <div class="entry-item fashion col-sm-6 col-md-4 col-lg-3">
+                            <article class="entry entry-grid text-center">
+                                <figure class="entry-media">
+                                    <a href="single.html">
+                                        <!-- <iframe width="300" height="300" src="https://www.youtube.com/embed/Jj408N2tXw0?si=KNZejCyJaUphuJUm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
+                                        <img src="{% static 'customerapp/images/blog/masonry/4cols/post-12.jpg' %}" alt="image desc">
+                                    </a>
+                                </figure><!-- End .entry-media -->
+
+                                <div class="entry-body">
+                                    <div class="entry-meta">
+                                        <a href="#">Nov 05, 2018</a>
+                                        <span class="meta-separator">|</span>
+                                        <a href="#">0 Comments</a>
+                                    </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                        <a href="single.html">Cras ornare tristique elit.</a>
+                                    </h2><!-- End .entry-title -->
+
+                                    <div class="entry-cats">
+                                        in <a href="#">Shopping</a>
+                                    </div><!-- End .entry-cats -->
+                                </div><!-- End .entry-body -->
+                            </article><!-- End .entry -->
+                        </div><!-- End .entry-item -->
+                    </div><!-- End .entry-container -->
+
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
+                                    <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                </a>
+                            </li>
+                            <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item">
+                                <a class="page-link page-link-next" href="#" aria-label="Next">
+                                    Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+    </div><!-- End .page-wrapper -->
+
+<!-- Plugins JS File -->
+    <script src="{% static 'customerapp/js/jquery.min.js' %}"></script>
+    <script src="{% static 'customerapp/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'customerapp/js/jquery.hoverIntent.min.js' %}"></script>
+    <script src="{% static 'customerapp/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'customerapp/js/superfish.min.js' %}"></script>
+    <script src="{% static 'customerapp/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'customerapp/js/imagesloaded.pkgd.min.js' %}"></script>
+    <script src="{% static 'customerapp/js/isotope.pkgd.min.js' %}"></script>
+    <!-- Main JS File -->
+    <script src="{% static 'customerapp/js/main.js' %}"></script>
+
+</body>
+ {% endblock content %}
+</html>

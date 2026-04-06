@@ -1,0 +1,33 @@
+from django.contrib import admin
+from .models import register, contact as contact_model, product, wishlist, add_to_cart, checkout, comment
+# Register your models here.
+admin.site.register(register)
+admin.site.register(wishlist)
+admin.site.register(add_to_cart)
+admin.site.register(comment)
+
+# Custom admin for product model
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price', 'bestseller', 'new_release', 'expert_pick']
+    list_filter = ['bestseller', 'new_release', 'expert_pick']
+    list_editable = ['bestseller', 'new_release', 'expert_pick']
+    search_fields = ['name', 'description']
+
+admin.site.register(product, ProductAdmin)
+
+admin.site.register(contact_model)
+
+# Custom admin for checkout model to display all products
+class CheckoutAdmin(admin.ModelAdmin):
+    list_display = ['order_date', 'name', 'email', 'phone', 'product_name', 'quantity', 'price', 'total']
+    list_filter = ['order_date', 'name', 'email']
+    search_fields = ['name', 'email', 'product_name', 'phone', 'register__username']
+    readonly_fields = ['name', 'email', 'address', 'phone', 'product_name', 'price', 'quantity', 'total', 'order_date', 'register']
+    
+    def has_add_permission(self, request):
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        return True
+
+admin.site.register(checkout, CheckoutAdmin)
