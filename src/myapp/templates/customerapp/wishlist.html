@@ -40,13 +40,21 @@
 								<td class="product-col">
 									<div class="product">
 										<figure class="product-media">
+											{% if i.product_id %}
+											<a href="{% url 'product' i.product_id %}">
+											{% else %}
 											<a href="#">
+											{% endif %}
 												<img src="{{i.image.url}}" alt="Product image">
 											</a>
 										</figure>
 
 										<h3 class="product-title">
+											{% if i.product_id %}
+											<a href="{% url 'product' i.product_id %}">{{i.product_name}}</a>
+											{% else %}
 											<a href="#">{{i.product_name}}</a>
+											{% endif %}
 										</h3><!-- End .product-title -->
 									</div><!-- End .product -->
 								</td>

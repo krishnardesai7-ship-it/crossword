@@ -29,18 +29,47 @@ class contact(models.Model):
 
     def __str__(self) -> str:
         return self.name
-    
-    
-class product(models.Model):
-    name=models.CharField(max_length=50)
-    price=models.IntegerField()
-    description=models.TextField()
-    image=models.ImageField(upload_to="images",blank=True,null=True)
-    bestseller=models.BooleanField(default=False)
-    new_release=models.BooleanField(default=False)
-    expert_pick=models.BooleanField(default=False)
 
-    def __str__(self) -> str:
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+
+class product(models.Model):
+    CATEGORY_CHOICES = [
+        ("romance", "Romance"),
+        ("fantasy", "Fantasy"),
+        ("science_fiction", "Science Fiction"),
+        ("mystery", "Mystery"),
+        ("thrillers", "Thrillers"),
+        ("self_health_and_personal_growth", "Self Health and Personal Growth"),
+        ("health_fitness_and_wellness", "Health Fitness and Wellness"),
+        ("spirituality_and_philosophy", "Spirituality and Philosophy"),
+        ("science_natural_and_technology", "Science Natural and Technology"),
+        ("leadership_and_management", "Leadership and Management"),
+        ("productivity_and_time_management", "Productivity and Time Management"),
+        ("career_professional_development", "Career Professional Development"),
+        ("holy_books_religious_texts_or_scriptures", "Holy Books, Religious Texts, or Scriptures"),
+    ]
+
+    name = models.CharField(max_length=200)
+    price = models.IntegerField()
+    description = models.TextField()
+    image = models.ImageField(upload_to='products/')
+    author_name = models.CharField(max_length=200, blank=True, null=True)
+    published_year = models.CharField(max_length=10, blank=True, null=True)
+
+    # Stored as text in current DB schema (`myapp_product.category`)
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, default="romance")
+
+    bestseller = models.BooleanField(default=False)
+    new_release = models.BooleanField(default=False)
+    expert_pick = models.BooleanField(default=False)
+
+    def __str__(self):
         return self.name
     
 class wishlist(models.Model):
@@ -74,6 +103,19 @@ class comment(models.Model):
     def __str__(self) -> str:
         return self.name
 
+class ProductReview(models.Model):
+    product = models.ForeignKey(product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(register, on_delete=models.CASCADE, blank=True, null=True)
+    email = models.EmailField(max_length=100)
+    message = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Review by {self.email} on {self.product.name}"
+
+    class Meta:
+        ordering = ['-created_at']
+
 
 class checkout(models.Model):
     register = models.ForeignKey(register, on_delete=models.CASCADE, blank=True, null=True)
@@ -92,3 +134,4 @@ class checkout(models.Model):
     
     class Meta:
         ordering = ['-order_date']
+    
