@@ -65,7 +65,7 @@
 													</h3><!-- End .product-title -->
 												</div><!-- End .product -->
 											</td>
-											<td class="price-col">${{i.price}}</td>
+											<td class="price-col">&#8377;{{i.price}}</td>
 											<td class="quantity-col">
                                                 <div class="cart-product-quantity">
                                                     <div class="input-group">
@@ -75,7 +75,7 @@
                                                     </div>
                                                 </div><!-- End .cart-product-quantity -->
                                             </td>
-											<td class="total-col">${{i.total}}</td>
+											<td class="total-col">&#8377;{{i.total}}</td>
 											<td class="remove-col"><a href="{% url 'cart_delete' i.id %}" class="btn-remove"><i class="icon-close"></i></a></td>
 										</tr>
 										{% empty %}
@@ -109,23 +109,23 @@
 	                					<tbody>
 	                						<tr class="summary-subtotal">
 	                							<td>Subtotal:</td>
-	                							<td>${{ subtotal }}</td>
+	                							<td>&#8377;{{ subtotal }}</td>
 	                						</tr><!-- End .summary-subtotal -->
 	                						<tr class="summary-shipping">
 	                							<td>Shipping:</td>
-	                							<td>${{ shipping }}</td>
+	                							<td>&#8377;{{ shipping }}</td>
 	                						</tr>
 
 	                						{% if discount > 0 %}
 	                						<tr class="summary-discount">
 	                							<td>Discount:</td>
-	                							<td>-${{ discount }}</td>
+	                							<td>-&#8377;{{ discount }}</td>
 	                						</tr>
 	                						{% endif %}
 
 	                						<tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td>${{ total }}</td>
+	                							<td>&#8377;{{ total }}</td>
 	                						</tr><!-- End .summary-total -->
 	                							<td>
 	                								<div class="custom-control custom-radio">
@@ -133,14 +133,14 @@
 														<label class="custom-control-label" for="express-shipping">Express:</label>
 													</div><!-- End .custom-control -->
 	                							</td>
-	                							<td>$20.00</td>
+	                							<td>&#8377;20.00</td>
 	                						</tr><!-- End .summary-shipping-row -->
 
 	                						
 
 	                						<tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td>${{ total }}</td>
+	                							<td>&#8377;{{ total }}</td>
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->

@@ -353,10 +353,6 @@ def wishlist(request):
         uid = RegisterUser.objects.get(email=request.session['email'])
         user_wishlist = wishlist_model.objects.filter(register=uid).order_by("-id")
 
-        # fallback: show all saved wishlist items when current user has none
-        if not user_wishlist.exists():
-            user_wishlist = wishlist_model.objects.all().order_by("-id")
-
         contaxt = {
             "pid": user_wishlist,
             "wid": user_wishlist,

@@ -7,6 +7,7 @@
 
 
 <!-- molla/about.html  22 Nov 2019 10:03:51 GMT -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -36,164 +37,178 @@
 
 
 <body>
-    
+
     {% block header %}
-        <header class="header">
-            <div class="header-top">
-                <div class="container">
-                    
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
 
-                    <div class="header-right">
-                        <ul class="top-menu">
-                            <li>
-                                <a href="#">Links</a>
-                                <ul>
-                                    <li><a href="tel:#"><i class="icon-phone"></i>Call: +91 7202963777</a></li>
-                                    <li><a href="{% url 'wishlist' %}"><i class="icon-heart-o"></i>Wishlist <span>(3)</span></a></li>
-                                    <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul">Logout</a></li>
-                                </ul>
+
+                <div class="header-right">
+                    <ul class="top-menu">
+                        <li>
+                            <a href="#">Links</a>
+                            <ul>
+                                <li><a href="tel:#"><i class="icon-phone"></i>Call: +91 7202963777</a></li>
+                                <li><a href="{% url 'wishlist' %}"><i class="icon-heart-o"></i>Wishlist <span>({{ wishlist_count|default:0 }})</span></a></li>
+                                <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul><!-- End .top-menu -->
+                </div><!-- End .header-right -->
+            </div><!-- End .container -->
+        </div><!-- End .header-top -->
+
+        <div class="header-middle sticky-header">
+            <div class="container">
+                <div class="header-left">
+                    <button class="mobile-menu-toggler">
+                        <span class="sr-only">Toggle mobile menu</span>
+                        <i class="icon-bars"></i>
+                    </button>
+                    <a href="{% url 'home' %}" class="logo">
+                        <img src="{% static 'customerapp/images/demos/demo-20/logo1.png' %}" alt="crossword Logo"
+                            width="90" height="10">
+                    </a>
+
+                    <nav class="main-nav">
+                        <ul class="menu sf-arrows">
+                            <li class="megamenu-container active">
+                                <a href="{% url 'home' %}" class="sf-with-ul">Home</a>
+
                             </li>
-                        </ul><!-- End .top-menu -->
-                    </div><!-- End .header-right -->
-                </div><!-- End .container -->
-            </div><!-- End .header-top -->
+                            <li>
+                                <a href="{% url 'about' %}" class="sf-with-ul">About</a>
+                            </li>
 
-            <div class="header-middle sticky-header">
-                <div class="container">
-                    <div class="header-left">
-                        <button class="mobile-menu-toggler">
-                            <span class="sr-only">Toggle mobile menu</span>
-                            <i class="icon-bars"></i>
-                        </button>
-                        <a href="{% url 'home' %}" class="logo">
-                            <img src="{% static 'customerapp/images/demos/demo-20/logo1.png' %}" alt="crossword Logo" width="90" height="10">
+                            <li>
+                                <a href="{% url 'shop' %}" class="sf-with-ul">Shop</a>
+
+
+                            </li>
+
+
+                            <li>
+                                <a href="{% url 'blog' %}" class="sf-with-ul">Blog</a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'contact' %}" class="sf-with-ul">Contact</a>
+                            </li>
+                        </ul><!-- End .menu -->
+                    </nav><!-- End .main-nav -->
+                </div><!-- End .header-left -->
+
+                <div class="header-right">
+
+
+                    <div class="header-search flex-grow-1">
+                        <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
+                        <form action="#" method="get">
+                            <div class="header-search-wrapper">
+                                <label for="q" class="sr-only">Search</label>
+                                <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
+                                    required>
+                            </div><!-- End .header-search-wrapper -->
+                        </form>
+                    </div><!-- End .header-search -->
+
+                    <div class="dropdown cart-dropdown" style="margin-left: 1px;">
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false" data-display="static">
+                            <i class="icon-shopping-cart"></i>
+                            <span class="cart-count">{{ cart_count }}</span>
                         </a>
 
-                        <nav class="main-nav">
-                            <ul class="menu sf-arrows">
-                                <li class="megamenu-container active">
-                                    <a href="{% url 'home' %}" class="sf-with-ul">Home</a>
-
-                                </li>
-                                <li>
-                                            <a href="{% url 'about' %}" class="sf-with-ul">About</a>
-                                        </li>
-
-                                <li>
-                                    <a href="{% url 'shop' %}" class="sf-with-ul">Shop</a>
-
-                                    
-                                </li>
-                               
-                                
-                                <li>
-                                    <a href="{% url 'blog' %}" class="sf-with-ul">Blog</a>
-                                </li>
-
-                                <li>
-                                        <a href="{% url 'contact' %}" class="sf-with-ul">Contact</a>
-                                    </li>
-                            </ul><!-- End .menu -->
-                        </nav><!-- End .main-nav -->
-                    </div><!-- End .header-left -->
-
-                    <div class="header-right">
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-cart-products">
 
 
-                            <div class="header-search flex-grow-1">
-                                <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                                <form action="#" method="get">
-                                    <div class="header-search-wrapper">
-                                        <label for="q" class="sr-only">Search</label>
-                                        <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
-                                    </div><!-- End .header-search-wrapper -->
-                                </form>
-                            </div><!-- End .header-search -->
-                      
-                            <div class="dropdown cart-dropdown" style="margin-left: 1px;">
-                                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
-                                    <i class="icon-shopping-cart"></i>
-                                    <span class="cart-count">2</span>
-                                </a>
+                            </div><!-- End .cart-product -->
 
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <div class="dropdown-cart-products">
-                                  
+                            <div class="dropdown-cart-total">
 
-                                    </div><!-- End .cart-product -->
+                            </div><!-- End .dropdown-cart-total -->
 
-                                    <div class="dropdown-cart-total">
-                                    
-                                    </div><!-- End .dropdown-cart-total -->
-
-                                    <div class="dropdown-cart-action">
-                                        <a href="{% url 'cart' %}" class="btn btn-primary">View Cart</a>
-                                        <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                                    </div><!-- End .dropdown-cart-total -->
-                                </div><!-- End .dropdown-menu -->
-                            </div><!-- End .cart-dropdown -->
-                        </div><!-- End .header-dropdown-link -->
-                </div><!-- End .container -->
-            </div><!-- End .header-middle -->
-        </header><!-- End .header -->
+                            <div class="dropdown-cart-action">
+                                <a href="{% url 'cart' %}" class="btn btn-primary">View Cart</a>
+                                <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2"><span>Checkout</span><i
+                                        class="icon-long-arrow-right"></i></a>
+                            </div><!-- End .dropdown-cart-total -->
+                        </div><!-- End .dropdown-menu -->
+                    </div><!-- End .cart-dropdown -->
+                </div><!-- End .header-dropdown-link -->
+            </div><!-- End .container -->
+        </div><!-- End .header-middle -->
+    </header><!-- End .header -->
     {% endblock header %}
     {% block content %}{% endblock content %}
-    
 
 
-{% block footer %} {% endblock footer %}
 
- <footer class="footer">
-        	<div class="footer-middle border-0">
-	            <div class="container">
-	            	<div class="row">
-	            		<div class="col-sm-12 col-lg-6">
-	            			<div class="widget widget-about">
-	            				<img src="{% static 'customerapp/images/logo.png' %}" class="footer-logo" alt="Footer Logo" width="150" height="50">
-	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+    {% block footer %} {% endblock footer %}
 
-	            				<div class="social-icons">
-                                    <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Pinterest"><i class="icon-pinterest"></i></a>
-                                </div><!-- End .soial-icons -->
-	            			</div><!-- End .widget about-widget -->
-	            		</div><!-- End .col-sm-12 col-lg-6 -->
+    <footer class="footer">
+        <div class="footer-middle border-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6">
+                        <div class="widget widget-about">
+                            <img src="{% static 'customerapp/images/logo.png' %}" class="footer-logo" alt="Footer Logo"
+                                width="150" height="50">
+                            <p>Our platform brings together a diverse collection of books,<br>
+                                ranging from academic resources and professional guides to novels,<br>
+                                self-development titles, and more. </p>
 
-                        <div class="col-sm-6 col-lg-3">
-	            			<div class="widget">
-	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+                            <div class="social-icons">
+                                <a href="#" class="social-icon" target="_blank" title="Facebook"><i
+                                        class="icon-facebook-f"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Twitter"><i
+                                        class="icon-twitter"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Instagram"><i
+                                        class="icon-instagram"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Youtube"><i
+                                        class="icon-youtube"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                        class="icon-pinterest"></i></a>
+                            </div><!-- End .soial-icons -->
+                        </div><!-- End .widget about-widget -->
+                    </div><!-- End .col-sm-12 col-lg-6 -->
 
-	            				<ul class="widget-list">
-	            					<li><a href="">About </a></li>
-	            					<li><a href="">FAQ</a></li>
-	            					<li><a href="">Contact us</a></li>
-	            					<li><a href="">Log in</a></li>
-	            				</ul><!-- End .widget-list -->
-	            			</div><!-- End .widget -->
-	            		</div><!-- End .col-sm-12 col-lg-6 -->
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
 
-	            		
-	            		
-	            	</div><!-- End .row -->
-	            </div><!-- End .container -->
-	        </div><!-- End .footer-middle -->
+                            <ul class="widget-list">
+                                <li><a href="">About </a></li>
+                                <li><a href="">FAQ</a></li>
+                                <li><a href="">Contact us</a></li>
+                                <li><a href="">Log in</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-12 col-lg-6 -->
 
-	        <div class="footer-bottom">
-	        	<div class="container">
-	        		<p class="footer-copyright">Copyright © 2026 crossword store. All Rights Reserved.</p><!-- End .footer-copyright -->
-	        		<figure class="footer-payments">
-	        			<img src="{% static 'customerapp/images/payments.png' %}" alt="Payment methods" width="272" height="20">
-	        		</figure><!-- End .footer-payments -->
-	        	</div><!-- End .container -->
-	        </div><!-- End .footer-bottom -->
-        </footer><!-- End .footer -->
+
+
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-middle -->
+
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="footer-copyright">Copyright © 2026 crossword store. All Rights Reserved.</p>
+                <!-- End .footer-copyright -->
+                <figure class="footer-payments">
+                    <img src="{% static 'customerapp/images/payments.png' %}" alt="Payment methods" width="272"
+                        height="20">
+                </figure><!-- End .footer-payments -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-bottom -->
+    </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
-   <!-- Plugins JS File -->
+    <!-- Plugins JS File -->
     <script src="{% static 'customerapp/js/jquery.min.js' %}"></script>
     <script src="{% static 'customerapp/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'customerapp/js/jquery.hoverIntent.min.js' %}"></script>
@@ -203,7 +218,7 @@
     <script src="{% static 'customerapp/js/imagesloaded.pkgd.min.js' %}"></script>
     <script src="{% static 'customerapp/js/isotope.pkgd.min.js' %}"></script>
     <!-- Main JS File -->
-     
+
 
     <script src="{% static 'customerapp/js/main.js' %}"></script>
     {% block scripts %}{% endblock %}
@@ -211,4 +226,5 @@
 
 
 <!-- molla/about.html  22 Nov 2019 10:03:54 GMT -->
+
 </html>

@@ -44,6 +44,53 @@
 		color: #fff;
 		font-weight: bold;
 	}
+
+	.quickview-modal-img {
+		width: 100%;
+		max-height: 260px;
+		object-fit: contain;
+		border: 1px solid #ececec;
+		border-radius: 8px;
+		padding: 10px;
+		background: #fff;
+	}
+
+	.quickview-qty-wrap {
+		display: inline-flex;
+		align-items: center;
+		border: 1px solid #ddd;
+		border-radius: 6px;
+		overflow: hidden;
+	}
+
+	.quickview-qty-btn {
+		border: 0;
+		background: #f7f7f7;
+		width: 38px;
+		height: 38px;
+		font-size: 20px;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.quickview-qty-btn:hover {
+		background: #ececec;
+	}
+
+	.quickview-qty-input {
+		width: 70px;
+		height: 38px;
+		border: 0;
+		text-align: center;
+		outline: none;
+	}
+
+	.quickview-price {
+		font-size: 24px;
+		font-weight: 700;
+		color: #c96;
+		margin-bottom: 12px;
+	}
 </style>
 
 <main class="main">
@@ -185,10 +232,7 @@
 												class="btn-product-icon btn-wishlist btn-expandable"><span>add to
 													wishlist</span></a>
 											{% endif %}
-											<a href="popup/quickView.html" class="btn-product-icon btn-quickview"
-												title="Quick view"><span>Quick view</span></a>
-											<a href="#" class="btn-product-icon btn-compare"
-												title="Compare"><span>Compare</span></a>
+											
 										</div><!-- End .product-action-vertical -->
 
 										<div class="product-action">
@@ -204,7 +248,7 @@
 										<h3 class="product-title"><a href="{% url 'product' i.id %}">{{i.name}}</a></h3>
 										<!-- End .product-title -->
 										<div class="product-price">
-											${{i.price}}
+											&#8377;{{i.price}}
 										</div><!-- End .product-price -->
 										<div class="ratings-container">
 											<div class="ratings">
@@ -266,6 +310,49 @@
 		</div><!-- End .container -->
 	</div><!-- End .page-content -->
 </main><!-- End .main -->
+
+<div class="modal fade" id="shopQuickViewModal" tabindex="-1" role="dialog" aria-labelledby="shopQuickViewTitle"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="shopQuickViewTitle">Quick View</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-5 mb-2 mb-md-0">
+						<img id="quickViewImage" class="quickview-modal-img" src="" alt="Product image">
+					</div>
+					<div class="col-md-7">
+						<h3 id="quickViewName" class="mb-1"></h3>
+						<div id="quickViewPrice" class="quickview-price"></div>
+						<p id="quickViewDescription" class="mb-3"></p>
+
+						<form id="quickViewCartForm" method="POST" action="">
+							{% csrf_token %}
+							<input type="hidden" id="quickViewQtyHidden" name="qty" value="1">
+							<div class="mb-3">
+								<label for="quickViewQty" class="d-block mb-1">Quantity</label>
+								<div class="quickview-qty-wrap">
+									<button type="button" id="quickViewMinus" class="quickview-qty-btn">-</button>
+									<input type="number" id="quickViewQty" class="quickview-qty-input" min="1" value="1">
+									<button type="button" id="quickViewPlus" class="quickview-qty-btn">+</button>
+								</div>
+							</div>
+							<div class="d-flex flex-wrap">
+								<button type="submit" class="btn btn-primary mr-2 mb-2">Add to Cart</button>
+								<a id="quickViewDetailsLink" href="#" class="btn btn-outline-primary mb-2">View Details</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock content %}
 
 
@@ -334,5 +421,67 @@
 
 		window.location.href = '?' + params.toString();
 	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const triggers = document.querySelectorAll('.shop-quickview-trigger');
+		const modalName = document.getElementById('quickViewName');
+		const modalDescription = document.getElementById('quickViewDescription');
+		const modalPrice = document.getElementById('quickViewPrice');
+		const modalImage = document.getElementById('quickViewImage');
+		const detailsLink = document.getElementById('quickViewDetailsLink');
+		const cartForm = document.getElementById('quickViewCartForm');
+		const qtyInput = document.getElementById('quickViewQty');
+		const qtyHidden = document.getElementById('quickViewQtyHidden');
+		const minusBtn = document.getElementById('quickViewMinus');
+		const plusBtn = document.getElementById('quickViewPlus');
+
+		function syncQty() {
+			let qty = parseInt(qtyInput.value, 10);
+			if (isNaN(qty) || qty < 1) {
+				qty = 1;
+			}
+			qtyInput.value = qty;
+			qtyHidden.value = qty;
+		}
+
+		minusBtn.addEventListener('click', function () {
+			let qty = parseInt(qtyInput.value, 10) || 1;
+			qty = Math.max(1, qty - 1);
+			qtyInput.value = qty;
+			syncQty();
+		});
+
+		plusBtn.addEventListener('click', function () {
+			let qty = parseInt(qtyInput.value, 10) || 1;
+			qty += 1;
+			qtyInput.value = qty;
+			syncQty();
+		});
+
+		qtyInput.addEventListener('input', syncQty);
+		cartForm.addEventListener('submit', syncQty);
+
+		triggers.forEach(function (trigger) {
+			trigger.addEventListener('click', function (event) {
+				event.preventDefault();
+				const name = this.dataset.productName || '';
+				const description = this.dataset.productDescription || 'No description available.';
+				const price = this.dataset.productPrice || '0';
+				const image = this.dataset.productImage || '';
+				const productUrl = this.dataset.productUrl || '#';
+				const addCartUrl = this.dataset.addCartUrl || '';
+
+				modalName.textContent = name;
+				modalDescription.textContent = description;
+				modalPrice.textContent = '\u20B9' + price;
+				modalImage.src = image;
+				modalImage.alt = name;
+				detailsLink.href = productUrl;
+				cartForm.action = addCartUrl;
+				qtyInput.value = 1;
+				syncQty();
+			});
+		});
+	});
 </script>
 {% endblock %}
