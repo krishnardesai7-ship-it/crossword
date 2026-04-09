@@ -12,6 +12,7 @@ class register(models.Model):
     education=models.CharField(max_length=50,blank=True,null=True)
     address=models.CharField(max_length=50,blank=True,null=True)
     phone=models.CharField(max_length=20,blank=True,null=True)
+    gender=models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], blank=True, null=True)
     image=models.ImageField(upload_to="images",blank=True,null=True)
 
     def __str__(self) -> str:
@@ -124,9 +125,11 @@ class checkout(models.Model):
     address=models.CharField(max_length=50)
     phone=models.CharField(max_length=20, blank=True, null=True)
     product_name=models.CharField(max_length=50)
+    image=models.TextField(null=True, blank=True)
     price=models.IntegerField()
     quantity=models.IntegerField()
     total=models.IntegerField()
+    status = models.CharField(max_length=20, default='Pending', choices=[('Pending', 'Pending'), ('Processed', 'Processed'), ('Shipped', 'Shipped'), ('Delivered', 'Delivered'), ('Cancelled', 'Cancelled')])
     order_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self) -> str:

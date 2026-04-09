@@ -260,6 +260,7 @@ def checkout(request):
                     address=address,
                     phone=phone,
                     product_name=item.product_name,
+                    image=item.image.name if hasattr(item.image, 'name') else item.image,
                     price=item.price,
                     quantity=item.quantity,
                     total=item.total,
@@ -495,3 +496,24 @@ def cart_delete(request,id):
     seid=add_to_cart.objects.get(id=id)
     seid.delete() 
     return redirect('cart')
+
+def profile(request):
+    if "email" not in request.session:
+        return redirect('accounts:login')
+    
+    uid = RegisterUser.objects.get(email=request.session['email'])
+    all_orders = checkout_model.objects.filter(register=uid).order_by('-order_date')
+    
+    # "Active" can be defined as anything not yet delivered
+    active_orders = all_orders.exclude(status='Delivered')
+    past_orders = all_orders.filter(status='Delivered')
+    
+    active_items_count = sum(order.quantity for order in active_orders)
+    
+    context = {
+        'uid': uid,
+        'active_orders': active_orders,
+        'past_orders': past_orders,
+        'active_items_count': active_items_count,
+    }
+    return render(request, 'customerapp/profile.html', context)

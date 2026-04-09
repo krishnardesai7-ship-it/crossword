@@ -45,6 +45,7 @@ urlpatterns = [
     path('add_wishlist/<int:id>', views.add_wishlist, name='add_wishlist'),
     path('wishlist_delete/<int:id>', views.wishlist_delete, name='wishlist_delete'),
     path('submit_review/<int:id>/', views.submit_review, name='submit_review'),
+    path('profile/', views.profile, name='profile'),
     
 
 ]

@@ -28,8 +28,9 @@ admin.site.register(contact_model)
 
 # Custom admin for checkout model to display all products
 class CheckoutAdmin(admin.ModelAdmin):
-    list_display = ['order_date', 'name', 'email', 'phone', 'product_name', 'quantity', 'price', 'total']
-    list_filter = ['order_date', 'name', 'email']
+    list_display = ['order_date', 'name', 'email', 'product_name', 'total', 'status']
+    list_editable = ['status']
+    list_filter = ['status', 'order_date', 'name', 'email']
     search_fields = ['name', 'email', 'product_name', 'phone', 'register__username']
     readonly_fields = ['name', 'email', 'address', 'phone', 'product_name', 'price', 'quantity', 'total', 'order_date', 'register']
     

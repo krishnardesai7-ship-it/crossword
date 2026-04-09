@@ -1,0 +1,257 @@
+{% extends 'customerapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content pb-0">
+        <div class="container">
+            <div class="row">
+                <!-- Orders Section - Full Width at Top -->
+                <div class="col-12">
+                    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="active-orders-link" data-toggle="tab" href="#active-orders" role="tab" aria-controls="active-orders" aria-selected="true">Active Orders ({{ active_orders|length }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="past-orders-link" data-toggle="tab" href="#past-orders" role="tab" aria-controls="past-orders" aria-selected="false">Order History ({{ past_orders|length }})</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- Active Orders Tab Pane -->
+                        <div class="tab-pane fade show active" id="active-orders" role="tabpanel" aria-labelledby="active-orders-link">
+                            {% if active_orders %}
+                                <table class="table table-wishlist table-mobile">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Qty</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in active_orders %}
+                                        <tr>
+                                            <td class="product-col">
+                                                <div class="product" style="display: flex; align-items: center; gap: 15px;">
+                                                    <figure class="product-media" style="background: none; overflow: visible; margin: 0; flex-shrink: 0;">
+                                                        <a href="#">
+                                                            {% if order.image %}
+                                                                <img src="/media/{{ order.image }}" alt="Product image" 
+                                                                    style="width: 80px; height: auto; object-fit: contain;">
+                                                            {% else %}
+                                                                <img src="{% static 'placeholder.png' %}" alt="No image" 
+                                                                    style="width: 80px; height: auto; object-fit: contain;">
+                                                            {% endif %}
+                                                        </a>
+                                                    </figure>
+                                                    <h3 class="product-title" style="margin: 0;">
+                                                        <a href="#">{{ order.product_name }}</a>
+                                                    </h3>
+                                                </div>
+                                            </td>
+                                            <td class="price-col">₹{{ order.price }}</td>
+                                            <td class="stock-col">{{ order.quantity }}</td>
+                                            <td class="price-col">₹{{ order.total }}</td>
+                                            <td class="action-col">
+                                                <span class="badge badge-info">{{ order.status }}</span>
+                                            </td>
+                                            <td class="date-col">{{ order.order_date|date:"d M Y" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p>No active orders.</p>
+                                <a href="{% url 'shop' %}" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                            {% endif %}
+                        </div><!-- .End .tab-pane -->
+
+                        <!-- Past Orders Tab Pane -->
+                        <div class="tab-pane fade" id="past-orders" role="tabpanel" aria-labelledby="past-orders-link">
+                            {% if past_orders %}
+                                <table class="table table-wishlist table-mobile">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Qty</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in past_orders %}
+                                        <tr>
+                                            <td class="product-col">
+                                                <div class="product" style="display: flex; align-items: center; gap: 15px;">
+                                                    <figure class="product-media" style="background: none; overflow: visible; margin: 0; flex-shrink: 0;">
+                                                        <a href="#">
+                                                            {% if order.image %}
+                                                                <img src="/media/{{ order.image }}" alt="Product image"
+                                                                    style="width: 80px; height: auto; object-fit: contain;">
+                                                            {% else %}
+                                                                <img src="{% static 'placeholder.png' %}" alt="No image" 
+                                                                    style="width: 80px; height: auto; object-fit: contain;">
+                                                            {% endif %}
+                                                        </a>
+                                                    </figure>
+                                                    <h3 class="product-title" style="margin: 0;">
+                                                        <a href="#">{{ order.product_name }}</a>
+                                                    </h3>
+                                                </div>
+                                            </td>
+                                            <td class="price-col">₹{{ order.price }}</td>
+                                            <td class="stock-col">{{ order.quantity }}</td>
+                                            <td class="price-col">₹{{ order.total }}</td>
+                                            <td class="action-col">
+                                                <span class="badge badge-success">{{ order.status }}</span>
+                                            </td>
+                                            <td class="date-col">{{ order.order_date|date:"d M Y" }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p>No past orders found.</p>
+                            {% endif %}
+                        </div><!-- .End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div>
+
+                <!-- User Information Section - Moved to Bottom -->
+                <div class="col-12 mt-5 mb-5">
+                    <div class="card card-dashboard">
+                        <div class="card-body">
+                            <h3 class="card-title">User Information</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Name:</strong> {{ uid.username }}</p>
+                                    <p><strong>Email:</strong> {{ uid.email }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Address:</strong> {{ uid.address|default:"Not Provided" }}</p>
+                                    <p><strong>Phone:</strong> {{ uid.phone|default:"Not Provided" }}</p>
+                                </div>
+                            </div>
+                        </div><!-- End .card-body -->
+                    </div><!-- End .card-dashboard -->
+                </div>
+            </div><!-- End .row -->
+        </div><!-- End .container -->
+        <div class="mb-5"></div><!-- End .mb-5 -->
+    </div><!-- End .page-content -->
+</main>
+
+<style>
+    .card-dashboard {
+        border: 1px solid #ebebeb;
+        background-color: #f9f9f9;
+        margin-bottom: 2rem;
+    }
+    .card-dashboard .card-title {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #ebebeb;
+        padding-bottom: 1rem;
+    }
+    .card-dashboard p {
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+    }
+    .nav-tabs-custom {
+        display: flex;
+        border-bottom: .1rem solid #ebebeb;
+        margin-bottom: 2rem;
+    }
+    .nav-tabs-custom .nav-item {
+        margin-bottom: -.1rem;
+        margin-right: 3rem;
+    }
+    .nav-tabs-custom .nav-link {
+        padding: 1.2rem 0;
+        font-weight: 400;
+        font-size: 2rem;
+        color: #666;
+        border: none;
+        border-bottom: .2rem solid transparent;
+        background: none;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    .nav-tabs-custom .nav-link.active {
+        color: #c96;
+        border-bottom-color: #c96;
+    }
+    .badge-info {
+        background-color: #3498db;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1.2rem;
+    }
+    .badge-success {
+        background-color: #2ecc71;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1.2rem;
+    }
+    .table.table-wishlist .product-col .product {
+        display: flex;
+        align-items: center;
+    }
+    @media (max-width: 768px) {
+        .nav-tabs-custom .nav-link {
+            font-size: 1.6rem;
+        }
+        .nav-tabs-custom .nav-item {
+            margin-right: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.nav-tabs-custom .nav-link');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all tabs
+                tabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab panes
+                const panes = document.querySelectorAll('.tab-pane');
+                panes.forEach(p => {
+                    p.classList.remove('show', 'active');
+                });
+                
+                // Show the target pane
+                const targetId = this.getAttribute('href').substring(1);
+                const targetPane = document.getElementById(targetId);
+                if (targetPane) {
+                    targetPane.classList.add('show', 'active');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
