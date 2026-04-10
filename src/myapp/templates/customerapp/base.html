@@ -143,6 +143,20 @@
         </div><!-- End .header-middle -->
     </header><!-- End .header -->
     {% endblock header %}
+
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     {% block content %}{% endblock content %}
 
 
@@ -222,6 +236,7 @@
 
 
     <script src="{% static 'customerapp/js/main.js' %}"></script>
+    <script src="{% static 'customerapp/js/animations.js' %}"></script>
     {% block scripts %}{% endblock %}
 </body>
 

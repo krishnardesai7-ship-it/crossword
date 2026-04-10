@@ -97,15 +97,22 @@
 
 						<div class="cart-bottom">
 							<div class="cart-discount">
-								<form action="#">
+								<form action="{% url 'apply_coupon' %}" method="POST">
+                                    {% csrf_token %}
 									<div class="input-group">
-										<input type="text" class="form-control" required placeholder="coupon code">
+										<input type="text" name="coupon_code" class="form-control" required placeholder="coupon code" value="{{ applied_coupon_code|default:'' }}">
 										<div class="input-group-append">
 											<button class="btn btn-outline-primary-2" type="submit"><i
 													class="icon-long-arrow-right"></i></button>
 										</div><!-- .End .input-group-append -->
 									</div><!-- End .input-group -->
 								</form>
+                                {% if applied_coupon_code %}
+                                <div style="margin-top: 10px;">
+                                    <span class="text-success">Coupon applied: {{ applied_coupon_code }}</span> 
+                                    <a href="{% url 'remove_coupon' %}" class="text-danger" style="margin-left: 10px; font-weight: bold;">(Remove)</a>
+                                </div>
+                                {% endif %}
 							</div><!-- End .cart-discount -->
 
 							<a href="{% url 'shop' %}" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i

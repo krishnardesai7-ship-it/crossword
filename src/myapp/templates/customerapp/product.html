@@ -11,75 +11,92 @@
         object-fit: contain;
         display: block;
     }
+
     .product-image-gallery img {
         width: 100%;
         height: auto;
         object-fit: contain;
     }
+
     .product-gallery-item {
         max-width: 80px;
     }
+
     /* Review styling */
     .review-item {
         border-bottom: 1px solid #eee;
         padding: 15px 0;
     }
+
     .review-item:last-child {
         border-bottom: none;
     }
+
     .review-email {
         font-weight: 600;
         color: #c96;
     }
+
     .review-date {
         color: #999;
         font-size: 0.85em;
     }
+
     .review-message {
         margin-top: 8px;
         color: #555;
         line-height: 1.6;
     }
+
     .detail-label {
         font-weight: 600;
         color: #333;
         min-width: 130px;
         display: inline-block;
     }
+
     .detail-value {
         color: #666;
     }
+
     /* Modal Styling */
     .modal-content {
         border-radius: 8px;
         border: none;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
+
     .modal-header {
         border-bottom: 1px solid #eee;
         padding: 20px 25px;
     }
+
     .modal-title {
         font-weight: 700;
         color: #333;
     }
+
     .modal-body {
         padding: 25px;
     }
+
     .modal-footer {
         border-top: 1px solid #eee;
         padding: 15px 25px;
     }
+
     .form-group label {
         font-weight: 600;
         color: #333;
         margin-bottom: 8px;
     }
+
     .form-control {
         border-radius: 4px;
         border: 1px solid #ddd;
         padding: 10px 15px;
     }
+
     .btn-submit-review {
         background: #c96;
         color: #fff;
@@ -89,9 +106,11 @@
         font-weight: 600;
         transition: all 0.3s;
     }
+
     .btn-submit-review:hover {
         background: #b38050;
     }
+
     button.btn-product {
         padding: 1.15rem 0;
         background-color: transparent;
@@ -107,10 +126,12 @@
         align-items: center;
         justify-content: center;
     }
+
     button.btn-product:hover {
         background-color: #c96;
         color: #fff;
     }
+
     button.btn-product span::before {
         content: '\e971';
         font-family: 'molla';
@@ -137,21 +158,18 @@
                     <div class="col-md-6">
                         <div class="product-gallery product-gallery-vertical">
                             <div class="row">
-                                <figure class="product-main-image">
+                                <figure class="product-main-image" style="display: flex; justify-content: center;">
                                     {% if spid.image %}
-                                    <img id="product-zoom" src="{{ spid.image.url }}" data-zoom-image="{{ spid.image.url }}" alt="{{ spid.name }}" style="object-fit: contain; max-height: 500px;">
+                                    <img id="product-zoom" src="{{ spid.image.url }}"
+                                        data-zoom-image="{{ spid.image.url }}" alt="{{ spid.name }}"
+                                        style="object-fit: contain; max-height: 400px; width: auto; max-width: 100%;">
                                     {% else %}
-                                    <img id="product-zoom" src="{% static 'customerapp/images/products/single/1.jpg' %}" data-zoom-image="{% static 'customerapp/images/products/single/1-big.jpg' %}" alt="product image">
+                                    <img id="product-zoom" src="{% static 'customerapp/images/products/single/1.jpg' %}"
+                                        data-zoom-image="{% static 'customerapp/images/products/single/1-big.jpg' %}"
+                                        alt="product image"
+                                        style="object-fit: contain; max-height: 400px; width: auto; max-width: 100%;">
                                     {% endif %}
                                 </figure><!-- End .product-main-image -->
-
-                                <div id="product-zoom-gallery" class="product-image-gallery">
-                                    {% if spid.image %}
-                                    <a class="product-gallery-item active" href="#" data-image="{{ spid.image.url }}" data-zoom-image="{{ spid.image.url }}">
-                                        <img src="{{ spid.image.url }}" alt="{{ spid.name }}" style="object-fit: contain;">
-                                    </a>
-                                    {% endif %}
-                                </div><!-- End .product-image-gallery -->
                             </div><!-- End .row -->
                         </div><!-- End .product-gallery -->
                     </div><!-- End .col-md-6 -->
@@ -164,7 +182,8 @@
                                 <div class="ratings">
                                     <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
                                 </div><!-- End .ratings -->
-                                <a class="ratings-text" href="#" data-toggle="modal" data-target="#reviewModal" id="review-link">( {{ review_count }} Reviews )</a>
+                                <a class="ratings-text" href="#product-review-tab" id="review-link-top" ( {{
+                                    review_count }} Reviews )></a>
                             </div><!-- End .rating-container -->
 
                             <div class="product-price">
@@ -190,7 +209,8 @@
                                 <div class="details-filter-row details-row-size">
                                     <label for="qty">Qty:</label>
                                     <div class="product-details-quantity">
-                                        <input type="number" name="qty" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                        <input type="number" name="qty" id="qty" class="form-control" value="1" min="1"
+                                            max="10" step="1" data-decimals="0" required>
                                     </div>
                                 </div>
 
@@ -198,10 +218,16 @@
                                     <button type="submit" class="btn-product btn-cart">
                                         <span>add to cart</span>
                                     </button>
-                                    
+
                                     <div class="details-action-wrapper">
                                         <a href="{% url 'add_wishlist' spid.id %}" class="btn-product btn-wishlist">
-                                            <span>{% if is_wishlisted %}Remove Wishlist{% else %}Add to Wishlist{% endif %}</span>
+                                            <span>
+                                                {% if is_wishlisted %}
+                                                Remove Wishlist
+                                                {% else %}
+                                                Add to Wishlist
+                                                {% endif %}
+                                            </span>
                                         </a>
                                     </div>
                                 </div>
@@ -210,69 +236,25 @@
                             <div class="product-details-footer">
                                 <div class="product-cat">
                                     <span>Category:</span>
-                                    <a href="{% url 'shop' %}?category={{ spid.category }}">{{ spid.get_category_display }}</a>
+                                    <a href="{% url 'shop' %}?category={{ spid.category }}" {{ spid.get_category_display
+                                        }}></a>
                                 </div>
                             </div>
-                            
+
 
                         </div><!-- End .product-details -->
                     </div><!-- End .col-md-6 -->
                 </div><!-- End .row -->
             </div><!-- End .product-details-top -->
 
-            <div class="product-details-tab">
-                <ul class="nav nav-pills justify-content-center" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="product-review-link" data-toggle="modal" href="#reviewModal" data-target="#reviewModal">Reviews ({{ review_count }})</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
-                        <div class="product-desc-content">
-                            <h3>Product Information</h3>
-                            <p>{{ spid.description }}</p>
-                        </div>
-                    </div>
 
-                    <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
-                        <div class="reviews">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h3>Reviews ({{ review_count }})</h3>
-                                <button class="btn btn-primary btn-round" data-toggle="modal" data-target="#reviewModal">Post Review</button>
-                            </div>
-                            
-                            {% if reviews %}
-                                {% for review in reviews %}
-                                <div class="review-item">
-                                    <div class="row no-gutters">
-                                        <div class="col-auto" style="min-width:150px;">
-                                            <span class="review-email">{{ review.email }}</span><br>
-                                            <span class="review-date">{{ review.created_at|timesince }} ago</span>
-                                        </div>
-                                        <div class="col">
-                                            <div class="review-message">
-                                                <p>{{ review.message }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <p>No reviews yet. Be the first to review this product!</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </main>
 
 <!-- Review Popup Modal -->
-<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -286,12 +268,16 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="modal-email">Email Address</label>
-                        <input type="email" id="modal-email" class="form-control" value="{{ user_email }}" readonly style="background-color: #f9f9f9; cursor: not-allowed;">
-                        <small class="form-text text-muted">You are posting as {{ user_email }}</small>
+                        <input type="email" id="modal-email" class="form-control" value="{{ user_email }}" readonly
+                            style="background-color: #f5f5f5; cursor: not-allowed;">
+                        <small class="form-text text-muted">You are posting as: <strong>{{ user_email
+                                }}</strong></small>
                     </div>
                     <div class="form-group">
-                        <label for="modal-message">Your Message</label>
-                        <textarea name="message" id="modal-message" class="form-control" placeholder="What did you think about this book?" required style="min-height: 150px;"></textarea>
+                        <label for="modal-message">Your Review Message</label>
+                        <textarea name="message" id="modal-message" class="form-control"
+                            placeholder="Share your thoughts about this book..." required
+                            style="min-height: 150px;"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -303,10 +289,52 @@
     </div>
 </div>
 
-{% endblock %}
 
 {% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Handle Top Review Link click
+        const reviewLinkTop = document.getElementById('review-link-top');
+        if (reviewLinkTop) {
+            reviewLinkTop.addEventListener('click', function (e) {
+                e.preventDefault();
+                // Trigger click on the actual tab link
+                document.getElementById('product-review-link').click();
+                // Scroll to the tabs section
+                document.querySelector('.product-details-tab').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+
+        // Ensure manual tab switching works correctly (in case theme JS is missing)
+        const tabLinks = document.querySelectorAll('.nav-pills .nav-link');
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                if (this.hasAttribute('data-toggle')) {
+                    e.preventDefault();
+
+                    // Remove active from all links and panes
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show', 'active'));
+
+                    // Add active to current
+                    this.classList.add('active');
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetPane = document.getElementById(targetId);
+                    if (targetPane) {
+                        targetPane.classList.add('show', 'active');
+                    }
+
+                    // AUTO-OPEN MODAL when Reviews tab is clicked
+                    if (targetId === 'product-review-tab') {
+                        $('#reviewModal').modal('show');
+                    }
+                }
+            });
+        });
+    });
+</script>
 <script src="{% static 'customerapp/js/bootstrap-input-spinner.js' %}"></script>
 <script src="{% static 'customerapp/js/jquery.elevateZoom.min.js' %}"></script>
 <script src="{% static 'customerapp/js/jquery.magnific-popup.min.js' %}"></script>
+{% endblock %}
 {% endblock %}

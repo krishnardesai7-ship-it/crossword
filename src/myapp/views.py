@@ -2,7 +2,7 @@ from unicodedata import category
 from urllib import request
 
 from django.shortcuts import render,HttpResponse,redirect
-from .models import register as RegisterUser, contact as contact_model, product as product_model, wishlist as wishlist_model, add_to_cart, checkout as checkout_model, Category, ProductReview
+from .models import register as RegisterUser, contact as contact_model, product as product_model, wishlist as wishlist_model, add_to_cart, checkout as checkout_model, Category, ProductReview, Coupon
 from django.core.paginator import Paginator
 from  django.core.mail import send_mail
 from django.contrib import messages
@@ -64,7 +64,7 @@ def contact(request):
 
         return render(request,"customerapp/contact.html",contaxt)
     else:
-        return render(request,"customerapp/login.html")
+        return redirect('accounts:login')
 
 def base(request):
     return render(request, 'customerapp/base.html')
@@ -234,7 +234,19 @@ def checkout(request):
     cart_items = add_to_cart.objects.filter(register=uid, order_status=False).order_by('-id')
     subtotal = sum(item.total for item in cart_items)
     shipping = 40 if subtotal > 0 else 0
-    total = subtotal + shipping
+    
+    discount = 0
+    coupon_id = request.session.get('coupon_id')
+    if coupon_id and subtotal > 0:
+        try:
+            coupon = Coupon.objects.get(id=coupon_id, is_active=True)
+            discount = coupon.discount_amount
+            if discount > subtotal:
+                discount = subtotal
+        except Coupon.DoesNotExist:
+            del request.session['coupon_id']
+            
+    total = subtotal + shipping - discount
 
     if request.method == 'POST':
         first_name = request.POST.get('first_name', '').strip()
@@ -269,12 +281,15 @@ def checkout(request):
                 item.save()
 
             messages.success(request, 'Checkout completed successfully. Your order is submitted.')
+            if 'coupon_id' in request.session:
+                del request.session['coupon_id']
             return redirect('shop')
 
     context = {
         'cart_items': cart_items,
         'subtotal': subtotal,
         'shipping': shipping,
+        'discount': discount,
         'total': total,
         'uid': uid,
     }
@@ -399,29 +414,59 @@ def cart(request):
             print(f"Cart item: {item.product_name}, quantity: {item.quantity}")
        
         l1=[]
-        subtotal=0
-        discount= 0
-        shipping = 40
-        total= 0
         for i in pid:
             l1.append(i.total)
         print(l1)
 
         subtotal=sum(l1)
-        total=subtotal+shipping-discount
+        shipping = 40 if subtotal > 0 else 0
+        discount = 0
+        applied_coupon_code = None
+
+        coupon_id = request.session.get('coupon_id')
+        if coupon_id and subtotal > 0:
+            try:
+                coupon = Coupon.objects.get(id=coupon_id, is_active=True)
+                discount = coupon.discount_amount
+                if discount > subtotal:
+                    discount = subtotal
+                applied_coupon_code = coupon.code
+            except Coupon.DoesNotExist:
+                del request.session['coupon_id']
+
+        total = subtotal + shipping - discount
         contaxt={
             "pid":pid,
             "l1":l1,
             "subtotal":subtotal,
             "shipping": shipping,
             "total" : total,
-            "discount": discount
-
+            "discount": discount,
+            "applied_coupon_code": applied_coupon_code
         }
         return render(request,"customerapp/cart.html",contaxt)
     else:
-        return render(request,"customerapp/login.html")
+        return redirect('accounts:login')
     
+def apply_coupon(request):
+    if request.method == 'POST':
+        code = request.POST.get('coupon_code', '').strip()
+        if code:
+            try:
+                coupon = Coupon.objects.get(code=code, is_active=True)
+                request.session['coupon_id'] = coupon.id
+                messages.success(request, f'Coupon "{code}" applied successfully!')
+            except Coupon.DoesNotExist:
+                messages.error(request, 'Invalid or expired coupon code.')
+        else:
+            messages.error(request, 'Please enter a valid coupon code.')
+    return redirect('cart')
+
+def remove_coupon(request):
+    if 'coupon_id' in request.session:
+        del request.session['coupon_id']
+        messages.info(request, 'Coupon removed successfully.')
+    return redirect('cart')
 
 def cart_add(request,id):
     print(f"cart_add called with id: {id}")

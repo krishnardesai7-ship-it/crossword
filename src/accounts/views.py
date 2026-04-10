@@ -76,6 +76,7 @@ def accounts_register(request):
     return render(request, "accounts/register.html", {"form": form})
 
 
+
 def accounts_login(request):
     if request.method != "POST":
         return redirect("accounts:login")
@@ -85,42 +86,45 @@ def accounts_login(request):
 
         if face_id is None:
             if reason == "no_known_faces":
-                messages.error(
-                    request, "No registered face data found. Please sign up first.")
-                return redirect(f"{reverse('accounts:login')}?auto_register=1")
+                messages.error(request, "No registered face data found. Please sign up first.")
+                return redirect(reverse("accounts:login") + "?auto_register=1")
+
             elif reason == "face_library_missing":
                 messages.error(request, FACE_LIB_SETUP_MSG)
+
             elif reason == "camera_error":
-                messages.error(
-                    request, "Unable to access camera. Check camera permission and try again.")
+                messages.error(request, "Unable to access camera. Check camera permission and try again.")
+
             elif reason == "face_not_matched":
-                messages.error(
-                    request, "Face detected but it did not match any active account.")
-                return redirect(f"{reverse('accounts:login')}?auto_register=1")
+                messages.error(request, "Face detected but it did not match any active account.")
+                return redirect(reverse("accounts:login") + "?auto_register=1")
+
             elif reason == "canceled":
                 messages.error(request, "Face login was canceled.")
+
             else:
-                messages.error(
-                    request, "Face not detected. Please center your face and try again.")
+                messages.error(request, "Face not detected. Please center your face and try again.")
+
             return redirect("accounts:login")
 
         user = User.objects.filter(id=face_id, is_active=True).first()
 
-        if user is not None:
+        if user:
             login(request, user)
+
             if user.email:
-                # myapp views rely on `request.session["email"]` for access.
                 request.session["email"] = user.email
-            return redirect("home")
+
+            # IMPORTANT FIX HERE 👇
+            return redirect("home")   # make sure this exists in urls.py
+
         else:
-            messages.error(
-                request, "Face not matched with any active account.")
-            return redirect(f"{reverse('accounts:login')}?auto_register=1")
+            messages.error(request, "Face not matched with any active account.")
+            return redirect(reverse("accounts:login") + "?auto_register=1")
 
     except Exception as e:
         messages.error(request, f"Login failed: {str(e)}")
         return redirect("accounts:login")
-
 
 def accounts_logout(request):
     request.session.pop("email", None)

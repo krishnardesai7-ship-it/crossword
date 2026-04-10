@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, register, contact as contact_model, product, wishlist, add_to_cart, checkout, comment, ProductReview
+from .models import Category, register, contact as contact_model, product, wishlist, add_to_cart, checkout, comment, ProductReview, Coupon
 # Register your models here.
 admin.site.register(register)
 admin.site.register(wishlist)
@@ -41,3 +41,4 @@ class CheckoutAdmin(admin.ModelAdmin):
         return True
 
 admin.site.register(checkout, CheckoutAdmin)
+admin.site.register(Coupon)

@@ -137,4 +137,11 @@ class checkout(models.Model):
     
     class Meta:
         ordering = ['-order_date']
-    
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount_amount = models.IntegerField(default=0, help_text="Flat discount amount in ₹")
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.code
