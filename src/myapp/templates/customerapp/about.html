@@ -2,6 +2,24 @@
 {% load static %}
 
 {% block content %}
+
+<style>
+    .row {
+        display: flex;
+        justify-content: center;
+        /* centers column */
+    }
+
+    .member {
+        text-align: center;
+    }
+
+    .member-media img {
+        display: block;
+        margin: 0 auto;
+        /* centers image */
+    }
+</style>
 <main class="main">
     <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
         <div class="container">
@@ -60,8 +78,10 @@
 
                     <div class="col-lg-6 offset-lg-1">
                         <div class="about-images">
-                            <img src="{% static 'customerapp/images/about/img-1.jpg' %}" alt="" class="about-img-front">
-                            <img src="{% static 'customerapp/images/about/img-2.jpg' %}" alt="" class="about-img-back">
+                            <img src="{% static 'customerapp/images/about/image-2.png' %}" alt=""
+                                class="about-img-front">
+                            <img src="{% static 'customerapp/images/about/image-1.png' %}" alt=""
+                                class="about-img-back">
                         </div><!-- End .about-images -->
                     </div><!-- End .col-lg-6 -->
                 </div><!-- End .row -->
@@ -79,15 +99,15 @@
 
             <h2 class="title text-center mb-4">Meet Our Team</h2>
             <div class="row">
-                <div class="col-md-4">
-                    <div class="member member-anim text-center">
+                <div class="col-md-4 mx-auto text-center">
+                    <div class="member member-anim">
                         <figure class="member-media">
-                            <img src="{% static 'customerapp/images/team/member-1.jpg' %}" alt="member photo">
+                            <img src="{% static 'customerapp/images/team/member-4.JPEG' %}" alt="member photo">
                             <figcaption class="member-overlay">
                                 <div class="member-overlay-content">
-                                    <h3 class="member-title">Samanta Grey<span>Founder & CEO</span></h3>
-                                    <p>Sed pretium, ligula sollicitudin viverra, tortor libero sodales leo, eget blandit
-                                        nunc.</p>
+                                    <h3 class="member-title">KRISHNA DESAI<span>Founder & CEO</span></h3>
+                                    <p>Our team consists of educators, librarians, and tech enthusiasts
+                                        who believe that knowledge should have no boundaries.</p>
                                     <div class="social-icons social-icons-simple">
                                         <a href="#" class="social-icon" title="Facebook" target="_blank"><i
                                                 class="icon-facebook-f"></i></a>
@@ -100,7 +120,7 @@
                             </figcaption>
                         </figure>
                         <div class="member-content">
-                            <h3 class="member-title">Samanta Grey<span>Founder & CEO</span></h3>
+                            <h3 class="member-title">KRISHNA DESAI<span>Founder & CEO</span></h3>
                         </div>
                     </div>
                 </div>

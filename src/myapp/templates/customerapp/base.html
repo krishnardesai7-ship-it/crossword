@@ -50,7 +50,8 @@
                             <a href="#">Links</a>
                             <ul>
                                 <li><a href="tel:#"><i class="icon-phone"></i>Call: +91 7202963777</a></li>
-                                <li><a href="{% url 'wishlist' %}"><i class="icon-heart-o"></i>Wishlist <span>({{ wishlist_count|default:0 }})</span></a></li>
+                                <li><a href="{% url 'wishlist' %}"><i class="icon-heart-o"></i>Wishlist <span({{
+                                            wishlist_count|default:0 }})></span></a></li>
                                 <li><a href="{% url 'profile' %}"><i class="icon-user"></i>Profile</a></li>
                                 <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul">Logout</a></li>
                             </ul>
@@ -103,16 +104,7 @@
                 <div class="header-right">
 
 
-                    <div class="header-search flex-grow-1">
-                        <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                        <form action="#" method="get">
-                            <div class="header-search-wrapper">
-                                <label for="q" class="sr-only">Search</label>
-                                <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
-                                    required>
-                            </div><!-- End .header-search-wrapper -->
-                        </form>
-                    </div><!-- End .header-search -->
+
 
                     <div class="dropdown cart-dropdown" style="margin-left: 1px;">
                         <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"

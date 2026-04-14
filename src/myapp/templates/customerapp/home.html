@@ -2,79 +2,117 @@
 {% load static %}
 
 {% block content %}
+
+<style>
+    .banner-content {
+        animation: fadeUp 1.2s ease;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .swiper-slide img {
+        transition: transform 6s ease;
+    }
+
+    .swiper-slide-active img {
+        transform: scale(1.05);
+        /* subtle zoom effect */
+    }
+</style>
+
+<head>
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+        const swiper = new Swiper('.myBannerSlider', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+
+            effect: 'fade', // smooth fade effect
+            fadeEffect: {
+                crossFade: true
+            },
+
+            speed: 1200,
+
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+    </script>
+
+</head>
+
 <main class="main">
     <div class="intro-section pt-lg-2">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 col-lg-6">
-                    <div class="banner banner-big banner-overlay">
-                        <a href="{% url 'shop' %}">
-                            <img src="{% static 'customerapp/images/demos/demo-20/banners/banner-1.jpg' %}"
-                                alt="Banner">
-                        </a>
+                <div class="swiper myBannerSlider">
+                    <div class="swiper-wrapper">
 
-                        <div class="banner-content">
-                            <h4 class="banner-subtitle text-white"><a href="{% url 'shop' %}">Your Guide To The
-                                    World</a></h4><!-- End .banner-subtitle -->
-                            <h2 class="banner-title text-white"><a href="{% url 'shop' %}">Must-Read <br>Travel
-                                    Books</a></h2><!-- End .banner-title -->
-                            <a href="{% url 'shop' %}" class="btn btn-outline-white-3 banner-link">Find out more<i
-                                    class="icon-long-arrow-right"></i></a>
-                        </div><!-- End .banner-content -->
-                    </div><!-- End .banner -->
-                </div><!-- End .col-lg-6 -->
+                        <!-- Slide 1 -->
+                        <div class="swiper-slide">
+                            <div class="banner banner-big banner-overlay">
+                                <a href="{% url 'shop' %}">
+                                    <img src="{% static 'customerapp/images/demos/demo-20/banners/image-1.png' %}"
+                                        alt="Banner">
+                                </a>
 
-                <div class="col-sm-6 col-lg-3">
-                    <div class="banner banner-overlay">
-                        <a href="{% url 'shop' %}">
-                            <img src="{% static 'customerapp/images/demos/demo-20/banners/banner-2.jpg' %}"
-                                alt="Banner">
-                        </a>
+                                <div class="banner-content">
+                                    <h4 class="banner-subtitle text-white">Your Guide To The World</h4>
+                                    <h2 class="banner-title text-white">Must-Read <br>Travel Books</h2>
+                                    <a href="{% url 'shop' %}" class="btn btn-outline-white-3 banner-link">
+                                        Find out more <i class="icon-long-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 
-                        <div class="banner-content banner-content-stretch">
-                            <h4 class="banner-subtitle text-white"><a href="{% url 'shop' %}">New This Week</a></h4>
-                            <!-- End .banner-subtitle -->
-                            <h3 class="banner-title text-white"><a href="{% url 'shop' %}">Discover Our <br>Best Romance
-                                    <br>Books</a></h3><!-- End .banner-title -->
-                            <a href="{% url 'shop' %}" class="btn btn-outline-white-3 banner-link">Discover Now<i
-                                    class="icon-long-arrow-right"></i></a>
-                        </div><!-- End .banner-content -->
-                    </div><!-- End .banner -->
-                </div><!-- End .col-lg-3 -->
+                        <!-- Slide 2 -->
+                        <div class="swiper-slide">
+                            <div class="banner banner-overlay">
+                                <a href="{% url 'shop' %}">
+                                    <img src="{% static 'customerapp/images/demos/demo-20/banners/image-2.png' %}"
+                                        alt="Banner">
+                                </a>
 
-                <div class="col-sm-6 col-lg-3">
-                    <div class="banner banner-small banner-overlay">
-                        <a href="{% url 'shop' %}">
-                            <img src="{% static 'customerapp/images/demos/demo-20/banners/banner-3.jpg' %}"
-                                alt="Banner">
-                        </a>
+                                <div class="banner-content banner-content-stretch">
+                                    <h4 class="banner-subtitle text-white">New This Week</h4>
+                                    <h3 class="banner-title text-white">
+                                        Discover Our <br>Best Romance <br>Books
+                                    </h3>
+                                    <a href="{% url 'shop' %}" class="btn btn-outline-white-3 banner-link">
+                                        Discover Now <i class="icon-long-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 
-                        <div class="banner-content">
-                            <h4 class="banner-subtitle text-white d-lg-none d-xl-block"><a href="{% url 'shop' %}">Deal
-                                    Of The Day</a></h4><!-- End .banner-subtitle -->
-                            <h3 class="banner-title text-white"><a href="{% url 'shop' %}">20% Off Use <br>Code:
-                                    <span>mybook</span></a></h3><!-- End .banner-title -->
-                            <a href="{% url 'shop' %}" class="btn btn-outline-white-3 banner-link">Shop Now<i
-                                    class="icon-long-arrow-right"></i></a>
-                        </div><!-- End .banner-content -->
-                    </div><!-- End .banner -->
+                    </div>
 
-                    <div class="banner banner-small banner-overlay">
-                        <a href="{% url 'shop' %}">
-                            <img src="{% static 'customerapp/images/demos/demo-20/banners/banner-4.jpg' %}"
-                                alt="Banner">
-                        </a>
+                    <!-- Pagination Dots -->
+                    <div class="swiper-pagination"></div>
+                </div>
 
-                        <div class="banner-content">
-                            <h4 class="banner-subtitle text-white d-lg-none d-xl-block"><a href="{% url 'shop' %}">New
-                                    Arrivals</a></h4><!-- End .banner-subtitle -->
-                            <h3 class="banner-title text-white"><a href="{% url 'shop' %}">Business <br>& Economics</a>
-                            </h3><!-- End .banner-title -->
-                            <a href="{% url 'shop' %}" class="btn btn-outline-white-3 banner-link">Discover Now<i
-                                    class="icon-long-arrow-right"></i></a>
-                        </div><!-- End .banner-content -->
-                    </div><!-- End .banner -->
-                </div><!-- End .col-lg-3 -->
             </div><!-- End .row -->
 
             <div class="icon-boxes-container bg-transparent mt-2 mb-2">
@@ -322,8 +360,7 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="banner banner-overlay">
                         <a href="{% url 'shop' %}">
-                            <img src="{% static 'customerapp/images/demos/demo-20/banners/banner-6.jpg' %}"
-                                alt="Banner">
+                            <img src="{% static 'customerapp/images/demos/demo-20/banners/1.PNG' %}" alt="Banner">
                         </a>
 
                         <div class="banner-content">
@@ -340,8 +377,7 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="banner banner-overlay">
                         <a href="{% url 'shop' %}">
-                            <img src="{% static 'customerapp/images/demos/demo-20/banners/banner-7.jpg' %}"
-                                alt="Banner">
+                            <img src="{% static 'customerapp/images/demos/demo-20/banners/2.PNG' %}" alt="Banner">
                         </a>
 
                         <div class="banner-content">
@@ -358,8 +394,7 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="banner banner-overlay">
                         <a href="{% url 'shop' %}">
-                            <img src="{% static 'customerapp/images/demos/demo-20/banners/banner-8.jpg' %}"
-                                alt="Banner">
+                            <img src="{% static 'customerapp/images/demos/demo-20/banners/3.PNG' %}" alt="Banner">
                         </a>
 
                         <div class="banner-content">
