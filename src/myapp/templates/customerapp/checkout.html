@@ -2,8 +2,71 @@
 {% load static %}
 
 {% block content %}
+
+<!-- your entire checkout page code above -->
+
+
+
+{% if response %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var options = {
+        "key": "rzp_test_bilBagOBVTi4lE",
+        "amount": "{{ response.amount }}",
+        "currency": "INR",
+        "name": "BookHaven",
+        "description": "Order Payment",
+        "order_id": "{{ response.id }}",
+
+        "handler": function (response) {
+            var successUrl = "{% url 'success' %}" +
+                "?payment_id=" + encodeURIComponent(response.razorpay_payment_id) +
+                "&order_id=" + encodeURIComponent(response.razorpay_order_id);
+
+            window.location.href = successUrl;
+        },
+
+        "prefill": {
+            "name": "{{ uid.username }}",
+            "email": "{{ uid.email }}"
+        },
+
+        "theme": {
+            "color": "#4f46e5"
+        },
+
+        "modal": {
+            "ondismiss": function () {
+                // User closed Razorpay popup without paying
+                alert("Payment was cancelled. You can try again by clicking 'Continue to payment'.");
+            }
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+
+    // Auto-open Razorpay popup after form submission
+    window.addEventListener('load', function () {
+        rzp1.open();
+    });
+
+    // Also allow manual open via button
+    var rzpBtn = document.getElementById('rzp-button');
+    if (rzpBtn) {
+        rzpBtn.onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        };
+    }
+</script>
+{% endif %}
+
+
+
 <main class="main">
-    <div class="page-header text-center" style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}&quot;)">
+    <div class="page-header text-center"
+        style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}&quot;)">
         <div class="container">
             <h1 class="page-title">Checkout</h1>
         </div>
@@ -24,43 +87,52 @@
             <div class="row">
                 <div class="col-lg-7 mb-4">
                     <h2>Billing Details</h2>
-                    
+
                     {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="margin-bottom: 20px;">
-                                <strong>{% if message.tags == 'error' %}Error:{% else %}Success:{% endif %}</strong> {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        {% endfor %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert"
+                        style="margin-bottom: 20px;">
+                        <strong>{% if message.tags == 'error' %}Error:{% else %}Success:{% endif %}</strong> {{ message
+                        }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
                     {% endif %}
-                    
-                    <form method="post" action="{% url 'checkout' %}" class="checkout-form" novalidate id="checkoutForm">
+
+                    <form method="post" action="{% url 'checkout' %}" class="checkout-form" novalidate
+                        id="checkoutForm">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-sm-6">
-                                <label for="first_name" class="form-label">First Name <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ uid.username }}" required>
+                                <label for="first_name" class="form-label">First Name <span
+                                        style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="first_name" name="first_name"
+                                    value="{{ uid.username }}" required>
                                 <div class="invalid-feedback" style="display: block;">First name is required!</div>
                             </div>
                             <div class="col-sm-6">
-                                <label for="last_name" class="form-label">Last Name <span style="color: red;">*</span></label>
+                                <label for="last_name" class="form-label">Last Name <span
+                                        style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" required>
                                 <div class="invalid-feedback" style="display: block;">Last name is required!</div>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email <span style="color: red;">*</span></label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ uid.email }}" required>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ uid.email }}"
+                                required>
                             <div class="invalid-feedback" style="display: block;">Valid email is required!</div>
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone <span style="color: red;">*</span></label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="{% if uid.phone %}{{ uid.phone }}{% endif %}" required>
+                            <input type="text" class="form-control" id="phone" name="phone"
+                                value="{% if uid.phone %}{{ uid.phone }}{% endif %}" required>
                             <div class="invalid-feedback" style="display: block;">Phone number is required!</div>
                         </div>
                         <div class="mb-3">
                             <label for="address" class="form-label">Address <span style="color: red;">*</span></label>
-                            <input type="text" class="form-control" id="address" name="address" placeholder="Street address" required>
+                            <input type="text" class="form-control" id="address" name="address"
+                                placeholder="Street address" required>
                             <div class="invalid-feedback" style="display: block;">Address is required!</div>
                         </div>
                         <div class="row">
@@ -70,21 +142,23 @@
                                 <div class="invalid-feedback" style="display: block;">City is required!</div>
                             </div>
                             <div class="col-sm-6 mb-3">
-                                <label for="pincode" class="form-label">Postal code <span style="color: red;">*</span></label>
+                                <label for="pincode" class="form-label">Postal code <span
+                                        style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="pincode" name="pincode" required>
                                 <div class="invalid-feedback" style="display: block;">Postal code is required!</div>
                             </div>
                         </div>
                         <div class="form-group mb-3">
                             <label for="order_notes" class="form-label">Order notes (optional)</label>
-                            <textarea class="form-control" id="order_notes" name="order_notes" rows="3" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                            <textarea class="form-control" id="order_notes" name="order_notes" rows="3"
+                                placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">Continue to payment</button>
                         </div>
                     </form>
-                    
+
                     <script>
                         (function () {
                             'use strict';
@@ -114,16 +188,16 @@
                             </thead>
                             <tbody>
                                 {% if cart_items and cart_items.count > 0 %}
-                                    {% for item in cart_items %}
-                                    <tr>
-                                        <td>{{ item.product_name }} <strong>× {{ item.quantity }}</strong></td>
-                                        <td class="text-end">&#8377;{{ item.total }}</td>
-                                    </tr>
-                                    {% endfor %}
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td>{{ item.product_name }} <strong>× {{ item.quantity }}</strong></td>
+                                    <td class="text-end">&#8377;{{ item.total }}</td>
+                                </tr>
+                                {% endfor %}
                                 {% else %}
-                                    <tr>
-                                        <td colspan="2">Your cart is empty.</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="2">Your cart is empty.</td>
+                                </tr>
                                 {% endif %}
                             </tbody>
                             <tfoot>
@@ -145,13 +219,16 @@
                         <div class="payment-methods mt-4">
                             <h3>Payment</h3>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_card" value="card" checked>
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_card"
+                                    value="card" checked>
                                 <label class="form-check-label" for="payment_card">Credit / Debit Card</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_cod" value="cod">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_cod"
+                                    value="cod">
                                 <label class="form-check-label" for="payment_cod">Cash on Delivery</label>
                             </div>
+
                         </div>
                     </div>
                 </div>

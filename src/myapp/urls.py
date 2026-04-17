@@ -47,6 +47,7 @@ urlpatterns = [
     path('submit_review/<int:id>/', views.submit_review, name='submit_review'),
     path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
+    path('success/', views.payment_success, name='success'),
     path('profile/', views.profile, name='profile'),
     
 

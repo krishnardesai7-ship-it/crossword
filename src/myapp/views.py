@@ -1,3 +1,4 @@
+import razorpay
 from unicodedata import category
 from urllib import request
 
@@ -232,9 +233,13 @@ def checkout(request):
 
     uid = RegisterUser.objects.get(email=request.session['email'])
     cart_items = add_to_cart.objects.filter(register=uid, order_status=False).order_by('-id')
+
+    if not cart_items.exists():
+        messages.info(request, 'Your cart is empty.')
+        return redirect('cart')
+
     subtotal = sum(item.total for item in cart_items)
     shipping = 40 if subtotal > 0 else 0
-    
     discount = 0
     coupon_id = request.session.get('coupon_id')
     if coupon_id and subtotal > 0:
@@ -245,8 +250,9 @@ def checkout(request):
                 discount = subtotal
         except Coupon.DoesNotExist:
             del request.session['coupon_id']
-            
+
     total = subtotal + shipping - discount
+    razorpay_response = None
 
     if request.method == 'POST':
         first_name = request.POST.get('first_name', '').strip()
@@ -264,26 +270,30 @@ def checkout(request):
         elif not cart_items:
             messages.error(request, 'Your cart is empty. Add products before checkout.')
         else:
-            for item in cart_items:
-                checkout_model.objects.create(
-                    register=uid,
-                    name=full_name,
-                    email=email,
-                    address=address,
-                    phone=phone,
-                    product_name=item.product_name,
-                    image=item.image.name if hasattr(item.image, 'name') else item.image,
-                    price=item.price,
-                    quantity=item.quantity,
-                    total=item.total,
+            # Create Razorpay order
+            amount_paise = total * 100
+            try:
+                client = razorpay.Client(
+                    auth=('rzp_test_bilBagOBVTi4lE', '77yKq3N9Wul97JVQcjtIVB5z')
                 )
-                item.order_status = True
-                item.save()
+                razorpay_response = client.order.create({
+                    'amount': amount_paise,
+                    'currency': 'INR',
+                    'payment_capture': 1
+                })
 
-            messages.success(request, 'Checkout completed successfully. Your order is submitted.')
-            if 'coupon_id' in request.session:
-                del request.session['coupon_id']
-            return redirect('shop')
+                # Store billing info in session for use after payment
+                request.session['billing_info'] = {
+                    'full_name': full_name,
+                    'email': email,
+                    'phone': phone,
+                    'address': address,
+                    'city': city,
+                    'pincode': pincode,
+                }
+            except Exception as e:
+                print(f"Razorpay error: {e}")
+                messages.error(request, "Could not initiate Razorpay payment. Please try again.")
 
     context = {
         'cart_items': cart_items,
@@ -292,9 +302,55 @@ def checkout(request):
         'discount': discount,
         'total': total,
         'uid': uid,
+        'response': razorpay_response,
     }
     return render(request, 'customerapp/checkout.html', context)
 
+
+def payment_success(request):
+    if "email" not in request.session:
+        return redirect('accounts:login')
+
+    payment_id = request.GET.get('payment_id')
+    order_id = request.GET.get('order_id')
+
+    if not payment_id or not order_id:
+        messages.error(request, 'Invalid payment information.')
+        return redirect('cart')
+
+    uid = RegisterUser.objects.get(email=request.session['email'])
+    cart_items = add_to_cart.objects.filter(register=uid, order_status=False)
+
+    billing = request.session.get('billing_info', {})
+    full_name = billing.get('full_name', uid.username)
+    email = billing.get('email', uid.email)
+    phone = billing.get('phone', '')
+    address = billing.get('address', '')
+
+    for item in cart_items:
+        checkout_model.objects.create(
+            register=uid,
+            name=full_name,
+            email=email,
+            address=address,
+            phone=phone,
+            product_name=item.product_name,
+            image=item.image.name if hasattr(item.image, 'name') else item.image,
+            price=item.price,
+            quantity=item.quantity,
+            total=item.total,
+        )
+        item.order_status = True
+        item.save()
+
+    # Clean up session
+    if 'billing_info' in request.session:
+        del request.session['billing_info']
+    if 'coupon_id' in request.session:
+        del request.session['coupon_id']
+
+    messages.success(request, f'Payment successful! Payment ID: {payment_id}. Your order has been placed.')
+    return redirect('shop')
 
 
 def product(request, id):
@@ -562,3 +618,6 @@ def profile(request):
         'active_items_count': active_items_count,
     }
     return render(request, 'customerapp/profile.html', context)
+
+
+
