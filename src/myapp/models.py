@@ -41,9 +41,9 @@ class Category(models.Model):
 
 class product(models.Model):
     CATEGORY_CHOICES = [
-        ("romance", "Romance"),
+        ("love_story", "Love Story"),
         ("fantasy", "Fantasy"),
-        ("science_fiction", "Science Fiction"),
+        ("juvenile_literature", "juvenile literature"),
         ("mystery", "Mystery"),
         ("thrillers", "Thrillers"),
         ("self_health_and_personal_growth", "Self Health and Personal Growth"),
