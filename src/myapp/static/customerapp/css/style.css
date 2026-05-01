@@ -19988,3 +19988,45 @@ html {
         opacity: 1;
     }
 }
+
+.whatsapp-floating {
+    align-items: center;
+    background-color: #fafafa;
+    border-radius: 0;
+    bottom: 188px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    color: #25d366;
+    display: flex;
+    font-size: 3rem;
+    height: 5rem;
+    justify-content: center;
+    opacity: 0;
+    position: fixed;
+    right: 50px;
+    text-decoration: none;
+    transform: translateY(1rem);
+    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
+    visibility: hidden;
+    width: 5rem;
+    z-index: 1000;
+}
+
+.whatsapp-floating.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.whatsapp-floating:hover,
+.whatsapp-floating:focus {
+    background-color: #eaeaea;
+    color: #1ebe5d;
+    text-decoration: none;
+}
+
+.whatsapp-floating svg {
+    display: block;
+    fill: #25d366;
+    height: 3rem;
+    width: 3rem;
+}
