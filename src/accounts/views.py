@@ -2,6 +2,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.contrib.messages import get_messages
 # from twilio.rest import Client
 from core.env import config
 
@@ -21,6 +22,24 @@ FACE_LIB_SETUP_MSG = (
     "Activate the project virtual environment (`.\\fenv\\Scripts\\activate`) "
     "or install requirements, then try again."
 )
+FACE_NOT_DETECTED_MSG = "Face not detected. Please center your face and try again."
+
+
+def clear_stale_face_login_messages(request):
+    """Keep face-login failures from appearing on the registration form."""
+    storage = get_messages(request)
+    remaining_messages = [
+        message for message in storage
+        if str(message) != FACE_NOT_DETECTED_MSG
+    ]
+
+    for message in remaining_messages:
+        messages.add_message(
+            request,
+            message.level,
+            str(message),
+            extra_tags=message.extra_tags,
+        )
 
 
 def accounts_home(request):
@@ -29,6 +48,9 @@ def accounts_home(request):
 
 
 def accounts_register(request):
+    if request.method == "GET":
+        clear_stale_face_login_messages(request)
+
     form = UserCreationForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
@@ -102,8 +124,12 @@ def accounts_login(request):
             elif reason == "canceled":
                 messages.error(request, "Face login was canceled.")
 
+            elif reason == "no_face_detected":
+                messages.error(request, FACE_NOT_DETECTED_MSG)
+                return redirect("accounts:register")
+
             else:
-                messages.error(request, "Face not detected. Please center your face and try again.")
+                messages.error(request, FACE_NOT_DETECTED_MSG)
 
             return redirect("accounts:login")
 

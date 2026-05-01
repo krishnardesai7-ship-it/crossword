@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('myapp.urls')),
     path('admin/', admin.site.urls),
     
+    
     # path('', RedirectView.as_view(url="/myapp/")),
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
 
