@@ -33,6 +33,227 @@
     <link rel="stylesheet" href="{% static 'customerapp/css/plugins/owl-carousel/owl.carousel.css' %}">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="{% static 'customerapp/css/style.css' %}">
+    <style>
+        /* ── Chatbot Floating Button ── */
+        .chatbot-floating {
+            align-items: center;
+            border: 0;
+            border-radius: 50%;
+            bottom: 30px;
+            background: linear-gradient(135deg, #4A90D9, #667BC6);
+            box-shadow: 0 4px 18px rgba(74, 144, 217, 0.45);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            height: 60px;
+            justify-content: center;
+            position: fixed;
+            right: 30px;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 60px;
+            z-index: 1000;
+            animation: chatbot-pulse 2.5s ease-in-out infinite;
+        }
+
+        .chatbot-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 28px rgba(74, 144, 217, 0.65);
+        }
+
+        .chatbot-floating:active {
+            transform: scale(0.95);
+        }
+
+        .chatbot-floating svg {
+            display: block;
+            fill: #fff;
+            height: 30px;
+            width: 30px;
+        }
+
+        @keyframes chatbot-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 18px rgba(74, 144, 217, 0.45);
+            }
+
+            50% {
+                box-shadow: 0 4px 28px rgba(74, 144, 217, 0.7), 0 0 0 8px rgba(74, 144, 217, 0.12);
+            }
+        }
+
+        /* ── WhatsApp Floating Button ── */
+        .whatsapp-floating {
+            align-items: center;
+            border-radius: 50%;
+            bottom: 105px;
+            background: linear-gradient(135deg, #25d366, #128c4e);
+            box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            height: 60px;
+            justify-content: center;
+            position: fixed;
+            right: 30px;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 60px;
+            z-index: 1000;
+            animation: whatsapp-pulse 2s ease-in-out infinite;
+        }
+
+        .whatsapp-floating:hover {
+            transform: scale(1.12);
+            box-shadow: 0 6px 28px rgba(37, 211, 102, 0.65);
+            animation: none;
+        }
+
+        .whatsapp-floating:active {
+            transform: scale(0.95);
+        }
+
+        .whatsapp-floating svg {
+            display: block;
+            fill: #fff;
+            height: 32px;
+            width: 32px;
+        }
+
+        @keyframes whatsapp-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 4px 28px rgba(37, 211, 102, 0.7), 0 0 0 8px rgba(37, 211, 102, 0.12);
+            }
+        }
+
+        /* WhatsApp tooltip on hover */
+        .whatsapp-floating::before {
+            content: 'Chat with us';
+            position: absolute;
+            right: 72px;
+            background: #333;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .whatsapp-floating:hover::before {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── Chatbot Popup ── */
+        .chatbot-popup {
+            position: fixed;
+            right: 30px;
+            bottom: 100px;
+            width: min(420px, calc(100vw - 30px));
+            height: min(620px, calc(100vh - 120px));
+            background: #101426;
+            border-radius: 14px;
+            box-shadow: 0 20px 55px rgba(15, 23, 42, 0.5);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1050;
+            animation: chatbot-popup-in 0.3s ease-out;
+        }
+
+        @keyframes chatbot-popup-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .chatbot-toggle-checkbox:checked~.chatbot-popup {
+            display: flex;
+        }
+
+        .chatbot-popup__header {
+            align-items: center;
+            background: linear-gradient(135deg, #4A90D9, #667BC6);
+            color: #fff;
+            display: flex;
+            font-size: 1.12rem;
+            font-weight: 600;
+            justify-content: space-between;
+            min-height: 50px;
+            padding: 0 16px;
+        }
+
+        .chatbot-popup__close {
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            border: 0;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            font-size: 1.5rem;
+            height: 32px;
+            justify-content: center;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            transition: background 0.2s ease;
+        }
+
+        .chatbot-popup__close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chatbot-popup__frame {
+            border: 0;
+            flex: 1 1 auto;
+            width: 100%;
+        }
+
+        @media screen and (max-width: 575px) {
+            .chatbot-popup {
+                bottom: 15px;
+                height: min(620px, calc(100vh - 30px));
+                right: 15px;
+                width: calc(100vw - 30px);
+            }
+
+            .chatbot-floating,
+            .whatsapp-floating {
+                right: 15px !important;
+            }
+
+            .chatbot-floating {
+                bottom: 20px;
+                height: 52px;
+                width: 52px;
+            }
+
+            .whatsapp-floating {
+                bottom: 85px;
+                height: 52px;
+                width: 52px;
+            }
+        }
+    </style>
 </head>
 
 
@@ -214,11 +435,41 @@
     </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-     <a class="whatsapp-floating show" href="https://wa.me/917202963777" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" style="align-items: center; background-color: #fafafa; bottom: 188px; color: #25d366; display: flex; height: 5rem; justify-content: center; position: fixed; right: 50px; text-decoration: none; width: 5rem; z-index: 1000;">
-      <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" style="display: block; fill: #25d366; height: 3rem; width: 3rem;">
-        <path fill="#25d366" d="M16.04 3C9.45 3 4.09 8.36 4.09 14.95c0 2.11.55 4.17 1.61 5.98L4 29l8.28-1.64a11.91 11.91 0 0 0 5.76 1.47h.01C24.64 28.83 30 23.47 30 16.88 30 10.28 22.64 3 16.04 3zm6.96 17.36c-.3.85-1.75 1.62-2.42 1.68-.62.06-1.39.09-2.24-.14-.52-.14-1.18-.38-2.03-.75-3.58-1.55-5.91-5.15-6.09-5.39-.18-.24-1.46-1.95-1.46-3.72s.92-2.64 1.25-3c.33-.36.72-.45.96-.45h.69c.22.01.52-.08.81.62.3.72 1.02 2.49 1.11 2.67.09.18.15.39.03.63-.12.24-.18.39-.36.6-.18.21-.38.47-.54.63-.18.18-.37.38-.16.74.21.36.93 1.54 2 2.49 1.37 1.22 2.52 1.6 2.88 1.78.36.18.57.15.78-.09.21-.24.9-1.05 1.14-1.41.24-.36.48-.3.81-.18.33.12 2.1.99 2.46 1.17.36.18.6.27.69.42.09.15.09.87-.21 1.72z"/>
-      </svg>
-    </a>
+    <!-- WhatsApp Floating Button (injected via JS to bypass all CSS conflicts) -->
+    <script>
+        (function () {
+            var a = document.createElement('a');
+            a.id = 'whatsapp-btn';
+            a.href = 'https://wa.me/917202963777?text=Hi%20there!%20I%27m%20interested%20in%20your%20books.';
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.setAttribute('aria-label', 'Chat on WhatsApp');
+            a.style.cssText = 'display:flex!important;align-items:center;justify-content:center;position:fixed;bottom:105px;right:30px;width:60px;height:60px;background:linear-gradient(135deg,#25d366,#128c4e);border-radius:50%;z-index:99999;text-decoration:none;box-shadow:0 4px 18px rgba(37,211,102,0.45);cursor:pointer;transition:transform 0.3s ease,box-shadow 0.3s ease;';
+            a.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="display:block;width:32px;height:32px;"><path fill="#ffffff" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>';
+            a.onmouseover = function () { a.style.transform = 'scale(1.12)'; a.style.boxShadow = '0 6px 28px rgba(37,211,102,0.65)'; };
+            a.onmouseout = function () { a.style.transform = 'scale(1)'; a.style.boxShadow = '0 4px 18px rgba(37,211,102,0.45)'; };
+            document.body.appendChild(a);
+        })();
+    </script>
+    <!-- CSS Toggle for Chatbot -->
+    <input type="checkbox" id="chatbot-toggle" class="chatbot-toggle-checkbox" style="display: none;">
+
+    <!-- Chatbot Floating Button -->
+    <label for="chatbot-toggle" class="chatbot-floating" aria-label="Chat with Chatbot" title="💬 Chat with us">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <path
+                d="M16 2C8.27 2 2 7.45 2 14.5c0 2.7.9 5.24 2.5 7.4L2.5 29.5l7.2-2.4c2.1 1.3 4.6 2 7.3 2 7.73 0 14-5.45 14-12.5S23.73 2 16 2zm3.5 16H8v-2h11.5v2zm0-4H8v-2h11.5v2zm0-4H8V8h11.5v2z" />
+        </svg>
+    </label>
+    <!-- Chatbot Popup -->
+    <div class="chatbot-popup" id="chatbotPopup" aria-hidden="true">
+        <div class="chatbot-popup__header">
+            <span>📚 Book Chatbot</span>
+            <label for="chatbot-toggle" class="chatbot-popup__close" aria-label="Close chatbot"
+                style="cursor: pointer;">&times;</label>
+        </div>
+        <iframe class="chatbot-popup__frame" src="{% url 'chat_ui' %}" title="Book Chatbot"></iframe>
+    </div>
     <!-- Plugins JS File -->
     <script src="{% static 'customerapp/js/jquery.min.js' %}"></script>
     <script src="{% static 'customerapp/js/bootstrap.bundle.min.js' %}"></script>
@@ -233,6 +484,7 @@
 
     <script src="{% static 'customerapp/js/main.js' %}"></script>
     <script src="{% static 'customerapp/js/animations.js' %}"></script>
+
     {% block scripts %}{% endblock %}
 </body>
 
