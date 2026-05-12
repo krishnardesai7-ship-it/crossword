@@ -145,8 +145,10 @@
         <div class="container d-flex align-items-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'shop' %}">Products</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ spid.name }}</li>
+                <li class="breadcrumb-item"><a href="{% url 'shop' %}" style="color: rgb(255, 255, 255);">Products</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: rgb(255, 255, 255);">{{
+                    spid.name }}</li>
             </ol>
         </div><!-- End .container -->
     </nav><!-- End .breadcrumb-nav -->

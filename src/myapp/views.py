@@ -84,14 +84,27 @@ def base(request):
 
 
 def search(request):
-    if request.POST:
-        search=request.POST["search"]
-        print(search)
-        pid=product_model.objects.filter(name__icontains=search)
-        contaxt={
-            "pid":pid
+    if request.method == "POST":
+        search_query = request.POST.get("search", "").strip()
+        print(f"Searching for: {search_query}")
+        
+        pid = product_model.objects.filter(name__icontains=search_query)
+        
+        # Generate external links
+        query_encoded = quote_plus(search_query)
+        amazon_link = f"https://www.amazon.in/s?k={query_encoded}"
+        flipkart_link = f"https://www.flipkart.com/search?q={query_encoded}"
+        
+        context = {
+            "pid": pid,
+            "search_query": search_query,
+            "amazon_link": amazon_link,
+            "flipkart_link": flipkart_link,
+            "total_count": pid.count(),
         }
-        return render(request,"customerapp/shop.html",contaxt)
+        return render(request, "customerapp/shop.html", context)
+    return redirect('shop')
+
 
 def faq(request):
     return render(request, 'customerapp/faq.html')
@@ -1884,18 +1897,26 @@ def chatbot_api(request):
         )
         return JsonResponse({"response": response})
 
-    return JsonResponse(
-        {
-            "response": render_menu_response(
-                t(language, "fallback"),
-                [
-                    ("Find by Title", "find:title"),
-                    ("Find by Author", "find:author"),
-                    ("Recommendations", "menu:recommend"),
-                    ("Customer Support", "menu:support"),
-                ],
-                name,
-                language=language,
-            )
-        }
-    )
+    purchase_links_html = render_purchase_links(msg)
+    fallback_text = t(language, "fallback")
+    
+    response_html = f"""
+<div class="book-info">
+    <div>{greeting_for(name, language)}{escape(fallback_text)}</div>
+    <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+        <p>🔍 Search <strong>"{escape(msg)}"</strong> online:</p>
+        <div style="margin-top: 5px;">{purchase_links_html}</div>
+    </div>
+</div>
+{render_choice_buttons(
+    [
+        ("Find by Title", "find:title"),
+        ("Find by Author", "find:author"),
+        ("Recommendations", "menu:recommend"),
+        ("Customer Support", "menu:support"),
+    ],
+    language=language,
+)}
+"""
+    return JsonResponse({"response": response_html})
+

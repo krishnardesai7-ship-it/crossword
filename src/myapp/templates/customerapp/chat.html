@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>📚 Book Chatbot</title>
@@ -32,7 +33,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.4) 0%, transparent 12%),
                 radial-gradient(circle at 85% 80%, rgba(124, 58, 237, 0.35) 0%, transparent 10%),
                 radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.3) 0%, transparent 14%),
@@ -57,7 +58,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 40% 10%, rgba(124, 58, 237, 0.3) 0%, transparent 11%),
                 radial-gradient(circle at 70% 60%, rgba(124, 58, 237, 0.38) 0%, transparent 13%),
                 radial-gradient(circle at 30% 85%, rgba(124, 58, 237, 0.32) 0%, transparent 10%),
@@ -76,18 +77,22 @@
                 transform: scaleY(0.9) translateY(0px);
                 opacity: 0.5;
             }
+
             25% {
                 transform: scaleY(1) translateY(-40px);
                 opacity: 0.8;
             }
+
             50% {
                 transform: scaleY(0.95) translateY(-80px);
                 opacity: 1;
             }
+
             75% {
                 transform: scaleY(0.98) translateY(-30px);
                 opacity: 0.8;
             }
+
             100% {
                 transform: scaleY(0.9) translateY(0px);
                 opacity: 0.5;
@@ -99,18 +104,22 @@
                 transform: scaleY(0.92) translateY(0px) scaleX(1.02);
                 opacity: 0.6;
             }
+
             25% {
                 transform: scaleY(1) translateY(-50px) scaleX(0.98);
                 opacity: 0.9;
             }
+
             50% {
                 transform: scaleY(0.96) translateY(-90px) scaleX(1);
                 opacity: 1;
             }
+
             75% {
                 transform: scaleY(0.99) translateY(-35px) scaleX(1.01);
                 opacity: 0.85;
             }
+
             100% {
                 transform: scaleY(0.92) translateY(0px) scaleX(1.02);
                 opacity: 0.6;
@@ -178,6 +187,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -233,41 +243,41 @@
             text-align: center;
         }
 
-.book-info {
-    min-width: 0;
-}
+        .book-info {
+            min-width: 0;
+        }
 
-.choice-list {
-    display: grid;
-    gap: 8px;
-    margin-top: 12px;
-}
+        .choice-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 12px;
+        }
 
-.choice-btn {
-    width: 100%;
-    min-height: 38px;
-    padding: 9px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 8px;
-    background: rgba(17, 24, 39, 0.82);
-    color: #f8fafc;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: left;
-    transition: 0.2s ease;
-}
+        .choice-btn {
+            width: 100%;
+            min-height: 38px;
+            padding: 9px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 8px;
+            background: rgba(17, 24, 39, 0.82);
+            color: #f8fafc;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            transition: 0.2s ease;
+        }
 
-.choice-btn:hover {
-    border-color: rgba(255, 140, 66, 0.75);
-    background: rgba(255, 140, 66, 0.16);
-}
+        .choice-btn:hover {
+            border-color: rgba(255, 140, 66, 0.75);
+            background: rgba(255, 140, 66, 0.16);
+        }
 
-.message a {
-    color: #64B5F6;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
+        .message a {
+            color: #64B5F6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .bot a {
@@ -302,6 +312,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -323,9 +334,12 @@
         }
 
         @keyframes glowPulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 0.6;
             }
+
             50% {
                 opacity: 1;
             }
@@ -335,9 +349,11 @@
             0% {
                 background: linear-gradient(135deg, #7C3AED 0%, #FF6B6B 50%, #FF8C42 100%);
             }
+
             50% {
                 background: linear-gradient(135deg, #FF8C42 0%, #7C3AED 50%, #FF6B6B 100%);
             }
+
             100% {
                 background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 50%, #7C3AED 100%);
             }
@@ -371,9 +387,12 @@
         }
 
         @keyframes inputBorder {
-            0%, 100% {
+
+            0%,
+            100% {
                 border-color: rgba(124, 58, 237, 0.3);
             }
+
             50% {
                 border-color: rgba(255, 107, 107, 0.3);
             }
@@ -461,9 +480,12 @@
         }
 
         @keyframes shine {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateX(-100%);
             }
+
             50% {
                 transform: translateX(100%);
             }
@@ -506,10 +528,14 @@
         }
 
         @keyframes typing {
-            0%, 60%, 100% {
+
+            0%,
+            60%,
+            100% {
                 opacity: 0.5;
                 transform: translateY(0);
             }
+
             30% {
                 opacity: 1;
                 transform: translateY(-8px);
@@ -517,567 +543,566 @@
         }
 
         @keyframes pulse-dot {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 0 5px rgba(100, 181, 246, 0.4);
             }
+
             50% {
                 box-shadow: 0 0 15px rgba(100, 181, 246, 0.8);
             }
         }
 
-        
-.settings-panel {
-    position: absolute;
-    right: 58px;
-    bottom: 62px;
-    width: min(280px, calc(100vw - 48px));
-    background: rgba(20, 25, 50, 0.98);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px;
-    padding: 16px;
-    display: none;
-    box-shadow: 0 18px 45px rgba(0,0,0,0.35);
-    color: #f4f4f5;
-    z-index: 20;
-}
 
-.settings-panel.open {
-    display: block;
-}
+        .settings-panel {
+            position: absolute;
+            right: 58px;
+            bottom: 62px;
+            width: min(280px, calc(100vw - 48px));
+            background: rgba(20, 25, 50, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 16px;
+            display: none;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+            color: #f4f4f5;
+            z-index: 20;
+        }
 
-.settings-panel h3 {
-    margin-bottom: 14px;
-    font-size: 16px;
-}
+        .settings-panel.open {
+            display: block;
+        }
 
-.setting-label {
-    display: block;
-    margin-bottom: 7px;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 13px;
-}
+        .settings-panel h3 {
+            margin-bottom: 14px;
+            font-size: 16px;
+        }
 
-.settings-panel label {
-    display: block;
-    margin-bottom: 7px;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 13px;
-}
+        .setting-label {
+            display: block;
+            margin-bottom: 7px;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 13px;
+        }
 
-.setting-item {
-    margin-bottom: 14px;
-}
+        .settings-panel label {
+            display: block;
+            margin-bottom: 7px;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 13px;
+        }
 
-.theme-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-}
+        .setting-item {
+            margin-bottom: 14px;
+        }
 
-.theme-btn,
-.clear-btn,
-.save-btn,
-.settings-panel button,
-.settings-panel select {
-    min-height: 36px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.08);
-    color: #f4f4f5;
-    cursor: pointer;
-    font-size: 13px;
-}
+        .theme-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
 
-.theme-btn.active,
-.settings-panel button.active {
-    border-color: #FF8C42;
-    background: rgba(255, 140, 66, 0.2);
-}
+        .theme-btn,
+        .clear-btn,
+        .save-btn,
+        .settings-panel button,
+        .settings-panel select {
+            min-height: 36px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: #f4f4f5;
+            cursor: pointer;
+            font-size: 13px;
+        }
 
-.settings-panel select {
-    width: 100%;
-    padding: 0 10px;
-    color: #ffffff;
-}
+        .theme-btn.active,
+        .settings-panel button.active {
+            border-color: #FF8C42;
+            background: rgba(255, 140, 66, 0.2);
+        }
 
-.settings-panel option {
-    color: #111827;
-}
+        .settings-panel select {
+            width: 100%;
+            padding: 0 10px;
+            color: #ffffff;
+        }
 
-.clear-btn,
-.save-btn {
-    width: 100%;
-}
+        .settings-panel option {
+            color: #111827;
+        }
 
-.clear-btn:hover,
-.save-btn:hover,
-.theme-btn:hover {
-    border-color: rgba(255, 140, 66, 0.75);
-}
+        .clear-btn,
+        .save-btn {
+            width: 100%;
+        }
 
-.save-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #FF6B6B 100%);
-    border: none;
-    font-weight: 600;
-}
+        .clear-btn:hover,
+        .save-btn:hover,
+        .theme-btn:hover {
+            border-color: rgba(255, 140, 66, 0.75);
+        }
 
-.settings-panel > button {
-    width: 100%;
-    background: linear-gradient(135deg, #7C3AED 0%, #FF6B6B 100%);
-    border: none;
-    font-weight: 600;
-}
+        .save-btn {
+            background: linear-gradient(135deg, #7C3AED 0%, #FF6B6B 100%);
+            border: none;
+            font-weight: 600;
+        }
 
-.dark-mode {
-    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0f0f1e 100%);
-    color: white;
-}
+        .settings-panel>button {
+            width: 100%;
+            background: linear-gradient(135deg, #7C3AED 0%, #FF6B6B 100%);
+            border: none;
+            font-weight: 600;
+        }
 
-.light-mode {
-    background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 50%, #fff7ed 100%);
-    color: #172033;
-}
+        .dark-mode {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0f0f1e 100%);
+            color: white;
+        }
 
-.light-mode::before,
-.light-mode::after {
-    opacity: 0.25;
-}
+        .light-mode {
+            background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 50%, #fff7ed 100%);
+            color: #172033;
+        }
 
-.light-mode .input-area,
-.light-mode .settings-panel {
-    background: rgba(255, 255, 255, 0.94);
-    color: #172033;
-    border-color: rgba(124, 58, 237, 0.22);
-}
+        .light-mode::before,
+        .light-mode::after {
+            opacity: 0.25;
+        }
 
-.light-mode input {
-    color: #172033;
-}
+        .light-mode .input-area,
+        .light-mode .settings-panel {
+            background: rgba(255, 255, 255, 0.94);
+            color: #172033;
+            border-color: rgba(124, 58, 237, 0.22);
+        }
 
-.light-mode input::placeholder,
-.light-mode .icon-btn {
-    color: rgba(23, 32, 51, 0.62);
-}
+        .light-mode input {
+            color: #172033;
+        }
 
-.light-mode .bot,
-.light-mode .typing-indicator {
-    background: rgba(255, 255, 255, 0.78);
-    color: #172033;
-}
+        .light-mode input::placeholder,
+        .light-mode .icon-btn {
+            color: rgba(23, 32, 51, 0.62);
+        }
 
-.light-mode .book-cover-placeholder {
-    background: rgba(15, 23, 42, 0.06);
-    border-color: rgba(15, 23, 42, 0.14);
-    color: rgba(23, 32, 51, 0.62);
-}
+        .light-mode .bot,
+        .light-mode .typing-indicator {
+            background: rgba(255, 255, 255, 0.78);
+            color: #172033;
+        }
 
-.light-mode .choice-btn {
-    background: rgba(255, 255, 255, 0.82);
-    border-color: rgba(15, 23, 42, 0.12);
-    color: #172033;
-}
+        .light-mode .book-cover-placeholder {
+            background: rgba(15, 23, 42, 0.06);
+            border-color: rgba(15, 23, 42, 0.14);
+            color: rgba(23, 32, 51, 0.62);
+        }
 
-.light-mode .setting-label {
-    color: rgba(23, 32, 51, 0.68);
-}
+        .light-mode .choice-btn {
+            background: rgba(255, 255, 255, 0.82);
+            border-color: rgba(15, 23, 42, 0.12);
+            color: #172033;
+        }
 
-.light-mode .settings-panel label {
-    color: rgba(23, 32, 51, 0.68);
-}
+        .light-mode .setting-label {
+            color: rgba(23, 32, 51, 0.68);
+        }
 
-.light-mode .theme-btn,
-.light-mode .clear-btn,
-.light-mode .settings-panel button,
-.light-mode .settings-panel select {
-    background: rgba(15, 23, 42, 0.05);
-    color: #172033;
-    border-color: rgba(15, 23, 42, 0.14);
-}
+        .light-mode .settings-panel label {
+            color: rgba(23, 32, 51, 0.68);
+        }
 
-.category-section {
-    width: min(820px, 100%);
-    padding: 14px 16px 16px;
-    margin: 0 auto 14px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 8px;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
-    backdrop-filter: blur(12px);
-    color: #f8fafc;
-    position: relative;
-    z-index: 5;
-}
+        .light-mode .theme-btn,
+        .light-mode .clear-btn,
+        .light-mode .settings-panel button,
+        .light-mode .settings-panel select {
+            background: rgba(15, 23, 42, 0.05);
+            color: #172033;
+            border-color: rgba(15, 23, 42, 0.14);
+        }
 
-body > .category-section {
-    display: block;
-    order: 1;
-    width: min(650px, calc(100% - 32px));
-    margin-bottom: 8px;
-}
+        .category-section {
+            width: min(820px, 100%);
+            padding: 14px 16px 16px;
+            margin: 0 auto 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 8px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(12px);
+            color: #f8fafc;
+            position: relative;
+            z-index: 5;
+        }
 
-.chat-container .category-section,
-.chat-container + .category-section {
-    display: none;
-}
+        body>.category-section {
+            display: block;
+            order: 1;
+            width: min(650px, calc(100% - 32px));
+            margin-bottom: 8px;
+        }
 
-.category-section h2 {
-    margin-bottom: 12px;
-    font-size: 18px;
-    line-height: 1.2;
-    text-align: center;
-}
+        .chat-container .category-section,
+        .chat-container+.category-section {
+            display: none;
+        }
 
-.mood-title {
-    margin-top: 14px;
-}
+        .category-section h2 {
+            margin-bottom: 12px;
+            font-size: 18px;
+            line-height: 1.2;
+            text-align: center;
+        }
 
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-}
+        .mood-title {
+            margin-top: 14px;
+        }
 
-.card {
-    min-height: 58px;
-    padding: 9px 10px;
-    background: rgba(17, 24, 39, 0.82);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
-    cursor: pointer;
-    transition: 0.3s;
-}
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
 
-.card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255, 140, 66, 0.75);
-    box-shadow: 0 12px 28px rgba(255, 140, 66, 0.2);
-}
+        .card {
+            min-height: 58px;
+            padding: 9px 10px;
+            background: rgba(17, 24, 39, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.card h3 {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.25;
-}
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 140, 66, 0.75);
+            box-shadow: 0 12px 28px rgba(255, 140, 66, 0.2);
+        }
 
-.card p {
-    margin-top: 3px;
-    font-size: 11px;
-    color: #ccc;
-}
+        .card h3 {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.25;
+        }
 
-.light-mode .category-section {
-    background: rgba(255, 255, 255, 0.86);
-    border-color: rgba(15, 23, 42, 0.12);
-    color: #172033;
-}
+        .card p {
+            margin-top: 3px;
+            font-size: 11px;
+            color: #ccc;
+        }
 
-.light-mode .card {
-    background: rgba(255, 255, 255, 0.82);
-    border-color: rgba(15, 23, 42, 0.12);
-    color: #172033;
-}
+        .light-mode .category-section {
+            background: rgba(255, 255, 255, 0.86);
+            border-color: rgba(15, 23, 42, 0.12);
+            color: #172033;
+        }
 
-.light-mode .card p {
-    color: rgba(23, 32, 51, 0.68);
-}
+        .light-mode .card {
+            background: rgba(255, 255, 255, 0.82);
+            border-color: rgba(15, 23, 42, 0.12);
+            color: #172033;
+        }
 
-@media (max-width: 720px) {
-    body {
-        padding: 14px 10px;
-    }
+        .light-mode .card p {
+            color: rgba(23, 32, 51, 0.68);
+        }
 
-    .category-section {
-        padding: 14px;
-    }
+        @media (max-width: 720px) {
+            body {
+                padding: 14px 10px;
+            }
 
-    .category-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+            .category-section {
+                padding: 14px;
+            }
 
-    .chat-container {
-        padding: 12px 4px 96px;
-    }
-}
+            .category-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
 
-@media (max-width: 420px) {
-    .category-grid {
-        grid-template-columns: 1fr;
-    }
+            .chat-container {
+                padding: 12px 4px 96px;
+            }
+        }
 
-    .book-card {
-        flex-direction: column;
-    }
-}
+        @media (max-width: 420px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
 
+            .book-card {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<div class="chat-container">
-    <div class="chat-box" id="chatBox"></div>
+    <div class="chat-container">
+        <div class="chat-box" id="chatBox"></div>
 
-    <div class="input-container">
-        <div class="input-wrapper">
-            <div class="input-glow"></div>
-            <div class="input-area">
-                <button class="icon-btn" onclick="showTools()" title="Tools">+</button>
-                
-                <input 
-                    type="text" 
-                    id="msg" 
-                    placeholder="Fallback search" 
-                    onkeypress="handleKeyPress(event)"
-                >
-                
-                <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙</button>
+        <div class="input-container">
+            <div class="input-wrapper">
+                <div class="input-glow"></div>
+                <div class="input-area">
+                    <button class="icon-btn" onclick="showTools()" title="Tools">+</button>
+
+                    <input type="text" id="msg" placeholder="Fallback search" onkeypress="handleKeyPress(event)">
+
+                    <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙</button>
 
                     <!-- Settings Panel -->
-<div class="settings-panel" id="settingsPanel">
-    <h3>⚙️ Settings</h3>
+                    <div class="settings-panel" id="settingsPanel">
+                        <h3>⚙️ Settings</h3>
 
-    
 
-    
 
-   
 
-    <!-- Theme -->
-    <div class="setting-item">
-        <label>Theme:</label>
-        <button onclick="setTheme('light')">Light</button>
-        <button onclick="setTheme('dark')">Dark</button>
-    </div>
 
-    <!-- Language -->
-    <div class="setting-item">
-        <label>Language:</label>
-        <select id="language">
-            <option>English</option>
-            <option>Hindi</option>
-            <option>Gujarati</option>
-        </select>
-    </div>
 
-    <!-- Chat History -->
-    <div class="setting-item">
-        <button onclick="clearChat()">Clear Chat History</button>
-    </div>
 
-    <button onclick="saveSettings()">Save</button>
-</div>
+                        <!-- Theme -->
+                        <div class="setting-item">
+                            <label>Theme:</label>
+                            <button onclick="setTheme('light')">Light</button>
+                            <button onclick="setTheme('dark')">Dark</button>
+                        </div>
 
-                <button class="send-btn" onclick="sendMessage()" title="Send message">→</button>
+                        <!-- Language -->
+                        <div class="setting-item">
+                            <label>Language:</label>
+                            <select id="language">
+                                <option>English</option>
+                                <option>Hindi</option>
+                                <option>Gujarati</option>
+                            </select>
+                        </div>
+
+                        <!-- Chat History -->
+                        <div class="setting-item">
+                            <button onclick="clearChat()">Clear Chat History</button>
+                        </div>
+
+                        <button onclick="saveSettings()">Save</button>
+                    </div>
+
+                    <button class="send-btn" onclick="sendMessage()" title="Send message">→</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
-<script>
-function getSelectedLanguage() {
-    const languageSelect = document.getElementById("language");
-    return languageSelect ? languageSelect.value : "English";
-}
-
-function appendMessage(className, content, isHtml = false) {
-    const chatBox = document.getElementById("chatBox");
-    const message = document.createElement("div");
-    message.className = `message ${className}`;
-    if (isHtml) {
-        message.innerHTML = content.replace(/\n/g, "<br>");
-    } else {
-        message.textContent = content;
-    }
-    chatBox.appendChild(message);
-    chatBox.scrollTop = chatBox.scrollHeight;
-    return message;
-}
-
-function sendChatMessage(message, label = message, showUser = true) {
-    if (!message) return;
-
-    if (showUser) {
-        appendMessage("user", label);
-    }
-
-    const typingDiv = appendMessage(
-        "bot",
-        '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>',
-        true
-    );
-
-    fetch(`/chatbot/?message=${encodeURIComponent(message)}&language=${encodeURIComponent(getSelectedLanguage())}`)
-    .then(res => res.json())
-    .then(data => {
-        typingDiv.remove();
-        appendMessage("bot", data.response, true);
-    })
-    .catch(error => {
-        typingDiv.remove();
-        appendMessage("bot", "Error connecting to the server. Try again!");
-    });
-}
-
-function sendMessage() {
-    const input = document.getElementById("msg");
-    const message = input.value.trim();
-    if (message === "") return;
-
-    sendChatMessage(message);
-    input.value = "";
-}
-
-function handleKeyPress(event) {
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-}
-
-function showTools() {
-    alert("Tools feature coming soon!");
-}
-
-const translations = {
-    English: {
-        placeholder: "Fallback search",
-        settings: "Settings",
-        theme: "Theme:",
-        light: "Light",
-        dark: "Dark",
-        language: "Language:",
-        clear: "Clear Chat History",
-        save: "Save",
-        saved: "Settings saved"
-    },
-    Hindi: {
-        placeholder: "मैं आपकी कैसे मदद कर सकता हूं?",
-        settings: "सेटिंग्स",
-        theme: "थीम:",
-        light: "लाइट",
-        dark: "डार्क",
-        language: "भाषा:",
-        clear: "चैट इतिहास साफ करें",
-        save: "सेव करें",
-        saved: "सेटिंग्स सेव हो गईं"
-    },
-    Gujarati: {
-        placeholder: "હું તમારી કેવી રીતે મદદ કરી શકું?",
-        settings: "સેટિંગ્સ",
-        theme: "થીમ:",
-        light: "લાઇટ",
-        dark: "ડાર્ક",
-        language: "ભાષા:",
-        clear: "ચેટ ઇતિહાસ સાફ કરો",
-        save: "સેવ કરો",
-        saved: "સેટિંગ્સ સેવ થઈ"
-    }
-};
-
-function toggleSettings() {
-    const panel = document.getElementById("settingsPanel");
-    const button = document.querySelector('[onclick="toggleSettings()"]');
-    const isOpen = panel.classList.toggle("open");
-    if (button) {
-        button.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    }
-}
-
-function setTheme(mode) {
-    document.body.classList.toggle("light-mode", mode === "light");
-    document.body.classList.toggle("dark-mode", mode === "dark");
-    localStorage.setItem("chatTheme", mode);
-    updateThemeButtons(mode);
-}
-
-function updateThemeButtons(mode) {
-    const buttons = document.querySelectorAll('[onclick^="setTheme"]');
-    buttons.forEach(button => {
-        const isActive = button.getAttribute("onclick").includes(`'${mode}'`);
-        button.classList.toggle("active", isActive);
-    });
-}
-
-function setLanguage(language) {
-    const selectedLanguage = translations[language] ? language : "English";
-    const text = translations[selectedLanguage];
-    const panel = document.getElementById("settingsPanel");
-    const labels = panel.querySelectorAll("label");
-    const buttons = panel.querySelectorAll("button");
-
-    document.getElementById("msg").placeholder = text.placeholder;
-    const title = panel.querySelector("h3");
-    if (title) title.textContent = `⚙ ${text.settings}`;
-    if (labels[0]) labels[0].textContent = text.theme;
-    if (labels[1]) labels[1].textContent = text.language;
-    if (buttons[0]) buttons[0].textContent = text.light;
-    if (buttons[1]) buttons[1].textContent = text.dark;
-    if (buttons[2]) buttons[2].textContent = text.clear;
-    if (buttons[3]) buttons[3].textContent = text.save;
-
-    localStorage.setItem("chatLanguage", selectedLanguage);
-}
-
-function saveSettings() {
-    const panel = document.getElementById("settingsPanel");
-    const language = document.getElementById("language").value;
-    setLanguage(language);
-    panel.classList.remove("open");
-    alert(translations[language]?.saved || translations.English.saved);
-}
-
-// Clear chat history
-function clearChat() {
-    document.getElementById("chatBox").innerHTML = "";
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem("chatTheme") || "dark";
-    const savedLanguage = localStorage.getItem("chatLanguage") || "English";
-    const languageSelect = document.getElementById("language");
-
-    setTheme(savedTheme);
-    languageSelect.value = savedLanguage;
-    setLanguage(savedLanguage);
-
-    languageSelect.addEventListener("change", event => {
-        setLanguage(event.target.value);
-    });
-
-    document.addEventListener("click", event => {
-        const choice = event.target.closest(".choice-btn");
-        if (choice) {
-            sendChatMessage(choice.dataset.message, choice.dataset.label || choice.textContent.trim());
-            return;
+    <script>
+        function getSelectedLanguage() {
+            const languageSelect = document.getElementById("language");
+            return languageSelect ? languageSelect.value : "English";
         }
 
-        const panel = document.getElementById("settingsPanel");
-        const clickedSettings = event.target.closest(".settings-panel") || event.target.closest('[onclick="toggleSettings()"]');
-        if (!clickedSettings) {
+        function appendMessage(className, content, isHtml = false) {
+            const chatBox = document.getElementById("chatBox");
+            const message = document.createElement("div");
+            message.className = `message ${className}`;
+            if (isHtml) {
+                message.innerHTML = content.replace(/\n/g, "<br>");
+            } else {
+                message.textContent = content;
+            }
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return message;
+        }
+
+        function sendChatMessage(message, label = message, showUser = true) {
+            if (!message) return;
+
+            if (showUser) {
+                appendMessage("user", label);
+            }
+
+            const typingDiv = appendMessage(
+                "bot",
+                '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>',
+                true
+            );
+
+            fetch(`/chatbot/?message=${encodeURIComponent(message)}&language=${encodeURIComponent(getSelectedLanguage())}`)
+                .then(res => res.json())
+                .then(data => {
+                    typingDiv.remove();
+                    appendMessage("bot", data.response, true);
+                })
+                .catch(error => {
+                    typingDiv.remove();
+                    appendMessage("bot", "Error connecting to the server. Try again!");
+                });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("msg");
+            const message = input.value.trim();
+            if (message === "") return;
+
+            sendChatMessage(message);
+            input.value = "";
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+
+        function showTools() {
+            alert("Tools feature coming soon!");
+        }
+
+        const translations = {
+            English: {
+                placeholder: "Fallback search",
+                settings: "Settings",
+                theme: "Theme:",
+                light: "Light",
+                dark: "Dark",
+                language: "Language:",
+                clear: "Clear Chat History",
+                save: "Save",
+                saved: "Settings saved"
+            },
+            Hindi: {
+                placeholder: "मैं आपकी कैसे मदद कर सकता हूं?",
+                settings: "सेटिंग्स",
+                theme: "थीम:",
+                light: "लाइट",
+                dark: "डार्क",
+                language: "भाषा:",
+                clear: "चैट इतिहास साफ करें",
+                save: "सेव करें",
+                saved: "सेटिंग्स सेव हो गईं"
+            },
+            Gujarati: {
+                placeholder: "હું તમારી કેવી રીતે મદદ કરી શકું?",
+                settings: "સેટિંગ્સ",
+                theme: "થીમ:",
+                light: "લાઇટ",
+                dark: "ડાર્ક",
+                language: "ભાષા:",
+                clear: "ચેટ ઇતિહાસ સાફ કરો",
+                save: "સેવ કરો",
+                saved: "સેટિંગ્સ સેવ થઈ"
+            }
+        };
+
+        function toggleSettings() {
+            const panel = document.getElementById("settingsPanel");
+            const button = document.querySelector('[onclick="toggleSettings()"]');
+            const isOpen = panel.classList.toggle("open");
+            if (button) {
+                button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            }
+        }
+
+        function setTheme(mode) {
+            document.body.classList.toggle("light-mode", mode === "light");
+            document.body.classList.toggle("dark-mode", mode === "dark");
+            localStorage.setItem("chatTheme", mode);
+            updateThemeButtons(mode);
+        }
+
+        function updateThemeButtons(mode) {
+            const buttons = document.querySelectorAll('[onclick^="setTheme"]');
+            buttons.forEach(button => {
+                const isActive = button.getAttribute("onclick").includes(`'${mode}'`);
+                button.classList.toggle("active", isActive);
+            });
+        }
+
+        function setLanguage(language) {
+            const selectedLanguage = translations[language] ? language : "English";
+            const text = translations[selectedLanguage];
+            const panel = document.getElementById("settingsPanel");
+            const labels = panel.querySelectorAll("label");
+            const buttons = panel.querySelectorAll("button");
+
+            document.getElementById("msg").placeholder = text.placeholder;
+            const title = panel.querySelector("h3");
+            if (title) title.textContent = `⚙ ${text.settings}`;
+            if (labels[0]) labels[0].textContent = text.theme;
+            if (labels[1]) labels[1].textContent = text.language;
+            if (buttons[0]) buttons[0].textContent = text.light;
+            if (buttons[1]) buttons[1].textContent = text.dark;
+            if (buttons[2]) buttons[2].textContent = text.clear;
+            if (buttons[3]) buttons[3].textContent = text.save;
+
+            localStorage.setItem("chatLanguage", selectedLanguage);
+        }
+
+        function saveSettings() {
+            const panel = document.getElementById("settingsPanel");
+            const language = document.getElementById("language").value;
+            setLanguage(language);
             panel.classList.remove("open");
+            alert(translations[language]?.saved || translations.English.saved);
         }
-    });
 
-    sendChatMessage("menu:main", "Main menu", false);
-});
+        // Clear chat history
+        function clearChat() {
+            document.getElementById("chatBox").innerHTML = "";
+        }
 
-function selectCategory(category) {
-    let chatBox = document.getElementById("chatBox");
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("chatTheme") || "dark";
+            const savedLanguage = localStorage.getItem("chatLanguage") || "English";
+            const languageSelect = document.getElementById("language");
 
-    // Show user message
-    chatBox.innerHTML += `<div class="message user">${category}</div>`;
+            setTheme(savedTheme);
+            languageSelect.value = savedLanguage;
+            setLanguage(savedLanguage);
 
-    // Call Django backend
-    fetch(`/chatbot/?message=${encodeURIComponent(category)}&language=${encodeURIComponent(getSelectedLanguage())}`)
-    .then(res => res.json())
-    .then(data => {
-        chatBox.innerHTML += `<div class="message bot">${data.response}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
-}
+            languageSelect.addEventListener("change", event => {
+                setLanguage(event.target.value);
+            });
 
-</script>
+            document.addEventListener("click", event => {
+                const choice = event.target.closest(".choice-btn");
+                if (choice) {
+                    sendChatMessage(choice.dataset.message, choice.dataset.label || choice.textContent.trim());
+                    return;
+                }
+
+                const panel = document.getElementById("settingsPanel");
+                const clickedSettings = event.target.closest(".settings-panel") || event.target.closest('[onclick="toggleSettings()"]');
+                if (!clickedSettings) {
+                    panel.classList.remove("open");
+                }
+            });
+
+            sendChatMessage("menu:main", "Main menu", false);
+        });
+
+        function selectCategory(category) {
+            let chatBox = document.getElementById("chatBox");
+
+            // Show user message
+            chatBox.innerHTML += `<div class="message user">${category}</div>`;
+
+            // Call Django backend
+            fetch(`/chatbot/?message=${encodeURIComponent(category)}&language=${encodeURIComponent(getSelectedLanguage())}`)
+                .then(res => res.json())
+                .then(data => {
+                    chatBox.innerHTML += `<div class="message bot">${data.response}</div>`;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
+        }
+
+    </script>
 
 </body>
+
 </html>

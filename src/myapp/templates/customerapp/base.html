@@ -34,42 +34,129 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" href="{% static 'customerapp/css/style.css' %}">
     <style>
-        /* ── Chatbot Floating Button ── */
+        /* ── Theme Mode Variables ── */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #ffffff;
+            --heading-color: #ffffff;
+            --border-color: #ebebeb;
+            --header-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            --bg-color: #101426;
+            --text-color: #d1d1d1;
+            --heading-color: #ffffff;
+            --border-color: #1e2540;
+            --header-bg: #101426;
+        }
+
+        /* ── Global Dark Mode Overrides ── */
+        body.dark-mode,
+        body.dark-mode .page-wrapper,
+        body.dark-mode .main,
+        body.dark-mode .header,
+        body.dark-mode .header-top,
+        body.dark-mode .header-middle,
+        body.dark-mode .header-bottom,
+        body.dark-mode .footer,
+        body.dark-mode .footer-middle,
+        body.dark-mode .footer-bottom,
+        body.dark-mode .page-header,
+        body.dark-mode .page-content,
+        body.dark-mode .container,
+        body.dark-mode .container-fluid,
+        body.dark-mode .dropdown-menu,
+        body.dark-mode .product,
+        body.dark-mode .widget,
+        body.dark-mode .card,
+        body.dark-mode .bg-light,
+        body.dark-mode .bg-white,
+        body.dark-mode .sticky-header {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4,
+        body.dark-mode h5,
+        body.dark-mode h6,
+        body.dark-mode .product-title a,
+        body.dark-mode .widget-title,
+        body.dark-mode .menu-title,
+        body.dark-mode .top-menu a,
+        body.dark-mode .main-nav .menu>li>a {
+            color: var(--heading-color) !important;
+        }
+
+        body.dark-mode a {
+            color: #d1d1d1;
+        }
+
+        body.dark-mode a:hover {
+            color: #4A90D9;
+        }
+
+        body.dark-mode input,
+        body.dark-mode textarea,
+        body.dark-mode select:not(.theme-select) {
+            background-color: #0a0d1a !important;
+            color: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        /* ── Floating Buttons & Animations ── */
         .chatbot-floating {
-            align-items: center;
-            border: 0;
-            border-radius: 50%;
-            bottom: 30px;
-            background: linear-gradient(135deg, #4A90D9, #667BC6);
-            box-shadow: 0 4px 18px rgba(74, 144, 217, 0.45);
-            color: #fff;
-            cursor: pointer;
-            display: flex;
-            height: 60px;
-            justify-content: center;
             position: fixed;
+            bottom: 30px;
             right: 30px;
-            text-decoration: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
             width: 60px;
-            z-index: 1000;
+            height: 60px;
+            background: linear-gradient(135deg, #4A90D9, #667BC6);
+            border-radius: 50%;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(74, 144, 217, 0.45);
+            transition: transform 0.3s ease;
             animation: chatbot-pulse 2.5s ease-in-out infinite;
         }
 
-        .chatbot-floating:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 28px rgba(74, 144, 217, 0.65);
-        }
-
-        .chatbot-floating:active {
-            transform: scale(0.95);
-        }
-
         .chatbot-floating svg {
-            display: block;
             fill: #fff;
-            height: 30px;
             width: 30px;
+            height: 30px;
+        }
+
+        .whatsapp-floating {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25d366, #128c4e);
+            border-radius: 50%;
+            z-index: 2100;
+            /* Always above everything */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45);
+            text-decoration: none;
+            transition: transform 0.3s ease;
+            animation: whatsapp-pulse 2s ease-in-out infinite;
+        }
+
+        .whatsapp-floating svg {
+            fill: #fff;
+            width: 32px;
+            height: 32px;
         }
 
         @keyframes chatbot-pulse {
@@ -84,44 +171,6 @@
             }
         }
 
-        /* ── WhatsApp Floating Button ── */
-        .whatsapp-floating {
-            align-items: center;
-            border-radius: 50%;
-            bottom: 105px;
-            background: linear-gradient(135deg, #25d366, #128c4e);
-            box-shadow: 0 4px 18px rgba(37, 211, 102, 0.4);
-            color: #fff;
-            cursor: pointer;
-            display: flex;
-            height: 60px;
-            justify-content: center;
-            position: fixed;
-            right: 30px;
-            text-decoration: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: 60px;
-            z-index: 1000;
-            animation: whatsapp-pulse 2s ease-in-out infinite;
-        }
-
-        .whatsapp-floating:hover {
-            transform: scale(1.12);
-            box-shadow: 0 6px 28px rgba(37, 211, 102, 0.65);
-            animation: none;
-        }
-
-        .whatsapp-floating:active {
-            transform: scale(0.95);
-        }
-
-        .whatsapp-floating svg {
-            display: block;
-            fill: #fff;
-            height: 32px;
-            width: 32px;
-        }
-
         @keyframes whatsapp-pulse {
 
             0%,
@@ -132,28 +181,6 @@
             50% {
                 box-shadow: 0 4px 28px rgba(37, 211, 102, 0.7), 0 0 0 8px rgba(37, 211, 102, 0.12);
             }
-        }
-
-        /* WhatsApp tooltip on hover */
-        .whatsapp-floating::before {
-            content: 'Chat with us';
-            position: absolute;
-            right: 72px;
-            background: #333;
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(8px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-
-        .whatsapp-floating:hover::before {
-            opacity: 1;
-            transform: translateX(0);
         }
 
         /* ── Chatbot Popup ── */
@@ -173,18 +200,6 @@
             animation: chatbot-popup-in 0.3s ease-out;
         }
 
-        @keyframes chatbot-popup-in {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
         .chatbot-toggle-checkbox:checked~.chatbot-popup {
             display: flex;
         }
@@ -202,7 +217,6 @@
         }
 
         .chatbot-popup__close {
-            align-items: center;
             background: rgba(255, 255, 255, 0.15);
             border: 0;
             border-radius: 50%;
@@ -212,26 +226,30 @@
             font-size: 1.5rem;
             height: 32px;
             justify-content: center;
-            line-height: 1;
-            padding: 0;
             width: 32px;
-            transition: background 0.2s ease;
-        }
-
-        .chatbot-popup__close:hover {
-            background: rgba(255, 255, 255, 0.3);
         }
 
         .chatbot-popup__frame {
             border: 0;
-            flex: 1 1 auto;
+            flex: 1;
             width: 100%;
+        }
+
+        @keyframes chatbot-popup-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         @media screen and (max-width: 575px) {
             .chatbot-popup {
                 bottom: 15px;
-                height: min(620px, calc(100vh - 30px));
                 right: 15px;
                 width: calc(100vw - 30px);
             }
@@ -243,15 +261,164 @@
 
             .chatbot-floating {
                 bottom: 20px;
-                height: 52px;
                 width: 52px;
+                height: 52px;
             }
 
             .whatsapp-floating {
-                bottom: 85px;
-                height: 52px;
+                bottom: 95px;
                 width: 52px;
+                height: 52px;
             }
+        }
+
+        body.dark-mode .whatsapp-floating {
+            box-shadow: 0 4px 25px rgba(37, 211, 102, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* ── Theme Selector ── */
+        .theme-switcher-container {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 15px;
+            padding-left: 15px;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .theme-select {
+            background: transparent;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: inherit;
+            font-size: 11px;
+            padding: 2px 5px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        body.dark-mode .theme-select {
+            background: #2c124b;
+            color: #fff;
+            border-color: #4A90D9;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #ffffff;
+            --heading-color: #ffffff;
+            --header-bg: #ffffff;
+            --header-top-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --border-color: #ffffff;
+            --card-bg: #ffffff;
+            --link-color: #ffffff;
+            --primary-color: #cc9966;
+        }
+
+        body.dark-mode {
+            --bg-color: #2c124b;
+            --text-color: #ffffff;
+            --heading-color: #ffffff;
+            --header-bg: #2c124b;
+            --header-top-bg: #2c124b;
+            --footer-bg: #2c124b;
+            --border-color: #2c124b;
+            --card-bg: #2c124b;
+            --link-color: #ffffff;
+            --primary-color: #4A90D9;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4,
+        body.dark-mode h5,
+        body.dark-mode h6 {
+            color: var(--heading-color);
+        }
+
+        body.dark-mode .header,
+        body.dark-mode .header-top,
+        body.dark-mode .header-middle,
+        body.dark-mode .footer,
+        body.dark-mode .page-header,
+        body.dark-mode .main {
+            background-color: var(--bg-color) !important;
+        }
+
+        body.dark-mode .header-top {
+            background-color: var(--header-top-bg) !important;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        body.dark-mode .footer {
+            background-color: var(--footer-bg) !important;
+            border-top: 1px solid var(--border-color);
+        }
+
+        body.dark-mode .product,
+        body.dark-mode .widget,
+        body.dark-mode .card,
+        body.dark-mode .dropdown-menu,
+        body.dark-mode .page-wrapper,
+        body.dark-mode .header-search-wrapper,
+        body.dark-mode .mobile-menu-container {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        body.dark-mode a {
+            color: var(--link-color);
+        }
+
+        body.dark-mode a:hover {
+            color: var(--primary-color);
+        }
+
+        body.dark-mode .top-menu a,
+        body.dark-mode .main-nav .menu>li>a {
+            color: var(--heading-color) !important;
+        }
+
+        body.dark-mode .sticky-header.fixed {
+            background-color: var(--header-bg) !important;
+        }
+
+        body.dark-mode .no-results-container {
+            background: #2c124b !important;
+            border-color: #4A90D9 !important;
+        }
+
+        /* Mode Selector Styling */
+        .theme-switcher-container {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+            padding-left: 15px;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .theme-select {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: inherit;
+            font-size: 11px;
+            padding: 2px 8px;
+            cursor: pointer;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        body.dark-mode .theme-select {
+            background: #2c124b;
+            border-color: #4A90D9;
         }
     </style>
 </head>
@@ -275,9 +442,16 @@
                                             wishlist_count|default:0 }})></span></a></li>
                                 <li><a href="{% url 'profile' %}"><i class="icon-user"></i>Profile</a></li>
                                 <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul">Logout</a></li>
+                                <li class="theme-switcher-container">
+                                    <select id="theme-selector" class="theme-select" aria-label="Select Theme">
+                                        <option value="light">☀️ Light</option>
+                                        <option value="dark">🌙 Dark</option>
+                                    </select>
+                                </li>
                             </ul>
                         </li>
                     </ul><!-- End .top-menu -->
+
                 </div><!-- End .header-right -->
             </div><!-- End .container -->
         </div><!-- End .header-top -->
@@ -290,8 +464,8 @@
                         <i class="icon-bars"></i>
                     </button>
                     <a href="{% url 'home' %}" class="logo">
-                        <img src="{% static 'customerapp/images/demos/demo-20/logo1.png' %}" alt="crossword Logo"
-                            width="90" height="10">
+                        <img src="{% static 'customerapp/images/demos/demo-20/logo1.PNG' %}" alt="crossword Logo"
+                            width="90" height="auto" style="max-height: 60px; object-fit: contain;">
                     </a>
 
                     <nav class="main-nav">
@@ -382,7 +556,7 @@
                 <div class="row">
                     <div class="col-sm-12 col-lg-6">
                         <div class="widget widget-about">
-                            <img src="{% static 'customerapp/images/logo.png' %}" class="footer-logo" alt="Footer Logo"
+                            <img src="{% static 'customerapp/images/logo.PNG' %}" class="footer-logo" alt="Footer Logo"
                                 width="150" height="50">
                             <p>Our platform brings together a diverse collection of books,<br>
                                 ranging from academic resources and professional guides to novels,<br>
@@ -434,24 +608,49 @@
         </div><!-- End .footer-bottom -->
     </footer><!-- End .footer -->
     </div><!-- End .page-wrapper -->
-    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-    <!-- WhatsApp Floating Button (injected via JS to bypass all CSS conflicts) -->
     <script>
         (function () {
-            var a = document.createElement('a');
-            a.id = 'whatsapp-btn';
-            a.href = 'https://wa.me/917202963777?text=Hi%20there!%20I%27m%20interested%20in%20your%20books.';
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-            a.setAttribute('aria-label', 'Chat on WhatsApp');
-            a.style.cssText = 'display:flex!important;align-items:center;justify-content:center;position:fixed;bottom:105px;right:30px;width:60px;height:60px;background:linear-gradient(135deg,#25d366,#128c4e);border-radius:50%;z-index:99999;text-decoration:none;box-shadow:0 4px 18px rgba(37,211,102,0.45);cursor:pointer;transition:transform 0.3s ease,box-shadow 0.3s ease;';
-            a.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="display:block;width:32px;height:32px;"><path fill="#ffffff" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>';
-            a.onmouseover = function () { a.style.transform = 'scale(1.12)'; a.style.boxShadow = '0 6px 28px rgba(37,211,102,0.65)'; };
-            a.onmouseout = function () { a.style.transform = 'scale(1)'; a.style.boxShadow = '0 4px 18px rgba(37,211,102,0.45)'; };
-            document.body.appendChild(a);
+            const themeSelector = document.getElementById('theme-selector');
+            const body = document.body;
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark-mode');
+                    if (themeSelector) themeSelector.value = 'dark';
+                } else {
+                    body.classList.remove('dark-mode');
+                    if (themeSelector) themeSelector.value = 'light';
+                }
+            }
+
+            // Initial load
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            // Change listener
+            if (themeSelector) {
+                themeSelector.addEventListener('change', function () {
+                    const newTheme = this.value;
+                    applyTheme(newTheme);
+                    localStorage.setItem('theme', newTheme);
+                });
+            }
         })();
     </script>
+
+
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/917202963777?text=Hi%20there!%20I%27m%20interested%20in%20your%20books."
+        class="whatsapp-floating" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="display:block;width:32px;height:32px;">
+            <path fill="#ffffff"
+                d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z" />
+        </svg>
+    </a>
+
     <!-- CSS Toggle for Chatbot -->
+
     <input type="checkbox" id="chatbot-toggle" class="chatbot-toggle-checkbox" style="display: none;">
 
     <!-- Chatbot Floating Button -->

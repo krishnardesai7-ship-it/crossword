@@ -14,8 +14,9 @@
 		<div class="container">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-				<li class="breadcrumb-item"><a href="#">Shop</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+				<li class="breadcrumb-item"><a href="#" style="color: rgb(255, 255, 255);">Shop</a></li>
+				<li class="breadcrumb-item active" aria-current="page" style="color: rgb(255, 255, 255);">Shopping Cart
+				</li>
 			</ol>
 		</div><!-- End .container -->
 	</nav><!-- End .breadcrumb-nav -->
@@ -50,7 +51,8 @@
 								<tr>
 									<td class="product-col">
 										<div class="product" style="display: flex; align-items: center; gap: 20px;">
-											<figure class="product-media" style="background: none; overflow: visible; margin: 0; flex-shrink: 0;">
+											<figure class="product-media"
+												style="background: none; overflow: visible; margin: 0; flex-shrink: 0;">
 												<a href="#">
 													{% if i.image %}
 													<img src="/media/{{ i.image }}" alt="Product image"
@@ -98,21 +100,23 @@
 						<div class="cart-bottom">
 							<div class="cart-discount">
 								<form action="{% url 'apply_coupon' %}" method="POST">
-                                    {% csrf_token %}
+									{% csrf_token %}
 									<div class="input-group">
-										<input type="text" name="coupon_code" class="form-control" required placeholder="coupon code" value="{{ applied_coupon_code|default:'' }}">
+										<input type="text" name="coupon_code" class="form-control" required
+											placeholder="coupon code" value="{{ applied_coupon_code|default:'' }}">
 										<div class="input-group-append">
 											<button class="btn btn-outline-primary-2" type="submit"><i
 													class="icon-long-arrow-right"></i></button>
 										</div><!-- .End .input-group-append -->
 									</div><!-- End .input-group -->
 								</form>
-                                {% if applied_coupon_code %}
-                                <div style="margin-top: 10px;">
-                                    <span class="text-success">Coupon applied: {{ applied_coupon_code }}</span> 
-                                    <a href="{% url 'remove_coupon' %}" class="text-danger" style="margin-left: 10px; font-weight: bold;">(Remove)</a>
-                                </div>
-                                {% endif %}
+								{% if applied_coupon_code %}
+								<div style="margin-top: 10px;">
+									<span class="text-success">Coupon applied: {{ applied_coupon_code }}</span>
+									<a href="{% url 'remove_coupon' %}" class="text-danger"
+										style="margin-left: 10px; font-weight: bold;">(Remove)</a>
+								</div>
+								{% endif %}
 							</div><!-- End .cart-discount -->
 
 							<a href="{% url 'shop' %}" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, register, contact as contact_model, product, wishlist, add_to_cart, checkout, comment, ProductReview, Coupon
+from .models import Book, Category, register, contact as contact_model, product, wishlist, add_to_cart, checkout, comment, ProductReview, Coupon
 # Register your models here.
 admin.site.register(register)
 admin.site.register(wishlist)
@@ -7,6 +7,7 @@ admin.site.register(add_to_cart)
 admin.site.register(comment)
 admin.site.register(Category)
 admin.site.register(product)
+admin.site.register(Book)
 
 class ProductReviewAdmin(admin.ModelAdmin):
     list_display = ['product', 'email', 'message', 'created_at']

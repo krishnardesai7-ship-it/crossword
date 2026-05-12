@@ -95,8 +95,7 @@
 
 <main class="main">
 
-	<div class="page-header text-center"
-		style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}&quot;);">
+	<div class="page-header text-center">
 		<div class="container">
 			<h1 class="page-title">Shop<span>Shop</span></h1>
 		</div><!-- End .container -->
@@ -106,13 +105,13 @@
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
 
-				<li class="breadcrumb-item active" aria-current="page">Shop</li>
+				<li class="breadcrumb-item active" aria-current="page" style="color: rgb(255, 255, 255);">Shop</li>
 			</ol>
 		</div><!-- End .container -->
 	</nav><!-- End .breadcrumb-nav -->
 
 
-	<div class="page-content">
+	<div class=" page-content">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-3">
@@ -125,16 +124,21 @@
 								<li><a href="?category=all" class="{% if category == 'all' %}active{% endif %}">All
 										Categories</a></li>
 								<li><a href="?category=love_story"
-										class="{% if category == 'love_story' %}active{% endif %}">Love Stories</a></li>
+										class="{% if category == 'love_story' %}active{% endif %}">Love
+										Stories</a></li>
 								<li><a href="?category=fantasy"
-										class="{% if category == 'fantasy' %}active{% endif %}">Fantasy</a></li>
+										class="{% if category == 'fantasy' %}active{% endif %}">Fantasy</a>
+								</li>
 								<li><a href="?category=juvenile_literature"
-										class="{% if category == 'juvenile_literature' %}active{% endif %}">Juvenile Literature
-										</a></li>
+										class="{% if category == 'juvenile_literature' %}active{% endif %}">Juvenile
+										Literature
+									</a></li>
 								<li><a href="?category=mystery"
-										class="{% if category == 'mystery' %}active{% endif %}">Mystery</a></li>
+										class="{% if category == 'mystery' %}active{% endif %}">Mystery</a>
+								</li>
 								<li><a href="?category=thrillers"
-										class="{% if category == 'thrillers' %}active{% endif %}">Thrillers</a></li>
+										class="{% if category == 'thrillers' %}active{% endif %}">Thrillers</a>
+								</li>
 								<li><a href="?category=self_health_and_personal_growth"
 										class="{% if category == 'self_health_and_personal_growth' %}active{% endif %}">Self
 										Health and Personal Growth</a></li>
@@ -168,7 +172,8 @@
 					<div class="toolbox">
 						<div class="toolbox-left">
 							<div class="toolbox-info">
-								Showing <span>{{ pid.object_list|length }} of {{ total_count }}</span> Products
+								Showing <span>{{ pid.object_list|length }} of {{ total_count }}</span>
+								Products
 							</div><!-- End .toolbox-info -->
 						</div><!-- End .toolbox-left -->
 
@@ -178,17 +183,7 @@
 							<div class="toolbox-sort">
 								<label for="sortby">Sort by:</label>
 								<div class="select-custom">
-									<select name="sortby" id="sortby" class="form-control"
-										onchange="updateSort(this.value);">
-										<option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest
-										</option>
 
-										<option value="bestseller" {% if filter == 'bestseller' %}selected{% endif %}>
-											Bestsellers</option>
-										<option value="new_release" {% if filter == 'new_release' %}selected{% endif %}>
-											New Releases</option>
-
-									</select>
 								</div>
 							</div><!-- End .toolbox-sort -->
 							<div class="toolbox-layout">
@@ -225,11 +220,13 @@
 										<div class="product-action-vertical">
 											{% if i.id in wishlist_ids %}
 											<a href="{% url 'add_wishlist' i.id %}"
-												class="btn-product-icon btn-wishlist btn-expandable"><span>remove from
+												class="btn-product-icon btn-wishlist btn-expandable"><span>remove
+													from
 													wishlist</span></a>
 											{% else %}
 											<a href="{% url 'add_wishlist' i.id %}"
-												class="btn-product-icon btn-wishlist btn-expandable"><span>add to
+												class="btn-product-icon btn-wishlist btn-expandable"><span>add
+													to
 													wishlist</span></a>
 											{% endif %}
 											0u
@@ -261,10 +258,82 @@
 								</div><!-- End .product -->
 							</div><!-- End .col-sm-6 col-lg-4 -->
 							{% empty %}
-							<div class="col-12">
-								<p>No products found.</p>
+							<div class="col-12 text-center py-5">
+								<div class="no-results-container"
+									style="padding: 40px; background: #f9f9f9; border-radius: 10px; border: 1px dashed #ccc;">
+									<i class="icon-search"
+										style="font-size: 64px; color: #d0d0d0; margin-bottom: 20px; display: block;"></i>
+									<h3 style="color: #333; font-weight: 600;">Oops! We couldn't find any
+										results for
+										"{{ search_query }}"</h3>
+									<p style="font-size: 16px; color: #666; margin-bottom: 30px;">This book
+										is not
+										currently available in our local catalog.</p>
+
+									<div class="external-search-options">
+										<p style="font-weight: 600; margin-bottom: 15px; color: #444;">Try
+											searching on
+											these popular platforms:</p>
+										<div class="d-flex justify-content-center flex-wrap" style="gap: 15px;">
+											<a href="{{ amazon_link }}" id="amazon-redirect-link" target="_blank"
+												class="btn btn-primary btn-round btn-minwidth-sm"
+												style="background-color: #FF9900; border-color: #FF9900; color: #000; font-weight: 700;">
+												<i class="icon-shopping-cart"></i> Search on Amazon
+											</a>
+											<a href="{{ flipkart_link }}" target="_blank"
+												class="btn btn-outline-primary btn-round btn-minwidth-sm"
+												style="border-color: #2874f0; color: #2874f0; font-weight: 700;">
+												<i class="icon-shopping-cart"></i> Search on Flipkart
+											</a>
+										</div>
+
+										<div id="redirect-timer-container" class="mt-3"
+											style="font-size: 14px; color: #888;">
+											<p>Redirecting to Amazon in <span id="timer-count">5</span>
+												seconds... <a href="javascript:void(0)" id="cancel-redirect"
+													style="color: #ff6b6b; text-decoration: underline;">Cancel</a>
+											</p>
+										</div>
+									</div>
+
+									<div class="mt-4 pt-3 border-top">
+										<p>Or <a href="{% url 'shop' %}" class="text-primary"
+												style="text-decoration: underline;">browse all available
+												books</a> in
+											our store.</p>
+									</div>
+								</div>
 							</div>
+
+							<script>
+								document.addEventListener('DOMContentLoaded', function () {
+									let timeLeft = 5;
+									const timerSpan = document.getElementById('timer-count');
+									const timerContainer = document.getElementById('redirect-timer-container');
+									const cancelBtn = document.getElementById('cancel-redirect');
+									const amazonLink = document.getElementById('amazon-redirect-link').href;
+
+									const countdown = setInterval(function () {
+										timeLeft--;
+										if (timerSpan) timerSpan.textContent = timeLeft;
+
+										if (timeLeft <= 0) {
+											clearInterval(countdown);
+											window.location.href = amazonLink;
+										}
+									}, 1000);
+
+									if (cancelBtn) {
+										cancelBtn.addEventListener('click', function () {
+											clearInterval(countdown);
+											if (timerContainer) timerContainer.style.display = 'none';
+										});
+									}
+								});
+							</script>
 							{% endfor %}
+
+
 
 						</div><!-- End .row -->
 					</div><!-- End .products -->
@@ -338,13 +407,15 @@
 								<label for="quickViewQty" class="d-block mb-1">Quantity</label>
 								<div class="quickview-qty-wrap">
 									<button type="button" id="quickViewMinus" class="quickview-qty-btn">-</button>
-									<input type="number" id="quickViewQty" class="quickview-qty-input" min="1" value="1">
+									<input type="number" id="quickViewQty" class="quickview-qty-input" min="1"
+										value="1">
 									<button type="button" id="quickViewPlus" class="quickview-qty-btn">+</button>
 								</div>
 							</div>
 							<div class="d-flex flex-wrap">
 								<button type="submit" class="btn btn-primary mr-2 mb-2">Add to Cart</button>
-								<a id="quickViewDetailsLink" href="#" class="btn btn-outline-primary mb-2">View Details</a>
+								<a id="quickViewDetailsLink" href="#" class="btn btn-outline-primary mb-2">View
+									Details</a>
 							</div>
 						</form>
 					</div>
