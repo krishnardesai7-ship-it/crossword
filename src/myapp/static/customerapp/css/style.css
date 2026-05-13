@@ -81,15 +81,15 @@ img {
 }
 
 .bg-light {
-    background-color: #f8f8f8 !important
+    background-color: var(--light-bg) !important
 }
 
 .bg-light-2 {
-    background-color: #f9f9f9 !important
+    background-color: var(--light-bg) !important
 }
 
 .bg-lighter {
-    background-color: #fafafa !important
+    background-color: var(--light-bg) !important
 }
 
 .bg-gray {
@@ -7750,7 +7750,7 @@ p {
     position: relative;
     padding: 1.6rem 2rem;
     transition: all .35s ease;
-    background-color: #fff
+    background-color: var(--card-bg)
 }
 
 .product-body.product-action-inner {
@@ -7762,7 +7762,7 @@ p {
     font-size: 1.6rem;
     line-height: 1.25;
     letter-spacing: -.01em;
-    color: #333333;
+    color: inherit;
     margin-bottom: .2rem
 }
 
@@ -15280,8 +15280,7 @@ button:focus {
 }
 
 #map {
-    height: 280px;
-    background-color: #ccc
+    background-color: var(--light-bg)
 }
 
 .gm-style .gm-style-iw-c {
@@ -15867,8 +15866,8 @@ button:focus {
 
 .summary {
     padding: 2.5rem 3rem 3rem;
-    border: .1rem dashed #d7d7d7;
-    background-color: #f9f9f9;
+    border: .1rem dashed var(--summary-border);
+    background-color: var(--summary-bg);
     border-radius: .3rem;
     margin-top: 2rem;
     margin-bottom: 2rem
@@ -19988,5 +19987,3 @@ html {
         opacity: 1;
     }
 }
-
-

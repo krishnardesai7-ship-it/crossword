@@ -4,8 +4,7 @@
 {% block content %}
 
 <main class="main">
-	<div class="page-header text-center"
-		style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}&quot;)">
+	<div class="page-header text-center">
 		<div class="container">
 			<h1 class="page-title">Shopping Cart<span>Shop</span></h1>
 		</div><!-- End .container -->
@@ -72,7 +71,7 @@
 											</h3><!-- End .product-title -->
 										</div><!-- End .product -->
 									</td>
-									<td class="price-col">&#8377;{{i.price}}</td>
+									<td class="price-col" style="color: #c96">&#8377;{{i.price}}</td>
 									<td class="quantity-col">
 										<div class="cart-product-quantity">
 											<div class="input-group">
@@ -129,23 +128,23 @@
 
 							<table class="table table-summary">
 								<tbody>
-									<tr class="summary-subtotal">
+									<tr class="summary-subtotal" style="color: #c96">
 										<td>Subtotal:</td>
 										<td>&#8377;{{ subtotal }}</td>
 									</tr><!-- End .summary-subtotal -->
-									<tr class="summary-shipping">
+									<tr class="summary-shipping" style="color: #c96">
 										<td>Shipping:</td>
 										<td>&#8377;{{ shipping }}</td>
 									</tr>
 
 									{% if discount > 0 %}
-									<tr class="summary-discount">
+									<tr class="summary-discount" style="color: #c96">
 										<td>Discount:</td>
 										<td>-&#8377;{{ discount }}</td>
 									</tr>
 									{% endif %}
 
-									<tr class="summary-total">
+									<tr class="summary-total" style="color: #c96">
 										<td>Total:</td>
 										<td>&#8377;{{ total }}</td>
 									</tr><!-- End .summary-total -->

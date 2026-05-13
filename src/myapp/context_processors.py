@@ -23,4 +23,8 @@ def cart_summary(request):
     )
     wishlist_count = wishlist.objects.filter(register=user).count()
 
-    return {"cart_count": cart_count, "wishlist_count": wishlist_count}
+    return {
+        "cart_count": cart_count,
+        "wishlist_count": wishlist_count,
+        "user_name": user.username if user else None
+    }

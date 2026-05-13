@@ -65,8 +65,7 @@
 
 
 <main class="main">
-    <div class="page-header text-center"
-        style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}&quot;)">
+    <div class="page-header text-center">
         <div class="container">
             <h1 class="page-title">Checkout</h1>
         </div>
@@ -190,8 +189,8 @@
                                 {% if cart_items and cart_items.count > 0 %}
                                 {% for item in cart_items %}
                                 <tr>
-                                    <td>{{ item.product_name }} <strong>× {{ item.quantity }}</strong></td>
-                                    <td class="text-end">&#8377;{{ item.total }}</td>
+                                    <td style="color: #c96">{{ item.product_name }}</td>
+                                    <td class="text-end" style="color: #c96">&#8377;{{ item.total }}</td>
                                 </tr>
                                 {% endfor %}
                                 {% else %}
@@ -201,15 +200,21 @@
                                 {% endif %}
                             </tbody>
                             <tfoot>
-                                <tr>
+                                <tr style="color: #c96">
                                     <th>Subtotal</th>
                                     <th class="text-end">&#8377;{{ subtotal }}</th>
                                 </tr>
-                                <tr>
+                                <tr style="color: #c96">
                                     <th>Shipping</th>
                                     <th class="text-end">&#8377;{{ shipping }}</th>
                                 </tr>
-                                <tr>
+                                {% if discount > 0 %}
+                                <tr style="color: #c96">
+                                    <th>Discount</th>
+                                    <th class="text-end">-&#8377;{{ discount }}</th>
+                                </tr>
+                                {% endif %}
+                                <tr style="color: #c96">
                                     <th>Total</th>
                                     <th class="text-end"><strong>&#8377;{{ total }}</strong></th>
                                 </tr>

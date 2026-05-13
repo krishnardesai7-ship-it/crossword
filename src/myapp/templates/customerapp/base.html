@@ -314,6 +314,7 @@
             --card-bg: #ffffff;
             --link-color: #ffffff;
             --primary-color: #cc9966;
+            --light-bg: #f9f9f9;
         }
 
         body.dark-mode {
@@ -327,6 +328,9 @@
             --card-bg: #2c124b;
             --link-color: #ffffff;
             --primary-color: #4A90D9;
+            --summary-bg: #2c124b;
+            --summary-border: #4A90D9;
+            --light-bg: #2c124b;
         }
 
         body.dark-mode {
@@ -339,8 +343,9 @@
         body.dark-mode h3,
         body.dark-mode h4,
         body.dark-mode h5,
-        body.dark-mode h6 {
-            color: var(--heading-color);
+        body.dark-mode h6,
+        body.dark-mode .text-dark {
+            color: var(--heading-color) !important;
         }
 
         body.dark-mode .header,
@@ -373,6 +378,25 @@
             border-color: var(--border-color) !important;
         }
 
+        body.dark-mode .summary {
+            background-color: var(--summary-bg) !important;
+            border-color: var(--summary-border) !important;
+            color: #ffffff;
+        }
+
+        body.dark-mode .summary-title {
+            color: #ffffff !important;
+            border-bottom-color: var(--summary-border) !important;
+        }
+
+        body.dark-mode .table.table-summary {
+            color: #ffffff;
+        }
+
+        body.dark-mode .table.table-summary td {
+            border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
         body.dark-mode a {
             color: var(--link-color);
         }
@@ -393,6 +417,105 @@
         body.dark-mode .no-results-container {
             background: #2c124b !important;
             border-color: #4A90D9 !important;
+        }
+
+        body.dark-mode .pagination .page-link {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        body.dark-mode .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        /* Chatbot Welcome Bubble */
+        .chatbot-welcome-bubble {
+            position: fixed;
+            bottom: 40px;
+            right: 100px;
+            background: #cc9966;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 18px 18px 0 18px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2001;
+            font-size: 14px;
+            font-weight: 500;
+            max-width: 320px;
+            width: max-content;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .chatbot-welcome-bubble:after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #cc9966;
+            border-top: 10px solid transparent;
+        }
+
+        body.dark-mode .chatbot-welcome-bubble {
+            background: #4A90D9;
+        }
+
+        body.dark-mode .chatbot-welcome-bubble:after {
+            border-left-color: #4A90D9;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .close-bubble {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            margin-left: 12px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .close-bubble:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 576px) {
+            .chatbot-welcome-bubble {
+                right: 90px;
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+        }
+
+        body.dark-mode .form-control,
+        body.dark-mode .form-control:focus {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        body.dark-mode .breadcrumb-item,
+        body.dark-mode .breadcrumb-item a {
+            color: var(--text-color) !important;
+        }
+
+        body.dark-mode .breadcrumb-item.active {
+            color: var(--primary-color) !important;
         }
 
         /* Mode Selector Styling */
@@ -444,8 +567,8 @@
                                 <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul">Logout</a></li>
                                 <li class="theme-switcher-container">
                                     <select id="theme-selector" class="theme-select" aria-label="Select Theme">
-                                        <option value="light">☀️ Light</option>
-                                        <option value="dark">🌙 Dark</option>
+                                        <option value="light">Light</option>
+                                        <option value="dark">Dark</option>
                                     </select>
                                 </li>
                             </ul>
@@ -655,11 +778,19 @@
 
     <!-- Chatbot Floating Button -->
     <label for="chatbot-toggle" class="chatbot-floating" aria-label="Chat with Chatbot" title="💬 Chat with us">
-        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-            <path
-                d="M16 2C8.27 2 2 7.45 2 14.5c0 2.7.9 5.24 2.5 7.4L2.5 29.5l7.2-2.4c2.1 1.3 4.6 2 7.3 2 7.73 0 14-5.45 14-12.5S23.73 2 16 2zm3.5 16H8v-2h11.5v2zm0-4H8v-2h11.5v2zm0-4H8V8h11.5v2z" />
-        </svg>
+        <video width="60" height="60" autoplay muted loop playsinline
+            style="border-radius: 50%; object-fit: cover; pointer-events: none; display: block;">
+            <source src="{% static 'customerapp/images/ai.mp4' %}" type="video/mp4">
+        </video>
     </label>
+
+    {% if user_name %}
+    <div class="chatbot-welcome-bubble" id="chatbotWelcomeBubble">
+        <span>Hey {{ user_name }}, how can I help you?</span>
+        <button class="close-bubble" onclick="document.getElementById('chatbotWelcomeBubble').style.display='none'">&times;</button>
+    </div>
+    {% endif %}
+
     <!-- Chatbot Popup -->
     <div class="chatbot-popup" id="chatbotPopup" aria-hidden="true">
         <div class="chatbot-popup__header">
