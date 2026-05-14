@@ -29,6 +29,83 @@
         transform: scale(1.05);
         /* subtle zoom effect */
     }
+
+    .video-banner-container {
+        position: relative;
+        height: 550px;
+        overflow: hidden;
+        border-radius: 15px;
+        /* Added slight rounding for premium feel */
+    }
+
+    .video-banner-container video {
+        transition: transform 1.2s ease;
+    }
+
+    .video-banner-container:hover video {
+        transform: scale(1.08);
+    }
+
+    .banner-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        background: rgba(0, 0, 0, 0.45);
+        padding: 25px 30px;
+        border-radius: 12px;
+        backdrop-filter: blur(8px);
+        max-width: 400px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        animation: boxFadeIn 1.2s ease-out;
+    }
+
+    .banner-box:hover {
+        transform: translateY(-10px) scale(1.02);
+        background: rgba(0, 0, 0, 0.55);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    @keyframes boxFadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .myBannerSlider {
+        height: 600px;
+    }
+
+    .myBannerSlider .swiper-slide img {
+        height: 600px;
+        object-fit: cover;
+    }
+
+    .intro-section {
+        padding-bottom: 0 !important;
+    }
+
+    .icon-boxes-container {
+        margin-top: 0 !important;
+        padding-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+
+        .video-banner-container,
+        .myBannerSlider,
+        .myBannerSlider .swiper-slide img {
+            height: 350px;
+        }
+    }
 </style>
 
 <head>
@@ -72,19 +149,33 @@
 
                         <!-- Slide 1 -->
                         <div class="swiper-slide">
-                            <div class="banner banner-big banner-overlay">
+                            <div class="video-banner-container">
                                 <a href="{% url 'shop' %}">
-                                    <img src="{% static 'customerapp/images/demos/demo-20/banners/image-1.png' %}"
-                                        alt="Banner">
+                                    <video autoplay loop muted playsinline
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                        <source
+                                            src="{% static 'customerapp/images/demos/demo-20/banners/video-1.mp4' %}"
+                                            type="video/mp4">
+                                    </video>
                                 </a>
 
-                                <div class="banner-content">
-                                    <h4 class="banner-subtitle text-white">Your Guide To The World</h4>
-                                    <h2 class="banner-title text-white">Must-Read <br>Travel Books</h2>
-                                    <a href="{% url 'shop' %}" class="btn btn-outline-white-3 banner-link">
-                                        Find out more <i class="icon-long-arrow-right"></i>
-                                    </a>
+                                <div class="video-overlay"
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: flex-start; padding-left: 6%;">
+                                    <div class="banner-box">
+                                        <h4 class="banner-subtitle text-white"
+                                            style="font-size: 1.6rem; letter-spacing: 1px; margin-bottom: 10px; font-weight: 400;">
+                                            Your Guide To The World</h4>
+                                        <h2 class="banner-title text-white"
+                                            style="font-size: 3.8rem; line-height: 1.1; margin-bottom: 15px; font-weight: 700;">
+                                            Must-Read <br>Travel Books</h2>
+                                        <a href="{% url 'shop' %}" class="text-white"
+                                            style="font-size: 1.6rem; font-weight: 400; display: flex; align-items: center; gap: 10px; transition: all 0.3s ease;">
+                                            Find out more <i class="icon-long-arrow-right"></i>
+                                        </a>
+                                    </div>
                                 </div>
+
+
                             </div>
                         </div>
 

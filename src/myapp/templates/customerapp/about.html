@@ -30,10 +30,22 @@
         </div><!-- End .container -->
     </nav><!-- End .breadcrumb-nav -->
     <div class="container">
-        <div class="page-header page-header-big text-center"
-            style="background-image: url(&quot;{% static 'customerapp/images/about-header-bg-1.JPEG' %}&quot;)">
-            <h1 class="page-title text-white">About us</h1>
-        </div><!-- End .page-header -->
+        <div class="video-banner-container"
+            style="position: relative; height: 400px; overflow: hidden; border-radius: 5px; margin-bottom: 50px;">
+            <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                <source src="{% static 'customerapp/images/about-video-bg-1.mp4' %}" type="video/mp4">
+            </video>
+            <div class="video-overlay"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; text-align: center;">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <h1 class="page-title text-white" style="margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                        About
+                        us</h1>
+                    <h4 class="text-white" style="margin-top: 10px; font-weight: 300; text-shadow: 1px 1px 3px
+						rgba(0,0,0,0.5);">know more about us</h4>
+                </div>
+            </div>
+        </div>
     </div><!-- End .container -->
 
     <div class="page-content pb-0">
@@ -108,13 +120,7 @@
                                     <h3 class="member-title">KRISHNA DESAI<span>Founder & Owner</span></h3>
                                     <p>Our team consists of educators, librarians, and tech enthusiasts
                                         who believe that knowledge should have no boundaries.</p>
-                                    <div class="social-icons social-icons-simple">
-                                        <a href="https://www.facebook.com/Crosswordbookstores/" class="social-icon"
-                                            title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
 
-                                        <a href="https://www.instagram.com/crosswordbookstores/" class="social-icon"
-                                            title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                                    </div>
                                 </div>
                             </figcaption>
                         </figure>

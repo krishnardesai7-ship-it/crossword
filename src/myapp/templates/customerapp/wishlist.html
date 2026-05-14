@@ -5,12 +5,12 @@
 
 <main class="main">
 	<div class="page-header text-center"
-		style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}'&quot;)">
+		style="background-image: url(&quot;{% static 'customerapp/images/page-header-bg.jpg' %}'&quot;); padding-top: 2rem; padding-bottom: 2rem; margin-bottom: 0;">
 		<div class="container">
-			<h1 class="page-title">Wishlist</h1>
+			<h1 class="page-title" style="margin-bottom: 0;">Wishlist</h1>
 		</div><!-- End .container -->
 	</div><!-- End .page-header -->
-	<nav aria-label="breadcrumb" class="breadcrumb-nav">
+	<nav aria-label="breadcrumb" class="breadcrumb-nav" style="margin-bottom: 1rem;">
 		<div class="container">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
@@ -81,16 +81,7 @@
 					{% endfor %}
 				</tbody>
 			</table><!-- End .table table-wishlist -->
-			<div class="wishlist-share">
-				<div class="social-icons social-icons-sm mb-2">
-					<label class="social-label">Share on:</label>
-					<a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-					<a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-					<a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-					<a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
-					<a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-				</div><!-- End .soial-icons -->
-			</div><!-- End .wishlist-share -->
+
 		</div><!-- End .container -->
 	</div><!-- End .page-content -->
 </main><!-- End .main -->

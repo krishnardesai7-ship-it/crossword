@@ -3,7 +3,7 @@ import re
 
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.html import escape
 from urllib.parse import quote_plus
 from django.views.decorators.clickjacking import xframe_options_sameorigin
@@ -17,13 +17,19 @@ from urllib import request
 from django.shortcuts import render,HttpResponse,redirect
 from .models import register as RegisterUser, contact as contact_model, product as product_model, wishlist as wishlist_model, add_to_cart, checkout as checkout_model, Category, ProductReview, Coupon
 from django.core.paginator import Paginator
-from  django.core.mail import send_mail
+from django.core.mail import send_mail
+from django.utils import timezone
 from django.contrib import messages
 import random
 # Create your views here.
 def home(request):
     if "email" in request.session:
-        uid = RegisterUser.objects.get(email=request.session['email'])
+        uid = RegisterUser.objects.filter(email=request.session['email']).first()
+        if not uid:
+            # If session exists but user not in DB, clear session and redirect
+            request.session.flush()
+            return redirect("accounts:login")
+
         # Fetch products for each section
         bestsellers = product_model.objects.filter(bestseller=True)[:6]
         new_releases = product_model.objects.filter(new_release=True)[:6]
@@ -52,7 +58,10 @@ def about(request):
 
 def contact(request):
     if "email" in request.session:
-        uid=RegisterUser.objects.get(email=request.session['email'])
+        uid = RegisterUser.objects.filter(email=request.session['email']).first()
+        if not uid:
+            request.session.flush()
+            return redirect("accounts:login")
 
         print(uid.email)
 
@@ -1919,4 +1928,25 @@ def chatbot_api(request):
 )}
 """
     return JsonResponse({"response": response_html})
+
+
+def track_order(request, id):
+    order = get_object_or_404(checkout_model, id=id)
+    # Simulate some tracking context
+    confirmed_dt = order.order_date
+    shipped_dt = confirmed_dt + timezone.timedelta(days=1)
+    out_dt = confirmed_dt + timezone.timedelta(days=2)
+    arrived_dt = confirmed_dt + timezone.timedelta(days=3)
+    
+    context = {
+        'order': order,
+        'order_id_display': f"{order.id:07d}UL",
+        'confirmed_date': confirmed_dt.strftime("%d %b").lstrip("0"),
+        'shipped_date': shipped_dt.strftime("%d %b").lstrip("0"),
+        'out_date': out_dt.strftime("%d %b").lstrip("0"),
+        'arrived_date': arrived_dt.strftime("%d %b").lstrip("0"),
+        'status_step': 4 if order.status == 'Delivered' else 2,
+    }
+    return render(request, 'customerapp/track_order.html', context)
+
 

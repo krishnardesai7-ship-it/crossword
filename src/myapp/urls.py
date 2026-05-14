@@ -49,6 +49,7 @@ urlpatterns = [
     path('remove_coupon/', views.remove_coupon, name='remove_coupon'),
     path('success/', views.payment_success, name='success'),
  path('profile/', views.profile, name='profile'),
+ path('track_order/<int:id>/', views.track_order, name='track_order'),
  path('chat/', views.chat_ui, name='chat_ui'),
  path('chatbot/', views.chatbot_api, name='chatbot_api'),
     

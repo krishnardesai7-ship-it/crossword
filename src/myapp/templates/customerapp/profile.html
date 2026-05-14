@@ -3,12 +3,12 @@
 
 {% block content %}
 <main class="main">
-    <div class="page-header text-center">
+    <div class="page-header text-center" style="padding-top: 2rem; padding-bottom: 2rem; margin-bottom: 0;">
         <div class="container">
-            <h1 class="page-title">Profile</h1>
+            <h1 class="page-title" style="margin-bottom: 0;">Profile</h1>
         </div><!-- End .container -->
     </div><!-- End .page-header -->
-    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0" style="margin-bottom: 1rem;">
         <div class="container">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
@@ -75,7 +75,13 @@
                                         <td class="stock-col" style="color: #c96">{{ order.quantity }}</td>
                                         <td class="price-col" style="color: #c96">₹{{ order.total }}</td>
                                         <td class="action-col">
-                                            <span class="badge badge-info">{{ order.status }}</span>
+                                            <div class="d-flex flex-column" style="gap: 4px; max-width: 80px;">
+                                                <span class="badge badge-info"
+                                                    style="font-size: 10px; padding: 3px 6px; text-transform: uppercase; color: white !important;">{{ order.get_status_display|default:"PENDING" }}</span>
+                                                <a href="{% url 'track_order' order.id %}"
+                                                    class="btn btn-outline-primary-2 btn-sm"
+                                                    style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Track</a>
+                                            </div>
                                         </td>
                                         <td class="date-col" style="color: #c96">{{ order.order_date|date:"d M Y" }}
                                         </td>
@@ -130,7 +136,13 @@
                                         <td class="stock-col" style="color: #c96">{{ order.quantity }}</td>
                                         <td class="price-col" style="color: #c96">₹{{ order.total }}</td>
                                         <td class="action-col">
-                                            <span class="badge badge-success">{{ order.status }}</span>
+                                            <div class="d-flex flex-column" style="gap: 4px; max-width: 80px;">
+                                                <span class="badge badge-success"
+                                                    style="font-size: 10px; padding: 3px 6px; text-transform: uppercase; color: white !important;">{{ order.get_status_display|default:"DELIVERED" }}</span>
+                                                <a href="{% url 'track_order' order.id %}"
+                                                    class="btn btn-outline-primary-2 btn-sm"
+                                                    style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Details</a>
+                                            </div>
                                         </td>
                                         <td class="date-col" style="color: #c96">{{ order.order_date|date:"d M Y" }}
                                         </td>

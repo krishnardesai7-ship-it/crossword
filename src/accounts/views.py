@@ -1,4 +1,4 @@
-﻿from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
 from django.contrib import messages
@@ -14,6 +14,7 @@ import random
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import IntegrityError
+from myapp.models import register as RegisterUser
 
 User = get_user_model()
 faceRecognition = FaceRecognition()
@@ -55,7 +56,7 @@ def accounts_register(request):
 
     if form.is_valid():
         new_user = form.save(commit=False)
-        new_user.is_active = False   # ðŸ”´ Verify first
+        new_user.is_active = False   # 🔴 Verify first
         try:
             new_user.save()
         except IntegrityError as exc:
@@ -89,7 +90,7 @@ def accounts_register(request):
         request.session['otp'] = otp
         request.session['user_id'] = new_user.id
 
-        # âœ… ADD MESSAGE HERE
+        # ✅ ADD MESSAGE HERE
         messages.success(
             request, "OTP sent to your email. Please verify your account.")
 
@@ -140,6 +141,14 @@ def accounts_login(request):
 
             if user.email:
                 request.session["email"] = user.email
+                # Synchronize with myapp.register model
+                if not RegisterUser.objects.filter(email=user.email).exists():
+                    RegisterUser.objects.create(
+                        username=user.username,
+                        email=user.email,
+                        password=user.password,
+                        confirm_password=user.password
+                    )
 
             # IMPORTANT FIX HERE 👇
             return redirect("home")   # make sure this exists in urls.py
@@ -184,8 +193,17 @@ def verify_otp(request):
 
         if str(user_otp) == str(session_otp):
             user = User.objects.get(id=user_id)
-            user.is_active = True   # âœ… Activate account
+            user.is_active = True   # ✅ Activate account
             user.save()
+
+            # Synchronize with myapp.register model
+            if not RegisterUser.objects.filter(email=user.email).exists():
+                RegisterUser.objects.create(
+                    username=user.username,
+                    email=user.email,
+                    password=user.password,
+                    confirm_password=user.password
+                )
 
             messages.success(request, "Account verified successfully!")
             return redirect("accounts:login")

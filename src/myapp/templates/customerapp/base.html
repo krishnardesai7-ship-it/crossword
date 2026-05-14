@@ -204,6 +204,10 @@
             display: flex;
         }
 
+        .chatbot-toggle-checkbox:checked~.chatbot-welcome-bubble {
+            display: none !important;
+        }
+
         .chatbot-popup__header {
             align-items: center;
             background: linear-gradient(135deg, #4A90D9, #667BC6);
@@ -440,7 +444,7 @@
             color: white;
             padding: 12px 20px;
             border-radius: 18px 18px 0 18px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             z-index: 2001;
             font-size: 14px;
             font-weight: 500;
@@ -472,8 +476,15 @@
         }
 
         @keyframes slideInRight {
-            from { transform: translateX(30px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         .close-bubble {
@@ -686,15 +697,16 @@
                                 self-development titles, and more. </p>
 
                             <div class="social-icons">
-                                <a href="#" class="social-icon" target="_blank" title="Facebook"><i
-                                        class="icon-facebook-f"></i></a>
-                                <a href="#" class="social-icon" target="_blank" title="Twitter"><i
-                                        class="icon-twitter"></i></a>
-                                <a href="#" class="social-icon" target="_blank" title="Instagram"><i
-                                        class="icon-instagram"></i></a>
-                                <a href="#" class="social-icon" target="_blank" title="Youtube"><i
-                                        class="icon-youtube"></i></a>
-                                <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                <a href="https://www.facebook.com/crosswordbookstores/" class="social-icon"
+                                    target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                                <a href="https://www.twitter.com/crosswordbookstores/" class="social-icon"
+                                    target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                                <a href="https://www.instagram.com/crosswordbookstores/" class="social-icon"
+                                    target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                                <a href="https://www.youtube.com/@CrosswordBookstores/videos" class="social-icon"
+                                    target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                                <a href="https://in.pinterest.com/ideas/crossword-bookstore/944653665753/"
+                                    class="social-icon" target="_blank" title="Pinterest"><i
                                         class="icon-pinterest"></i></a>
                             </div><!-- End .soial-icons -->
                         </div><!-- End .widget about-widget -->
@@ -787,7 +799,8 @@
     {% if user_name %}
     <div class="chatbot-welcome-bubble" id="chatbotWelcomeBubble">
         <span>Hey {{ user_name }}, how can I help you?</span>
-        <button class="close-bubble" onclick="document.getElementById('chatbotWelcomeBubble').style.display='none'">&times;</button>
+        <button class="close-bubble"
+            onclick="document.getElementById('chatbotWelcomeBubble').style.display='none'">&times;</button>
     </div>
     {% endif %}
 
