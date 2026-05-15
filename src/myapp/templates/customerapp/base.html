@@ -575,7 +575,8 @@
                                 <li><a href="{% url 'wishlist' %}"><i class="icon-heart-o"></i>Wishlist <span({{
                                             wishlist_count|default:0 }})></span></a></li>
                                 <li><a href="{% url 'profile' %}"><i class="icon-user"></i>Profile</a></li>
-                                <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul">Logout</a></li>
+                                <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul"
+                                        style="color:red !important;">Logout</a></li>
                                 <li class="theme-switcher-container">
                                     <select id="theme-selector" class="theme-select" aria-label="Select Theme">
                                         <option value="light">Light</option>

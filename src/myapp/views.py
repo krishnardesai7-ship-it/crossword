@@ -1,4 +1,3 @@
-import razorpay
 import re
 
 from django.db.models import Q
@@ -20,7 +19,14 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 import random
+
+try:
+    import razorpay
+except ModuleNotFoundError:
+    razorpay = None
+
 # Create your views here.
 def home(request):
     if "email" in request.session:
@@ -307,6 +313,8 @@ def checkout(request):
             # Create Razorpay order
             amount_paise = total * 100
             try:
+                if razorpay is None:
+                    raise RuntimeError("Razorpay package is not installed.")
                 client = razorpay.Client(
                     auth=('rzp_test_bilBagOBVTi4lE', '77yKq3N9Wul97JVQcjtIVB5z')
                 )
@@ -637,6 +645,61 @@ def profile(request):
         return redirect('accounts:login')
     
     uid = RegisterUser.objects.get(email=request.session['email'])
+    
+    if request.method == "POST":
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        address = request.POST.get('address', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        gender = request.POST.get('gender', '').strip()
+        image = request.FILES.get('image')
+        
+        try:
+            if not username or not email:
+                messages.error(request, 'Name and email are required.')
+                return redirect('profile')
+
+            duplicate_email = RegisterUser.objects.filter(email=email).exclude(id=uid.id).exists()
+            if duplicate_email:
+                messages.error(request, 'This email is already used by another account.')
+                return redirect('profile')
+
+            old_email = uid.email
+            UserModel = get_user_model()
+            auth_user = UserModel.objects.filter(email=old_email).first()
+            if auth_user and UserModel.objects.filter(email=email).exclude(id=auth_user.id).exists():
+                messages.error(request, 'This email is already used by another account.')
+                return redirect('profile')
+
+            uid.username = username
+            uid.email = email
+            request.session['email'] = email
+            uid.address = address
+            uid.phone = phone
+            uid.gender = gender
+            if image:
+                uid.image = image
+            uid.save()
+
+            if auth_user:
+                gender_map = {
+                    'Male': 'MALE',
+                    'Female': 'FEMALE',
+                }
+                auth_user.username = username
+                auth_user.email = email
+                auth_user.phone_number = int(phone) if phone.isdigit() else None
+                if gender in gender_map:
+                    auth_user.gender = gender_map[gender]
+                if image:
+                    auth_user.id_image = image
+                auth_user.save()
+
+            messages.success(request, 'Profile updated successfully!')
+        except Exception as e:
+            messages.error(request, f'Error updating profile: {e}')
+        return redirect('profile')
+
     all_orders = checkout_model.objects.filter(register=uid).order_by('-order_date')
     
     # "Active" can be defined as anything not yet delivered
@@ -1937,6 +2000,15 @@ def track_order(request, id):
     shipped_dt = confirmed_dt + timezone.timedelta(days=1)
     out_dt = confirmed_dt + timezone.timedelta(days=2)
     arrived_dt = confirmed_dt + timezone.timedelta(days=3)
+    # Map status to step index for the animated timeline
+    status_map = {
+        'Pending': 1,
+        'Processed': 2,
+        'Shipped': 3,
+        'Delivered': 4,
+        'Cancelled': 0
+    }
+    status_step = status_map.get(order.status, 1)
     
     context = {
         'order': order,
@@ -1945,8 +2017,6 @@ def track_order(request, id):
         'shipped_date': shipped_dt.strftime("%d %b").lstrip("0"),
         'out_date': out_dt.strftime("%d %b").lstrip("0"),
         'arrived_date': arrived_dt.strftime("%d %b").lstrip("0"),
-        'status_step': 4 if order.status == 'Delivered' else 2,
+        'status_step': status_step,
     }
     return render(request, 'customerapp/track_order.html', context)
-
-

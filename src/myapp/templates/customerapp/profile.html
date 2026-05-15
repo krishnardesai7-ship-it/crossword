@@ -76,8 +76,8 @@
                                         <td class="price-col" style="color: #c96">₹{{ order.total }}</td>
                                         <td class="action-col">
                                             <div class="d-flex flex-column" style="gap: 4px; max-width: 80px;">
-                                                <span class="badge badge-info"
-                                                    style="font-size: 10px; padding: 3px 6px; text-transform: uppercase; color: white !important;">{{ order.get_status_display|default:"PENDING" }}</span>
+                                                <span class="badge {% if order.status == 'Delivered' %}badge-success{% elif order.status == 'Shipped' %}badge-warning{% elif order.status == 'Pending' %}badge-orange{% elif order.status == 'Cancelled' %}badge-danger{% else %}badge-info{% endif %}"
+                                                    style="font-size: 10px; padding: 3px 6px; text-transform: uppercase; color: white !important;">{{ order.status|default:"PENDING" }}</span>
                                                 <a href="{% url 'track_order' order.id %}"
                                                     class="btn btn-outline-primary-2 btn-sm"
                                                     style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Track</a>
@@ -137,8 +137,8 @@
                                         <td class="price-col" style="color: #c96">₹{{ order.total }}</td>
                                         <td class="action-col">
                                             <div class="d-flex flex-column" style="gap: 4px; max-width: 80px;">
-                                                <span class="badge badge-success"
-                                                    style="font-size: 10px; padding: 3px 6px; text-transform: uppercase; color: white !important;">{{ order.get_status_display|default:"DELIVERED" }}</span>
+                                                <span class="badge {% if order.status == 'Delivered' %}badge-success{% elif order.status == 'Shipped' %}badge-warning{% elif order.status == 'Pending' %}badge-orange{% elif order.status == 'Cancelled' %}badge-danger{% else %}badge-info{% endif %}"
+                                                    style="font-size: 10px; padding: 3px 6px; text-transform: uppercase; color: white !important;">{{ order.status|default:"DELIVERED" }}</span>
                                                 <a href="{% url 'track_order' order.id %}"
                                                     class="btn btn-outline-primary-2 btn-sm"
                                                     style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Details</a>
@@ -161,25 +161,133 @@
                 <div class="col-12 mt-5 mb-5">
                     <div class="card card-dashboard">
                         <div class="card-body">
-                            <h3 class="card-title">User Information</h3>
-                            <div class="row">
-                                <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="card-title mb-0">User Information</h3>
+                                <button type="button" id="editProfileBtn" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                                    <span>EDIT PROFILE</span>
+                                    <i class="icon-edit"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="row align-items-center">
+                                <div class="col-md-3 text-center mb-3 mb-md-0">
+                                    <div class="profile-image-container mb-2" style="background: #f4f4f4; display: flex; align-items: center; justify-content: center;">
+                                        {% if uid.image %}
+                                        <img src="{{ uid.image.url }}" alt="{{ uid.username }}" class="profile-img-large">
+                                        {% else %}
+                                        <svg viewBox="0 0 24 24" width="50" height="50" fill="#ccc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
                                     <p><strong>Name:</strong> {{ uid.username }}</p>
                                     <p><strong>Email:</strong> {{ uid.email }}</p>
+                                    <p><strong>Gender:</strong> {{ uid.gender|default:"Not Specified" }}</p>
                                 </div>
-                                <div class="col-md-6">
-                                    <p><strong>Address:</strong> {{ uid.address|default:"Not Provided" }}</p>
+                                <div class="col-md-5">
                                     <p><strong>Phone:</strong> {{ uid.phone|default:"Not Provided" }}</p>
+                                    <p><strong>Address:</strong> {{ uid.address|default:"Not Provided" }}</p>
                                 </div>
                             </div>
                         </div><!-- End .card-body -->
                     </div><!-- End .card-dashboard -->
+
+                    <!-- Inline Edit Profile Form (Hidden by default) -->
+                    <div class="card card-dashboard mt-3" id="editProfileSection" style="display: none; border-top: 3px solid #c96;">
+                        <div class="card-body">
+                            <h3 class="card-title">Edit Profile</h3>
+                            <form action="{% url 'profile' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="username">Name *</label>
+                                            <input type="text" class="form-control" id="username" name="username" value="{{ uid.username }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="email">Email ID *</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ uid.email }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="phone">Mobile No.</label>
+                                            <input type="text" class="form-control" id="phone" name="phone" value="{{ uid.phone|default:'' }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="gender">Gender</label>
+                                            <select class="form-control" id="gender" name="gender">
+                                                <option value="Male" {% if uid.gender == 'Male' %}selected{% endif %}>Male</option>
+                                                <option value="Female" {% if uid.gender == 'Female' %}selected{% endif %}>Female</option>
+                                                <option value="Other" {% if uid.gender == 'Other' %}selected{% endif %}>Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row align-items-start">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="address">Address</label>
+                                            <textarea class="form-control" id="address" name="address" rows="3">{{ uid.address|default:'' }}</textarea>
+                                        </div>
+
+                                        <div class="camera-capture-box">
+                                            <div class="camera-preview">
+                                                <video id="profileCamera" autoplay playsinline muted></video>
+                                                <canvas id="profileSnapshotCanvas" style="display: none;"></canvas>
+                                                {% if uid.image %}
+                                                <img id="capturedProfilePreview" src="{{ uid.image.url }}" alt="{{ uid.username }}">
+                                                {% else %}
+                                                <img id="capturedProfilePreview" alt="Profile preview" style="display: none;">
+                                                {% endif %}
+                                            </div>
+                                            <div class="camera-actions">
+                                                <button type="button" id="openCameraBtn" class="btn btn-outline-primary-2 btn-sm">
+                                                    <span>OPEN CAMERA</span>
+                                                </button>
+                                                <button type="button" id="takePhotoBtn" class="btn btn-outline-primary-2 btn-sm" disabled>
+                                                    <span>TAKE PICTURE</span>
+                                                </button>
+                                                <button type="button" id="closeCameraBtn" class="btn btn-link btn-sm" disabled>Close Camera</button>
+                                            </div>
+                                            <small id="cameraStatus" class="form-text text-muted"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="image">Profile Image</label>
+                                            <input type="file" class="form-control" id="image" name="image" accept="image/*" style="padding-top: 10px;">
+                                            <small class="form-text text-muted">Upload an image or take a new photo with your camera.</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-footer mt-2">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>SAVE CHANGES</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
+                                    <button type="button" id="cancelEditProfile" class="btn btn-link">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
             </div><!-- End .row -->
         </div><!-- End .container -->
         <div class="mb-5"></div><!-- End .mb-5 -->
     </div><!-- End .page-content -->
 </main>
+
 
 <style>
     .card-dashboard {
@@ -199,6 +307,78 @@
     .card-dashboard p {
         margin-bottom: 1rem;
         font-size: 1.4rem;
+    }
+
+    .profile-image-container {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #ebebeb;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .profile-img-large {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .camera-capture-box {
+        border: 1px solid #ebebeb;
+        margin-bottom: 2rem;
+        max-width: 230px;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .camera-preview {
+        align-items: center;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+        max-width: 210px;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+    }
+
+    .camera-preview video,
+    .camera-preview img {
+        display: block;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .camera-preview video {
+        display: none;
+    }
+
+    .camera-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .7rem;
+        max-width: 210px;
+    }
+
+    .camera-actions .btn {
+        flex: 1 1 100%;
+        min-width: 0;
+        padding-left: .8rem;
+        padding-right: .8rem;
+    }
+
+    #editProfileSection .form-group {
+        margin-bottom: 1.8rem;
+    }
+
+    #editProfileSection textarea.form-control {
+        min-height: 105px;
+        resize: vertical;
     }
 
     .nav-tabs-custom {
@@ -229,16 +409,44 @@
         border-bottom-color: #c96;
     }
 
-    .badge-info {
-        background-color: #3498db;
+    .badge-success {
+        background-color: #2ecc71;
         color: #fff;
         padding: 0.5rem 1rem;
         border-radius: 4px;
         font-size: 1.2rem;
     }
 
-    .badge-success {
-        background-color: #2ecc71;
+    .badge-warning {
+        background-color: #f1c40f;
+        /* Yellow for Shipped */
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1.2rem;
+    }
+
+    .badge-orange {
+        background-color: #e67e22;
+        /* Orange for Pending */
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1.2rem;
+    }
+
+    .badge-info {
+        background-color: #3498db;
+        /* Blue for Processed */
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1.2rem;
+    }
+
+    .badge-danger {
+        background-color: #e74c3c;
+        /* Red for Cancelled */
         color: #fff;
         padding: 0.5rem 1rem;
         border-radius: 4px;
@@ -265,6 +473,133 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const editButton = document.getElementById('editProfileBtn');
+        const editSection = document.getElementById('editProfileSection');
+        const cancelButton = document.getElementById('cancelEditProfile');
+        const imageInput = document.getElementById('image');
+        const cameraVideo = document.getElementById('profileCamera');
+        const cameraCanvas = document.getElementById('profileSnapshotCanvas');
+        const capturedPreview = document.getElementById('capturedProfilePreview');
+        const openCameraButton = document.getElementById('openCameraBtn');
+        const takePhotoButton = document.getElementById('takePhotoBtn');
+        const closeCameraButton = document.getElementById('closeCameraBtn');
+        const cameraStatus = document.getElementById('cameraStatus');
+        let profileCameraStream = null;
+
+        function setCameraStatus(message) {
+            if (cameraStatus) {
+                cameraStatus.textContent = message || '';
+            }
+        }
+
+        function stopProfileCamera() {
+            if (profileCameraStream) {
+                profileCameraStream.getTracks().forEach(track => track.stop());
+                profileCameraStream = null;
+            }
+
+            if (cameraVideo) {
+                cameraVideo.srcObject = null;
+                cameraVideo.style.display = 'none';
+            }
+
+            if (takePhotoButton) takePhotoButton.disabled = true;
+            if (closeCameraButton) closeCameraButton.disabled = true;
+        }
+
+        if (editButton && editSection) {
+            editButton.addEventListener('click', function () {
+                editSection.style.display = 'block';
+                editSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        if (cancelButton && editSection) {
+            cancelButton.addEventListener('click', function () {
+                stopProfileCamera();
+                editSection.style.display = 'none';
+            });
+        }
+
+        if (imageInput && capturedPreview) {
+            imageInput.addEventListener('change', function () {
+                const file = this.files && this.files[0];
+                if (!file) return;
+
+                capturedPreview.src = URL.createObjectURL(file);
+                capturedPreview.style.display = 'block';
+                stopProfileCamera();
+                setCameraStatus('Selected image is ready. Click Save Changes to update your profile.');
+            });
+        }
+
+        if (openCameraButton && cameraVideo && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            openCameraButton.addEventListener('click', async function () {
+                try {
+                    stopProfileCamera();
+                    setCameraStatus('Requesting camera permission...');
+                    profileCameraStream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'user' },
+                        audio: false
+                    });
+                    cameraVideo.srcObject = profileCameraStream;
+                    cameraVideo.style.display = 'block';
+                    if (capturedPreview) capturedPreview.style.display = 'none';
+                    if (takePhotoButton) takePhotoButton.disabled = false;
+                    if (closeCameraButton) closeCameraButton.disabled = false;
+                    setCameraStatus('Camera is open. Take a picture when you are ready.');
+                } catch (error) {
+                    setCameraStatus('Camera access was blocked or unavailable. Please allow camera permission and try again.');
+                }
+            });
+        } else if (openCameraButton) {
+            openCameraButton.disabled = true;
+            setCameraStatus('Camera capture is not supported in this browser.');
+        }
+
+        if (takePhotoButton && cameraVideo && cameraCanvas && imageInput) {
+            takePhotoButton.addEventListener('click', function () {
+                if (!profileCameraStream || !cameraVideo.videoWidth) {
+                    setCameraStatus('Camera is not ready yet. Please try again in a moment.');
+                    return;
+                }
+
+                cameraCanvas.width = cameraVideo.videoWidth;
+                cameraCanvas.height = cameraVideo.videoHeight;
+                cameraCanvas.getContext('2d').drawImage(cameraVideo, 0, 0);
+
+                cameraCanvas.toBlob(function (blob) {
+                    if (!blob) {
+                        setCameraStatus('Could not capture the photo. Please try again.');
+                        return;
+                    }
+
+                    const capturedFile = new File([blob], 'profile-camera-photo.jpg', { type: 'image/jpeg' });
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(capturedFile);
+                    imageInput.files = dataTransfer.files;
+
+                    if (capturedPreview) {
+                        capturedPreview.src = URL.createObjectURL(blob);
+                        capturedPreview.style.display = 'block';
+                    }
+
+                    stopProfileCamera();
+                    setCameraStatus('Photo captured. Click Save Changes to update your profile image.');
+                }, 'image/jpeg', 0.92);
+            });
+        }
+
+        if (closeCameraButton) {
+            closeCameraButton.addEventListener('click', function () {
+                stopProfileCamera();
+                if (capturedPreview && capturedPreview.src) {
+                    capturedPreview.style.display = 'block';
+                }
+                setCameraStatus('Camera closed.');
+            });
+        }
+
         const tabs = document.querySelectorAll('.nav-tabs-custom .nav-link');
         tabs.forEach(tab => {
             tab.addEventListener('click', function (e) {
