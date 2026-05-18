@@ -4,9 +4,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.static import serve as media_serve
 from django.views.generic import RedirectView
+from accounts import views as account_views
 
 
 urlpatterns = [
+    path('accounts/login/', account_views.accounts_login_page, name='accounts_login'),
+    path('accounts/register/', account_views.accounts_register, name='accounts_register'),
+    path('accounts/login_face/', account_views.accounts_login, name='accounts_login_face'),
+    path('accounts/logout/', account_views.accounts_logout, name='accounts_logout'),
+    path('accounts/verify-otp/', account_views.verify_otp, name='accounts_verify_otp'),
     path('', include('myapp.urls')),
     path('admin/', admin.site.urls),
     
