@@ -57,9 +57,6 @@ def accounts_home(request):
 
 
 def accounts_register(request):
-    if request.method == "GET":
-        clear_stale_face_login_messages(request)
-
     form = UserCreationForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
