@@ -21,5 +21,5 @@ cd src
 If PowerShell blocks script execution, run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install_windows.ps1
+powershell -ExecutionPolicy Bypass -File ..\install_windows.ps1
 ```

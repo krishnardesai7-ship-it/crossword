@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from .env import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,12 +13,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = 'django-insecure-84t-z6$bwd-!fc!*$%&+m=0&=gmhqd+w5*x(4!o^tc$w623t(^'
+SECRET_KEY = config(
+    'SECRET_KEY',
+    default='django-insecure-84t-z6$bwd-!fc!*$%&+m=0&=gmhqd+w5*x(4!o^tc$w623t(^',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG_VALUE = config('DEBUG', default='False')
+DEBUG = str(DEBUG_VALUE).strip().lower() in {'1', 'true', 'yes', 'on', 'debug', 'dev', 'development'}
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['myapp.onrender.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -43,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -71,10 +77,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{os.path.join(BASE_DIR, 'db.sqlite3')}",
+        conn_max_age=600,
+    )
 }
 
 
@@ -115,10 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = 'static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,"core/static"),
+    os.path.join(BASE_DIR, "core/static"),
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
@@ -148,8 +155,8 @@ EMAIL_HOST_PASSWORD = 'slqa xfjx eltx ovtz'
 
 
 # Celery settings
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = config('REDIS_URL', default="redis://localhost:6379")
+CELERY_RESULT_BACKEND = config('REDIS_URL', default="redis://localhost:6379")
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

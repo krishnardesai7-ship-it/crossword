@@ -11,6 +11,13 @@ except ModuleNotFoundError:
 from core.settings import BASE_DIR
 
 
+def close_cv_windows():
+    try:
+        cv2.destroyAllWindows()
+    except cv2.error:
+        pass
+
+
 class FaceRecognition:
     def __init__(self):
         self.encoding_dir = Path(BASE_DIR) / "media" / "encodings"
@@ -71,19 +78,19 @@ class FaceRecognition:
             key = cv2.waitKey(1) & 0xFF
             if key == 27:
                 cam.release()
-                cv2.destroyAllWindows()
+                close_cv_windows()
                 return False, "Face registration canceled."
 
             if len(samples) >= required_samples:
                 avg_encoding = np.mean(np.array(samples), axis=0)
                 np.save(self.encoding_dir / f"{user_id}.npy", avg_encoding)
                 cam.release()
-                cv2.destroyAllWindows()
+                close_cv_windows()
                 return True, "Face registered successfully."
 
             if (time.time() - start) > timeout_seconds:
                 cam.release()
-                cv2.destroyAllWindows()
+                close_cv_windows()
                 return False, "Face registration timed out."
 
     def recognize_face(self, tolerance=0.45, timeout_seconds=20):
@@ -143,23 +150,23 @@ class FaceRecognition:
 
                 if matched_user_id is not None:
                     cam.release()
-                    cv2.destroyAllWindows()
+                    close_cv_windows()
                     return matched_user_id, "matched"
 
             cv2.imshow("Face Login", frame)
             key = cv2.waitKey(1) & 0xFF
             if key == 27:
                 cam.release()
-                cv2.destroyAllWindows()
+                close_cv_windows()
                 return None, "canceled"
 
             if (time.time() - start) > timeout_seconds:
                 cam.release()
-                cv2.destroyAllWindows()
+                close_cv_windows()
                 if saw_any_face:
                     return None, "face_not_matched"
                 break
 
         cam.release()
-        cv2.destroyAllWindows()
+        close_cv_windows()
         return None, "no_face_detected"
