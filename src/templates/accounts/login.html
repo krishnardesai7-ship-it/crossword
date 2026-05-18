@@ -30,14 +30,34 @@
                     </p>
                 </div>
                 {% include "components/messages.html" %}
-                <div class="mt-10">
-                    <form method="post" action="{% url 'accounts:login_face' %}">
+                <div class="mt-8 max-w-md">
+                    <form method="post" action="{% url 'accounts:login' %}" class="space-y-4">
                         {% csrf_token %}
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-white">Email</label>
+                            <input type="email" id="email" name="email" value="{{ email|default:'' }}" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-3">
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-white">Password</label>
+                            <input type="password" id="password" name="password" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-3">
+                        </div>
                         <button type="submit"
                             class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center">
                             Login Now
                         </button>
                     </form>
+                    <form method="post" action="{% url 'accounts:login_face' %}" class="mt-4">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="text-white border border-white hover:bg-white hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                            Use Face Login
+                        </button>
+                    </form>
+                    <p class="mt-4 text-sm text-white">
+                        New here? <a href="{% url 'accounts:register' %}" class="font-semibold underline">Create an account</a>
+                    </p>
                 </div>
             </div>
             <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">

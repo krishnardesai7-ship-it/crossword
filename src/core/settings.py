@@ -21,6 +21,10 @@ SECRET_KEY = config(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG_VALUE = config('DEBUG', default='False')
 DEBUG = str(DEBUG_VALUE).strip().lower() in {'1', 'true', 'yes', 'on', 'debug', 'dev', 'development'}
+FACE_RECOGNITION_REQUIRED_VALUE = config('FACE_RECOGNITION_REQUIRED', default='False')
+FACE_RECOGNITION_REQUIRED = str(FACE_RECOGNITION_REQUIRED_VALUE).strip().lower() in {
+    '1', 'true', 'yes', 'on'
+}
 
 ALLOWED_HOSTS = [
     host.strip()

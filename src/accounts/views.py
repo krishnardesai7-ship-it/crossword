@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.messages import get_messages
 # from twilio.rest import Client
@@ -19,11 +19,19 @@ from myapp.models import register as RegisterUser
 User = get_user_model()
 faceRecognition = FaceRecognition()
 FACE_LIB_SETUP_MSG = (
-    "Face recognition dependencies are not installed for this Python interpreter. "
-    "Activate the project virtual environment (`.\\fenv\\Scripts\\activate`) "
-    "or install requirements, then try again."
+    "Face login is not available on this hosted website. Please log in with your email and password."
 )
 FACE_NOT_DETECTED_MSG = "Face not detected. Please center your face and try again."
+
+
+def sync_register_user(user):
+    if user.email and not RegisterUser.objects.filter(email=user.email).exists():
+        RegisterUser.objects.create(
+            username=user.username,
+            email=user.email,
+            password=user.password,
+            confirm_password=user.password,
+        )
 
 
 def clear_stale_face_login_messages(request):
@@ -75,12 +83,18 @@ def accounts_register(request):
         # Capture and store dlib embedding for this user.
         registered, face_message = faceRecognition.enroll_face(new_user.id)
         if not registered:
-            new_user.delete()
-            if face_message == "face_library_missing":
-                messages.error(request, FACE_LIB_SETUP_MSG)
-            else:
-                messages.error(request, face_message)
-            return redirect("accounts:register")
+            if settings.FACE_RECOGNITION_REQUIRED:
+                new_user.delete()
+                if face_message == "face_library_missing":
+                    messages.error(request, FACE_LIB_SETUP_MSG)
+                else:
+                    messages.error(request, face_message)
+                return redirect("accounts:register")
+
+            messages.info(
+                request,
+                "Face login is not available on this hosted server. Continue with email OTP verification.",
+            )
 
         # Send OTP Email
         email = new_user.email
@@ -141,14 +155,7 @@ def accounts_login(request):
 
             if user.email:
                 request.session["email"] = user.email
-                # Synchronize with myapp.register model
-                if not RegisterUser.objects.filter(email=user.email).exists():
-                    RegisterUser.objects.create(
-                        username=user.username,
-                        email=user.email,
-                        password=user.password,
-                        confirm_password=user.password
-                    )
+                sync_register_user(user)
 
             # IMPORTANT FIX HERE 👇
             return redirect("home")   # make sure this exists in urls.py
@@ -168,6 +175,24 @@ def accounts_logout(request):
 
 
 def accounts_login_page(request):
+    if request.method == "POST":
+        email = (request.POST.get("email") or "").strip().lower()
+        password = request.POST.get("password") or ""
+
+        user = authenticate(request, username=email, password=password)
+        if user is None:
+            inactive_user = User.objects.filter(email__iexact=email).first()
+            if inactive_user and inactive_user.check_password(password) and not inactive_user.is_active:
+                messages.error(request, "Please verify your email OTP before logging in.")
+            else:
+                messages.error(request, "Invalid email or password.")
+            return render(request, "accounts/login.html", {"email": email})
+
+        login(request, user)
+        request.session["email"] = user.email
+        sync_register_user(user)
+        return redirect("home")
+
     return render(request, "accounts/login.html")
 
 
@@ -197,13 +222,7 @@ def verify_otp(request):
             user.save()
 
             # Synchronize with myapp.register model
-            if not RegisterUser.objects.filter(email=user.email).exists():
-                RegisterUser.objects.create(
-                    username=user.username,
-                    email=user.email,
-                    password=user.password,
-                    confirm_password=user.password
-                )
+            sync_register_user(user)
 
             messages.success(request, "Account verified successfully!")
             return redirect("accounts:login")
