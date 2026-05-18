@@ -22,7 +22,14 @@ SECRET_KEY = config(
 DEBUG_VALUE = config('DEBUG', default='False')
 DEBUG = str(DEBUG_VALUE).strip().lower() in {'1', 'true', 'yes', 'on', 'debug', 'dev', 'development'}
 
-ALLOWED_HOSTS = ['myapp.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in config(
+        'ALLOWED_HOSTS',
+        default='crossword-3.onrender.com,myapp.onrender.com,127.0.0.1,localhost',
+    ).split(',')
+    if host.strip()
+]
 
 
 # Application definition
