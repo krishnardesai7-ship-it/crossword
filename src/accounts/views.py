@@ -60,33 +60,37 @@ def accounts_register(request):
     form = UserCreationForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
-        new_user = form.save(commit=False)
-        new_user.is_active = False   # 🔴 Verify first
         try:
-            new_user.save()
-        except IntegrityError as exc:
-            error_text = str(exc).lower()
-            if "username" in error_text:
-                form.add_error("username", "This username is already taken.")
-            elif "email" in error_text:
-                form.add_error("email", "An account with this email already exists.")
-            else:
-                form.add_error(
-                    None,
-                    "Could not create account due to duplicate data. Please try different values.",
-                )
+            new_user = form.save(commit=False)
+            new_user.is_active = False   # 🔴 Verify first
+            try:
+                new_user.save()
+            except IntegrityError as exc:
+                error_text = str(exc).lower()
+                if "username" in error_text:
+                    form.add_error("username", "This username is already taken.")
+                elif "email" in error_text:
+                    form.add_error("email", "An account with this email already exists.")
+                else:
+                    form.add_error(
+                        None,
+                        "Could not create account due to duplicate data. Please try different values.",
+                    )
+                return render(request, "accounts/register.html", {"form": form})
+
+            # Send OTP to user's email and redirect to verification
+            otp = send_otp(new_user.email)
+            request.session['otp'] = otp
+            request.session['user_id'] = new_user.id
+
+            messages.success(
+                request,
+                f"Account created successfully! An OTP has been sent to {new_user.email}.",
+            )
+            return redirect("accounts:verify_otp")
+        except Exception as e:
+            messages.error(request, f"Server Error during registration: {str(e)}")
             return render(request, "accounts/register.html", {"form": form})
-
-        # Send OTP to user's email and redirect to verification
-        otp = send_otp(new_user.email)
-        request.session['otp'] = otp
-        request.session['user_id'] = new_user.id
-
-        messages.success(
-            request,
-            f"Account created successfully! An OTP has been sent to {new_user.email}.",
-        )
-        return redirect("accounts:verify_otp")
 
     return render(request, "accounts/register.html", {"form": form})
 
