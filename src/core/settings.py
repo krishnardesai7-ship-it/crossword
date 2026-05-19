@@ -30,7 +30,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in config(
         'ALLOWED_HOSTS',
-        default='crossword-3.onrender.com,myapp.onrender.com,127.0.0.1,localhost',
+        default='crossword-5-355o.onrender.com,crossword-3.onrender.com,myapp.onrender.com,127.0.0.1,localhost,.onrender.com',
     ).split(',')
     if host.strip()
 ]
