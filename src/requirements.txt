@@ -17,8 +17,7 @@ dj-database-url==3.1.2
 Django==5.2.12
 # dlib-bin provides a pre-compiled binary wheel (no C++ compilation needed on Render).
 # face-recognition depends on dlib; dlib-bin avoids build failures on hosted Linux servers.
-dlib-bin==20.0.0
-face-recognition==1.3.0
+dlib-bin>=20.0.0
 face-recognition-models==0.3.0
 filelock==3.29.0
 fonttools==4.62.1
