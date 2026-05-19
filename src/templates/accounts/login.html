@@ -231,6 +231,12 @@
                                 stopCamera();
                                 window.location.href = "{% url 'accounts:register' %}";
                             }, 2500);
+                        } else if (data.message.indexOf("Face not detected") !== -1) {
+                            statusBadge.textContent = '⚠️ Auto-retrying...';
+                            scanning = false;
+                            setTimeout(() => {
+                                if (stream) startCountdownAndCapture();
+                            }, 1500);
                         } else {
                             scanning = false;
                             captureBtn.disabled = false;
