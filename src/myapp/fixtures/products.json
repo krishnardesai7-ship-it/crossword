@@ -1,0 +1,1209 @@
+[
+{
+  "model": "myapp.product",
+  "pk": 17,
+  "fields": {
+    "name": "BEFORE WE WERE STRANGER",
+    "price": 877,
+    "description": "Second chance love story",
+    "image": "products/BEFORE_WE_WERE_STRANGER.jpg",
+    "author_name": "RENEE CARLINO",
+    "published_year": "2015",
+    "category": "love_story",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 18,
+  "fields": {
+    "name": "CALL ME BY YOUR NAME",
+    "price": 392,
+    "description": "Lyrical coming of age novel",
+    "image": "products/CALL_ME_BY_YOUR_NAME.jpg",
+    "author_name": "Andre Aaman",
+    "published_year": "2007",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 19,
+  "fields": {
+    "name": "IT ENDS WITH US",
+    "price": 2016,
+    "description": "About love story of relationship",
+    "image": "products/IT_ENDS_WITH_US.jpg",
+    "author_name": "Colleen Hoover",
+    "published_year": "2016",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 21,
+  "fields": {
+    "name": "ME BEFORE YOU",
+    "price": 159,
+    "description": "About wealthy, Wheelchair bound",
+    "image": "products/ME_BEFORE_YOU.jpg",
+    "author_name": "Jojo Moyes",
+    "published_year": "2012",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 22,
+  "fields": {
+    "name": "NOTE BOOK",
+    "price": 499,
+    "description": "About met each other again",
+    "image": "products/NOTEBOOK.jpg",
+    "author_name": "Nicholas Sparks",
+    "published_year": "1996",
+    "category": "love_story",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 23,
+  "fields": {
+    "name": "OUTLANDER",
+    "price": 399,
+    "description": "About Love Story",
+    "image": "products/OUTLANDER.jpg",
+    "author_name": "Diana Gabaldon",
+    "published_year": "1991",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 24,
+  "fields": {
+    "name": "THE FAULT IN OUR STARS",
+    "price": 154,
+    "description": "Young Adult novel about two teen",
+    "image": "products/THE_FAULT_IN_OUR_STARS.jpg",
+    "author_name": "John Green",
+    "published_year": "2012",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 25,
+  "fields": {
+    "name": "THE TIME TRAVELLER'S WIFE",
+    "price": 175,
+    "description": "about unpredictable absence love",
+    "image": "products/THE_TIME_TRAVELERS_WIFE.jpg",
+    "author_name": "Audrey Niffeneger",
+    "published_year": "2003",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 26,
+  "fields": {
+    "name": "TWILIGHT",
+    "price": 372,
+    "description": "About Dangerous Addictive Love",
+    "image": "products/TWILIGHT.jpg",
+    "author_name": "Stephenie Meyer",
+    "published_year": "2005",
+    "category": "love_story",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 27,
+  "fields": {
+    "name": "A GAME OF THRONES",
+    "price": 415,
+    "description": "ABOUT SUPERNATURAL THREATS",
+    "image": "products/A_GAME_OF_THRONES.jpg",
+    "author_name": "GEORGE R. R. MARTIN",
+    "published_year": "1996",
+    "category": "fantasy",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 28,
+  "fields": {
+    "name": "AMERICAN GODS",
+    "price": 322,
+    "description": "RECRUITED BY MYSTERIOUS",
+    "image": "products/AMERICAN_GODS.jpg",
+    "author_name": "NEIL GAIMAN",
+    "published_year": "2001",
+    "category": "fantasy",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 29,
+  "fields": {
+    "name": "CITY OF BONES",
+    "price": 395,
+    "description": "A LADY WORRIER BORN TO PROTACT THE WORLD",
+    "image": "products/CITY_OF_BONES.jpg",
+    "author_name": "CASSANDRA CLARE",
+    "published_year": "2007",
+    "category": "fantasy",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 30,
+  "fields": {
+    "name": "GOOD OMENS",
+    "price": 412,
+    "description": "UNLIKLY DUO A FUSSY ANGLE AND FAST LIVING DEMON",
+    "image": "products/GOOD_OMENS.jpg",
+    "author_name": "NEIL GAIMAN",
+    "published_year": "1990",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 31,
+  "fields": {
+    "name": "THE BEAR AND THE NIGHTANGLE",
+    "price": 361,
+    "description": "RUSSIAN WILDNESS MUST PROTECT HER VILLAGE FROM ANCIENT",
+    "image": "products/THE_BEAR_AND_THE_NIGHTINGALE.jpg",
+    "author_name": "KATHERINE ARDEN",
+    "published_year": "2017",
+    "category": "fantasy",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 32,
+  "fields": {
+    "name": "THE HOBBIT",
+    "price": 285,
+    "description": "ABOUT WHISKED AWAY ON AN UNEXPECTED JOURNY",
+    "image": "products/THE_HOBBIT.jpg",
+    "author_name": "J. R. R. TOLKEIN",
+    "published_year": "1997",
+    "category": "fantasy",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 33,
+  "fields": {
+    "name": "THE LAST UNICORN",
+    "price": 399,
+    "description": "ABOUT LAST REMAINING UNICORN LEAVES HER LILAC WOOD",
+    "image": "products/THE_LAST_UNICORN.jpg",
+    "author_name": "PETER S. BEAGLE",
+    "published_year": "1978",
+    "category": "fantasy",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 34,
+  "fields": {
+    "name": "THE NAME OF THE WIND",
+    "price": 499,
+    "description": "LIFE STORY TO A TRAVELLING SCRIBE",
+    "image": "products/THE_NAME_OF_THE_WIND.jpg",
+    "author_name": "PATRICK ROTHFUSS",
+    "published_year": "2007",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 35,
+  "fields": {
+    "name": "ALICE'S ADVENTURE IN WONDERLAND",
+    "price": 111,
+    "description": "ABOUT LITTLE GIRL AND RABIT",
+    "image": "products/ALICES_ADVENTURE_IN_WONDERLAND.jpg",
+    "author_name": "LEWIS CARROLL",
+    "published_year": "1965",
+    "category": "juvenile_literature",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 36,
+  "fields": {
+    "name": "DIARY OF A WIMPY KID",
+    "price": 235,
+    "description": "ABOUT DIARY ENTRIES",
+    "image": "products/DIARY_OF_A_WIMPY_KID.jpg",
+    "author_name": "JEFF KINNEY",
+    "published_year": "2007",
+    "category": "juvenile_literature",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 37,
+  "fields": {
+    "name": "PERCY JEACKSON",
+    "price": 316,
+    "description": "THE BOY DEMIGOD THE SON OF POSEIDON",
+    "image": "products/PERCY_JACKSON.jpg",
+    "author_name": "RICK RIORDAN",
+    "published_year": "2005",
+    "category": "juvenile_literature",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 38,
+  "fields": {
+    "name": "THE CAT IN THE HAT",
+    "price": 250,
+    "description": "TWO CHILDREN LEFT HOME ALONE ON RAINY DAY",
+    "image": "products/THE_CAT_IN_THE_HAT.jpg",
+    "author_name": "DR. SEUSS",
+    "published_year": "1957",
+    "category": "juvenile_literature",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 39,
+  "fields": {
+    "name": "THE LITTLE PRINCE",
+    "price": 199,
+    "description": "SATNDARD PIOLT IN SABRA DESSERT",
+    "image": "products/THE_LITTLE_PRINCE.jpg",
+    "author_name": "ANTOINE DE SAINT  EXUPERY",
+    "published_year": "1943",
+    "category": "juvenile_literature",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 40,
+  "fields": {
+    "name": "THE MAGIC TREE HOUSE",
+    "price": 195,
+    "description": "TWO SIBLINGS DISCOVER A MYSTERIOUS TREEHOUSE IN WOODS",
+    "image": "products/THE_MAGIC_TREE_HOUSE.jpg",
+    "author_name": "MARRY POPE OSBORNE",
+    "published_year": "1992",
+    "category": "juvenile_literature",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 41,
+  "fields": {
+    "name": "THE SECRET GARDEN",
+    "price": 150,
+    "description": "OVERGROWN GARDEN THAT HELPS HER FIND HAELTH AND HER",
+    "image": "products/THE_SECRET_GARDEN.jpg",
+    "author_name": "FRANCES HODGSON BURNETT",
+    "published_year": "1999",
+    "category": "juvenile_literature",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 42,
+  "fields": {
+    "name": "THE TALE OF PETER RABIT",
+    "price": 225,
+    "description": "DISOBEDIENT YOUNG RABBIT",
+    "image": "products/THE_TALE_OF_PETER_RABBIT.jpg",
+    "author_name": "BEATRIX POTTER",
+    "published_year": "1992",
+    "category": "juvenile_literature",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 43,
+  "fields": {
+    "name": "THE WIND IN THE WILLOWS",
+    "price": 175,
+    "description": "FOLLOWS PASTERAL ADVENTURES",
+    "image": "products/THE_WIND_IN_THE_WILLOWS.jpg",
+    "author_name": "KENNETH GRAHAME",
+    "published_year": "1988",
+    "category": "juvenile_literature",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 44,
+  "fields": {
+    "name": "WINNIE THE POOH",
+    "price": 299,
+    "description": "BEAR OF VERY LITTLE BRAIN",
+    "image": "products/WINNIETHE_POOH.jpg",
+    "author_name": "A. A MILNE",
+    "published_year": "1989",
+    "category": "juvenile_literature",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 45,
+  "fields": {
+    "name": "A STUDY IN SCARLET",
+    "price": 151,
+    "description": "FIRST APPERANCE OF SHARLOCK HOMES AND DR. WATSON",
+    "image": "products/A_STUDY_IN_SCARLET.jpg",
+    "author_name": "ARTHUR CONAN DOYLE",
+    "published_year": "1887",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 46,
+  "fields": {
+    "name": "BIG LITTLE LIES",
+    "price": 189,
+    "description": "A DARK COMEDY AND MYSTERY",
+    "image": "products/BIG_LITTLE_LIES.jpg",
+    "author_name": "LIANE MORIARTY",
+    "published_year": "2014",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 47,
+  "fields": {
+    "name": "GONE GIRL",
+    "price": 173,
+    "description": "PERSON WOULD BE DISAPPEARS AND IT BECOMES A SUSPECT",
+    "image": "products/GONE_GIRL.jpg",
+    "author_name": "GILLIAN FLYNN",
+    "published_year": "2012",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 48,
+  "fields": {
+    "name": "IN THE WOOD",
+    "price": 420,
+    "description": "INVESTIGATES THE MURDER OF YOUNG GIRL",
+    "image": "products/IN_THE_WOOD.jpg",
+    "author_name": "TANA FRENCH",
+    "published_year": "2007",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 49,
+  "fields": {
+    "name": "REBECCA",
+    "price": 237,
+    "description": "A YOUNG WOMAN MARRIES A WIDOWER AND MOVES",
+    "image": "products/REBECCA.jpg",
+    "author_name": "DAPHNE DU MAURIER",
+    "published_year": "1978",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 50,
+  "fields": {
+    "name": "SHARP OBJECT",
+    "price": 355,
+    "description": "TWO GIRLS STRUGGLING WITH HER PAST",
+    "image": "products/SHARP_OBJECT.jpg",
+    "author_name": "GILLIAN FLYNN",
+    "published_year": "2006",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 51,
+  "fields": {
+    "name": "THE DA VINCI CODE",
+    "price": 160,
+    "description": "ARTWORK TO UNCOVERA SECERT GUARDED FOR CENTER",
+    "image": "products/THE_DA_VINCI_CODE.jpg",
+    "author_name": "DAN BROWN",
+    "published_year": "2003",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 52,
+  "fields": {
+    "name": "THE GRIL ON THE TRAIN",
+    "price": 199,
+    "description": "PSYCHOLOGICAL THRILLER",
+    "image": "products/THE_GIRL_ON_THE_TRAIN.jpg",
+    "author_name": "PAULA HAWKINS",
+    "published_year": "2015",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 53,
+  "fields": {
+    "name": "THE SILENT PAITENT",
+    "price": 199,
+    "description": "FORENSIC PSYCHOTHERAPIST BECOMES OBSSESD WITH HER NOTICE",
+    "image": "products/THE_SILENT_PATIENT.jpg",
+    "author_name": "ALEX MICHAELIDES",
+    "published_year": "2019",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 54,
+  "fields": {
+    "name": "THE WOMEN IN THE WHITE",
+    "price": 315,
+    "description": "ABOUT MISTAKE IDENTITY, MADNESS AND DARK MIDNIGHT ENCOUNTER",
+    "image": "products/THE_WOMAN_IN_WHITE.jpg",
+    "author_name": "WILKIE COLLINS",
+    "published_year": "1987",
+    "category": "mystery",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 55,
+  "fields": {
+    "name": "ANGLE AND DEMONS",
+    "price": 288,
+    "description": "DESTROYING THE CATHOLIC CHURCH WITH DEVASTING WAEPON",
+    "image": "products/ANGLE_AND_DEMONS.jpg",
+    "author_name": "DAN BROWN",
+    "published_year": "2000",
+    "category": "thrillers",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 56,
+  "fields": {
+    "name": "EYE OF THE NEEDLE",
+    "price": 377,
+    "description": "A GERMAN SPY CPDENAMED THE NEEDLE",
+    "image": "products/EYE_OF_THE_NEEDLE.jpg",
+    "author_name": "KEN FOLLETT",
+    "published_year": "1978",
+    "category": "thrillers",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 57,
+  "fields": {
+    "name": "I AM WATCHING YOU",
+    "price": 249,
+    "description": "PSYCHOLOGICAL THRILLER ABOUT WOMEN",
+    "image": "products/I_AM_WATCHING_YOU.jpg",
+    "author_name": "TERESA DRISCOLL",
+    "published_year": "2017",
+    "category": "thrillers",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 58,
+  "fields": {
+    "name": "KILLING FLOOR",
+    "price": 300,
+    "description": "DEBUTE NOVEL IN JACK REACHER SERIES",
+    "image": "products/KILLING_FLOOR.jpg",
+    "author_name": "LEE CHILD",
+    "published_year": "1997",
+    "category": "thrillers",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 59,
+  "fields": {
+    "name": "THE COUPLE NEXT DOOR",
+    "price": 400,
+    "description": "DOMESTIC SUSPENSE NOVEL",
+    "image": "products/THE_COUPLE_NEXT_DOOR.jpg",
+    "author_name": "SHARI LAPENA",
+    "published_year": "2016",
+    "category": "thrillers",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 60,
+  "fields": {
+    "name": "THE FRIM",
+    "price": 390,
+    "description": "YOUNG LAWYER COOPERATE WITH FBI SUPERVISOR",
+    "image": "products/THE_FIRM.jpg",
+    "author_name": "JOHN GRISHAM",
+    "published_year": "1991",
+    "category": "thrillers",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 61,
+  "fields": {
+    "name": "THE GIRL BEFORE",
+    "price": 485,
+    "description": "TWO WOMEN MOVE INTO A MINIMALIST HOUSE WITH STRICT RULES",
+    "image": "products/THE_GIRL_BEFORE.jpg",
+    "author_name": "JP DELANY",
+    "published_year": "2017",
+    "category": "thrillers",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 62,
+  "fields": {
+    "name": "ATOMIC HABITS",
+    "price": 444,
+    "description": "GUID BULIDING GOOD HABITS",
+    "image": "products/ATOMIC_HABITS_b3Hbbps.jpg",
+    "author_name": "JAMES CLEAR",
+    "published_year": "2018",
+    "category": "self_health_and_personal_growth",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 63,
+  "fields": {
+    "name": "AWAKEN THE GAINT WITHIN",
+    "price": 342,
+    "description": "FOCUS ON TAKING IMMEDIAT CONTROL OF YOUR MENTAL",
+    "image": "products/AWAKEN_THE_GIANT_WITHIN_fmsWpz3.jpg",
+    "author_name": "TONY ROBBINS",
+    "published_year": "1991",
+    "category": "self_health_and_personal_growth",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 64,
+  "fields": {
+    "name": "DEEP WORK",
+    "price": 146,
+    "description": "ABILITY TO FOCUS WITOHUT DISTRATCION",
+    "image": "products/DEEP_WORK.jpg",
+    "author_name": "CAL NEWPORT",
+    "published_year": "2016",
+    "category": "self_health_and_personal_growth",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 65,
+  "fields": {
+    "name": "IKIGAI",
+    "price": 210,
+    "description": "HOW FIND YOUR PURPOSE LEADS LO LONGER LIFE",
+    "image": "products/IKIGAI.jpg",
+    "author_name": "HECTOR GARCIA AND FRANEES MIRALLES",
+    "published_year": "2016",
+    "category": "self_health_and_personal_growth",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 66,
+  "fields": {
+    "name": "HOW NOT TO DIE",
+    "price": 450,
+    "description": "EXPLAIN HOW NUTRITIONAL AND LIFESTYLE INTERVENTION",
+    "image": "products/HOW_NOT_TO_DIE.jpg",
+    "author_name": "DR. MICHAL GREEN",
+    "published_year": "2015",
+    "category": "health_fitness_and_wellness",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 67,
+  "fields": {
+    "name": "THE BLUE ZONE",
+    "price": 378,
+    "description": "GEOGRAPHIC REGIONS WHERE PEOPLE LIVE SIGNIFICANTLY LONGER",
+    "image": "products/The_Blue_Zones.jpg",
+    "author_name": "DAN BUTTNER",
+    "published_year": "2008",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 68,
+  "fields": {
+    "name": "BREATH",
+    "price": 189,
+    "description": "HOW HUMAN BREATH, ARGUING THAT MANY MODERN HEALTH",
+    "image": "products/BREATH.jpg",
+    "author_name": "HERMAN PONTZER",
+    "published_year": "2021",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 69,
+  "fields": {
+    "name": "BURN",
+    "price": 450,
+    "description": "BASED ON EVOLUOTIONARY BIOLOGY AND REASEARCH",
+    "image": "products/BURN.jpg",
+    "author_name": "HERMAN PONTZER",
+    "published_year": "2021",
+    "category": "self_health_and_personal_growth",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 70,
+  "fields": {
+    "name": "A NEW EARTH",
+    "price": 249,
+    "description": "EXPLORE TRANSCENDING OUE EGO",
+    "image": "products/A_NEW_EARTH.jpg",
+    "author_name": "ECKHART TOLLE",
+    "published_year": "2005",
+    "category": "spirituality_and_philosophy",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 71,
+  "fields": {
+    "name": "BEYOND GOOD AND EVIL",
+    "price": 121,
+    "description": "TRADITIONAL PHILOSOPHY AND CHRISTAN MORALITY",
+    "image": "products/BEYOND_GOOD_AND_EVIL.jpg",
+    "author_name": "FRIRDRICH NIETZSCHE",
+    "published_year": "1889",
+    "category": "spirituality_and_philosophy",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 72,
+  "fields": {
+    "name": "MEDITATION",
+    "price": 199,
+    "description": "THROUGH VARRIED HUMAN EXPERIANCE",
+    "image": "products/MEDITATION.jpg",
+    "author_name": "MARCUS AURELIUS",
+    "published_year": "2003",
+    "category": "spirituality_and_philosophy",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 73,
+  "fields": {
+    "name": "THE POWER OF NOW",
+    "price": 389,
+    "description": "A GUID TO SPRITUAL ENLIGHTEMENT THAT EMPHEIZES",
+    "image": "products/THE_POWER_OF_NOW.jpg",
+    "author_name": "ECKHART TOLLE",
+    "published_year": "1997",
+    "category": "spirituality_and_philosophy",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 74,
+  "fields": {
+    "name": "A BREIF HISTORY",
+    "price": 147,
+    "description": "ABOUT BLACK HOLES AND LIGHT CONES TO GENRAL AUDIANCE",
+    "image": "products/A_BRIEF_HISTORY_OF_TIME.jpg",
+    "author_name": "STEPHON HAWKING",
+    "published_year": "1988",
+    "category": "science_natural_and_technology",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 75,
+  "fields": {
+    "name": "ASTROPHYSICS FOR PEOPLE IN HURRY",
+    "price": 149,
+    "description": "BREAKING DOWN THE NATURE OF SPACE, TIME AND UNIVERSE",
+    "image": "products/Astrophysics_for_People_in_a_Hurry.jpg",
+    "author_name": "NEIL DEGRASSE TYSON",
+    "published_year": "2017",
+    "category": "science_natural_and_technology",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 76,
+  "fields": {
+    "name": "HOMO DEUS",
+    "price": 179,
+    "description": "EXPLORE FUTURE OF HUMANITY",
+    "image": "products/HOMO_DEUS.jpg",
+    "author_name": "YUVAL NOAH HARARI",
+    "published_year": "2016",
+    "category": "science_natural_and_technology",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 77,
+  "fields": {
+    "name": "THE ELEGENT UNIVERSE",
+    "price": 680,
+    "description": "FOCUS ON SUPERSTRING UNIVERSE",
+    "image": "products/THE_ELEGANT_UNIVERSE.jpg",
+    "author_name": "BRAIN GRENNE",
+    "published_year": "1999",
+    "category": "science_natural_and_technology",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 78,
+  "fields": {
+    "name": "GURU GRATNH SAHIB",
+    "price": 400,
+    "description": "ENTERNAL LIVING GURU SIKHISM",
+    "image": "products/GURU_GRANTH_SAHIB.jpg",
+    "author_name": "GURU ARJAN DEV JI",
+    "published_year": "1604",
+    "category": "holy_books_religious_texts_or_scriptures",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 79,
+  "fields": {
+    "name": "MAHABHARAT",
+    "price": 500,
+    "description": "ABOUT KURUKSHETRA WAR BETWEEN PANDAVAS AND KAURAVS",
+    "image": "products/MAHABHARAT.jpg",
+    "author_name": "MAHARSHI VED VYAS",
+    "published_year": "4TH CEN",
+    "category": "love_story",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 80,
+  "fields": {
+    "name": "RAMAYNA",
+    "price": 200,
+    "description": "ABOUT PRINCE RAMA",
+    "image": "products/RAMAYAN.jpg",
+    "author_name": "RISHI VALMIKI",
+    "published_year": "7 TH CEN",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 81,
+  "fields": {
+    "name": "SHIV PURAN",
+    "price": 650,
+    "description": "DEDICATED TO LORD SHIVA",
+    "image": "products/SHIV_PURAN.jpg",
+    "author_name": "MAHARSHI VYAS",
+    "published_year": "10TH CEN",
+    "category": "holy_books_religious_texts_or_scriptures",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 82,
+  "fields": {
+    "name": "DESIGNING YOUR LIFE",
+    "price": 151,
+    "description": "DESIGN THINKING PRINCIPLE",
+    "image": "products/DESIGNING_YOUR_LIFE.jpg",
+    "author_name": "BILL BURNETT",
+    "published_year": "2016",
+    "category": "career_professional_development",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 83,
+  "fields": {
+    "name": "OUTLIERS",
+    "price": 250,
+    "description": "SUCH CULTURE FAMILIEAS AND OPPORTUNITY",
+    "image": "products/OUTLIERS.jpg",
+    "author_name": "MALCOLM GLADWELL",
+    "published_year": "2008",
+    "category": "career_professional_development",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 84,
+  "fields": {
+    "name": "RICH DAD AND POOR DAD",
+    "price": 148,
+    "description": "HIGHLIGHT OF FINANCIAL EDUCATION",
+    "image": "products/RICH_DAD_POOR_DAD.jpg",
+    "author_name": "ROBERT T. KIYOSAKI",
+    "published_year": "1997",
+    "category": "career_professional_development",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 85,
+  "fields": {
+    "name": "EAT THAT FROG",
+    "price": 287,
+    "description": "TACKLE YOUR MOST CHALLENGING AND IMPORATNCE TASK",
+    "image": "products/EAT_THAT_FROG.jpg",
+    "author_name": "BRAIN TRACY",
+    "published_year": "2001",
+    "category": "productivity_and_time_management",
+    "bestseller": true,
+    "new_release": false,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 86,
+  "fields": {
+    "name": "ESSENTIALISM",
+    "price": 271,
+    "description": "HOW FILTER THROUGH THE NOISE OF MODERN LIFE",
+    "image": "products/ESSENTIALISM.jpg",
+    "author_name": "GREG MCKEOW",
+    "published_year": "2014",
+    "category": "productivity_and_time_management",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 87,
+  "fields": {
+    "name": "FINISH WHAT YOU START",
+    "price": 199,
+    "description": "ATTENTION RESIDUE AND OVERCOME MENTAL ROADBLOCKS",
+    "image": "products/FINISH_WHAT_YOU_START.jpg",
+    "author_name": "PETER HOLLINS",
+    "published_year": "2019",
+    "category": "productivity_and_time_management",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 88,
+  "fields": {
+    "name": "BLUE OCEAN STRATEGY",
+    "price": 449,
+    "description": "SUCESS COMES NOT FROM BATTLING COMPETITERS",
+    "image": "products/BLUE_OCEAN_STARTEGY.jpg",
+    "author_name": "CHAN KIM",
+    "published_year": "2005",
+    "category": "leadership_and_management",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 89,
+  "fields": {
+    "name": "DARE TO LEAD",
+    "price": 249,
+    "description": "LEADERSHIP REQUIRES VULNERABILITY",
+    "image": "products/DARE_TO_LEAD.jpg",
+    "author_name": "BRNE BROWN",
+    "published_year": "2018",
+    "category": "leadership_and_management",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 90,
+  "fields": {
+    "name": "DRIVE",
+    "price": 295,
+    "description": "HUMAN NEED FOR AUTONOMY, MASTERY, PURPOSE",
+    "image": "products/DRIVE.jpg",
+    "author_name": "DANIEL H. PINK",
+    "published_year": "2009",
+    "category": "leadership_and_management",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": false
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 91,
+  "fields": {
+    "name": "LEADERS EAT LAST",
+    "price": 419,
+    "description": "LEADERS CREATE A CIRDE SAFTY",
+    "image": "products/LEADER_EAT_LAST.jpg",
+    "author_name": "SIMON SINEK",
+    "published_year": "2014",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": true,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.product",
+  "pk": 92,
+  "fields": {
+    "name": "Love Story",
+    "price": 200,
+    "description": "About Love relationship",
+    "image": "products/LOVE_STORY_13q1T34.jpg",
+    "author_name": "Erich Seagle",
+    "published_year": "1987",
+    "category": "love_story",
+    "bestseller": false,
+    "new_release": false,
+    "expert_pick": true
+  }
+},
+{
+  "model": "myapp.category",
+  "pk": 1,
+  "fields": {
+    "name": "romance"
+  }
+}
+]

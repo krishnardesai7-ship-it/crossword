@@ -59,7 +59,7 @@ def about(request):
     if "email" in request.session:
         return render(request,"customerapp/about.html")
     else:
-        return render(request,"customerapp/login.html")
+        return redirect("accounts:login")
 
 
 def contact(request):
