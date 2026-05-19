@@ -225,8 +225,16 @@
                     } else {
                         statusBadge.textContent = '⚠️ Try again';
                         showResultMsg(false, '⚠️ ' + data.message);
-                        scanning = false;
-                        captureBtn.disabled = false;
+                        if (data.message.indexOf("Please sign up") !== -1 || data.message.indexOf("did not match") !== -1) {
+                            statusBadge.textContent = '🔄 Redirecting to Registration...';
+                            setTimeout(() => {
+                                stopCamera();
+                                window.location.href = "{% url 'accounts:register' %}";
+                            }, 2500);
+                        } else {
+                            scanning = false;
+                            captureBtn.disabled = false;
+                        }
                     }
                 })
                 .catch(err => {
