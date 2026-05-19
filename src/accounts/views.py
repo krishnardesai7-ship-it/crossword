@@ -77,34 +77,16 @@ def accounts_register(request):
                 )
             return render(request, "accounts/register.html", {"form": form})
 
-        # Capture and store dlib embedding for this user (non-blocking).
-        try:
-            registered, face_message = faceRecognition.enroll_face(new_user.id)
-            if not registered and settings.FACE_RECOGNITION_REQUIRED:
-                new_user.delete()
-                if face_message == "face_library_missing":
-                    messages.error(request, FACE_LIB_SETUP_MSG)
-                else:
-                    messages.error(request, face_message)
-                return redirect("accounts:register")
-        except Exception:
-            pass  # Face recognition unavailable on hosted server — continue anyway
-
-        # Activate the user immediately (no OTP required)
-        new_user.is_active = True
-        new_user.save()
-
-        # Sync to myapp register model
-        sync_register_user(new_user)
-
-        # Store user_id in session so face_enroll knows who to enroll
-        request.session['enroll_user_id'] = new_user.id
+        # Send OTP to user's email and redirect to verification
+        otp = send_otp(new_user.email)
+        request.session['otp'] = otp
+        request.session['user_id'] = new_user.id
 
         messages.success(
             request,
-            "Account created! Now register your face to enable Face Login.",
+            f"Account created successfully! An OTP has been sent to {new_user.email}.",
         )
-        return redirect("accounts:face_enroll")
+        return redirect("accounts:verify_otp")
 
     return render(request, "accounts/register.html", {"form": form})
 
@@ -217,13 +199,20 @@ def accounts_login_page(request):
 def send_otp(email):
     otp = random.randint(100000, 999999)
 
-    send_mail(
-        'Your OTP Code',
-        f'Your OTP is {otp}',
-        settings.EMAIL_HOST_USER,
-        [email],
-        fail_silently=False,
-    )
+    print("\n" + "="*50)
+    print(f"OTP GENERATED FOR {email}: {otp}")
+    print("="*50 + "\n")
+
+    try:
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP is {otp}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print(f"Error sending email to {email}: {e}")
 
     return otp
 
@@ -242,8 +231,11 @@ def verify_otp(request):
             # Synchronize with myapp.register model
             sync_register_user(user)
 
-            messages.success(request, "Account verified successfully!")
-            return redirect("accounts:login")
+            # Store user_id in session so face_enroll knows who to enroll
+            request.session['enroll_user_id'] = user.id
+
+            messages.success(request, "Account verified successfully! Please register your face to enable Face Login.")
+            return redirect("accounts:face_enroll")
 
         else:
             messages.error(request, "Invalid OTP")
