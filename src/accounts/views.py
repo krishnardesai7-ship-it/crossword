@@ -77,35 +77,31 @@ def accounts_register(request):
                 )
             return render(request, "accounts/register.html", {"form": form})
 
-        # Capture and store dlib embedding for this user.
-        registered, face_message = faceRecognition.enroll_face(new_user.id)
-        if not registered:
-            if settings.FACE_RECOGNITION_REQUIRED:
+        # Capture and store dlib embedding for this user (non-blocking).
+        try:
+            registered, face_message = faceRecognition.enroll_face(new_user.id)
+            if not registered and settings.FACE_RECOGNITION_REQUIRED:
                 new_user.delete()
                 if face_message == "face_library_missing":
                     messages.error(request, FACE_LIB_SETUP_MSG)
                 else:
                     messages.error(request, face_message)
                 return redirect("accounts:register")
+        except Exception:
+            pass  # Face recognition unavailable on hosted server — continue anyway
 
-            messages.info(
-                request,
-                "Face login is not available on this hosted server. Continue with email OTP verification.",
-            )
+        # Activate the user immediately (no OTP required)
+        new_user.is_active = True
+        new_user.save()
 
-        # Send OTP Email
-        email = new_user.email
-        otp = send_otp(email)
+        # Sync to myapp register model
+        sync_register_user(new_user)
 
-        # Save in session
-        request.session['otp'] = otp
-        request.session['user_id'] = new_user.id
-
-        # ✅ ADD MESSAGE HERE
         messages.success(
-            request, "OTP sent to your email. Please verify your account.")
-
-        return redirect("accounts:verify_otp")
+            request,
+            "Account created successfully! You can now log in.",
+        )
+        return redirect("accounts:login")
 
     return render(request, "accounts/register.html", {"form": form})
 

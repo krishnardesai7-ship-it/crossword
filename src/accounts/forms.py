@@ -18,21 +18,13 @@ class UserCreationForm(forms.ModelForm):
         model = NewUser
         fields = ('email', 'username', 'first_name', 'country','last_name', 'gender', 'phone_number' ,'id_image')
 
-    def clean_password2(self, contain=False):
+    def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             raise ValidationError("Passwords don't match")
-
-        if len(password1) < 8:
-            raise ValidationError("Passwords Must be More 8 Charcaters")
-
-        for char in USERNAME_REGEX:
-            if char in password1:
-                contain = True
-
-        if not contain:
-            raise ValidationError("Passwords Must Contain one of '% - $ - & - * - #'")
+        if password1 and len(password1) < 8:
+            raise ValidationError("Password must be at least 8 characters")
         return password2
 
     # def clean_first_name(self):
@@ -49,8 +41,8 @@ class UserCreationForm(forms.ModelForm):
     
     def clean_username(self):
         username = (self.cleaned_data.get('username') or "").strip()
-        if len(username) < 6:
-            raise ValidationError("User name must be More 6 Charcaters")
+        if not username:
+            raise ValidationError("Username is required.")
 
         if NewUser.objects.filter(username__iexact=username).exists():
             raise ValidationError("This username is already taken.")
@@ -72,10 +64,6 @@ class UserCreationForm(forms.ModelForm):
     #     if len(username)<5:
     #         raise ValidationError("User name must be More 5 Charcaters")
     #     return firstname, lastname, username
-
-
-
-        return firstname
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
