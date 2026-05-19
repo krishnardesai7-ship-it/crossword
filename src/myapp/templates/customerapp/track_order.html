@@ -177,8 +177,13 @@
                                 style="border: 1px solid var(--border-color); border-radius: 12px; background: var(--card-bg);">
                                 <div class="card-body" style="padding: 20px;">
                                     <div class="product-item d-flex align-items-center">
+                                        {% if order.image %}
                                         <img src="/media/{{ order.image }}" alt="{{ order.product_name }}"
                                             style="width: 70px; height: 90px; object-fit: cover; border-radius: 6px; border: 1px solid #eee; margin-right: 20px;">
+                                        {% else %}
+                                        <img src="{% static 'customerapp/images/logo-icon.png' %}" alt="No image"
+                                            style="width: 70px; height: 90px; object-fit: contain; border-radius: 6px; border: 1px solid #eee; margin-right: 20px;">
+                                        {% endif %}
                                         <div style="flex: 1;">
                                             <h5 style="font-size: 1.6rem; font-weight: 700; color: #333; margin-bottom: 5px;">{{ order.product_name }}</h5>
                                             <p style="font-size: 1.3rem; color: #888; margin-bottom: 0;">Qty: {{ order.quantity }} | Standard Shipping</p>
