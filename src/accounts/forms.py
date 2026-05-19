@@ -68,8 +68,25 @@ class UserCreationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
 
+        # Apply Tailwind style + cursor text to all fields
         for field in self.fields.values():
             field.widget.attrs['class'] = INPUTSTYLE
+            field.widget.attrs['style'] = 'cursor: text;'
+
+        # Placeholder text for each field
+        placeholders = {
+            'first_name':    'Enter your first name',
+            'last_name':     'Enter your last name',
+            'username':      'Choose a username',
+            'email':         'you@example.com',
+            'phone_number':  'e.g. 9876543210',
+            'country':       'e.g. India',
+            'password1':     'Min. 8 characters',
+            'password2':     'Repeat your password',
+        }
+        for field_name, placeholder in placeholders.items():
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs['placeholder'] = placeholder
 
     def save(self, commit=True):
         # Save the provided password in hashed format

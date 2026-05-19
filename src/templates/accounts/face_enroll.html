@@ -1,0 +1,441 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Your Face | Face Login</title>
+    {% include "../base-static/style.html" %}
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 24px;
+            padding: 40px 36px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .icon-wrap {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            box-shadow: 0 0 30px rgba(124,58,237,0.4);
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.55);
+            font-size: 0.9rem;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        /* Camera container */
+        .camera-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+            border: 2px solid rgba(255,255,255,0.1);
+            margin-bottom: 24px;
+        }
+
+        #video {
+            width: 100%;
+            display: block;
+            transform: scaleX(-1); /* mirror */
+        }
+
+        /* Animated face guide oval */
+        .face-guide {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55%;
+            aspect-ratio: 3/4;
+            border: 3px dashed rgba(124, 58, 237, 0.8);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: pulse-guide 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-guide {
+            0%, 100% { border-color: rgba(124,58,237,0.8); box-shadow: 0 0 0 0 rgba(124,58,237,0.3); }
+            50% { border-color: rgba(99,255,200,0.9); box-shadow: 0 0 0 8px rgba(124,58,237,0); }
+        }
+
+        /* Status overlay */
+        .status-badge {
+            position: absolute;
+            bottom: 12px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            white-space: nowrap;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Hidden canvas for capture */
+        #canvas { display: none; }
+
+        /* Buttons */
+        .btn-capture {
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-capture:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(124,58,237,0.55);
+        }
+
+        .btn-capture:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-skip {
+            width: 100%;
+            padding: 12px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-skip:hover {
+            border-color: rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Result message */
+        .result-msg {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .result-msg.success {
+            background: rgba(16,185,129,0.15);
+            border: 1px solid rgba(16,185,129,0.4);
+            color: #6ee7b7;
+        }
+
+        .result-msg.error {
+            background: rgba(239,68,68,0.15);
+            border: 1px solid rgba(239,68,68,0.4);
+            color: #fca5a5;
+        }
+
+        /* Steps indicator */
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .step.active { color: #a78bfa; }
+        .step.done { color: #6ee7b7; }
+
+        .step-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .step.active .step-dot { background: #7c3aed; box-shadow: 0 0 8px #7c3aed; }
+        .step.done .step-dot { background: #10b981; }
+
+        .step-line {
+            width: 24px; height: 1px;
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Countdown ring */
+        .countdown-wrap {
+            position: absolute;
+            top: 12px; right: 12px;
+            width: 44px; height: 44px;
+            display: none;
+        }
+        .countdown-svg circle {
+            fill: none;
+            stroke: #7c3aed;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 113;
+            stroke-dashoffset: 0;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .countdown-num {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <!-- Steps -->
+        <div class="steps">
+            <div class="step done">
+                <div class="step-dot"></div>
+                <span>Registered</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step active">
+                <div class="step-dot"></div>
+                <span>Face Setup</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-dot"></div>
+                <span>Login</span>
+            </div>
+        </div>
+
+        <div class="icon-wrap">🎭</div>
+        <h1>Register Your Face</h1>
+        <p class="subtitle">
+            Center your face inside the oval outline, then click <strong>Capture Face</strong>.<br>
+            Good lighting and a clear view gives the best results.
+        </p>
+
+        <!-- Camera -->
+        <div class="camera-wrap">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas"></canvas>
+            <div class="face-guide" id="faceGuide"></div>
+            <div class="status-badge" id="statusBadge">📷 Starting camera…</div>
+
+            <!-- Countdown ring -->
+            <div class="countdown-wrap" id="countdownWrap">
+                <svg class="countdown-svg" viewBox="0 0 38 38">
+                    <circle cx="19" cy="19" r="18" id="countdownCircle"></circle>
+                </svg>
+                <div class="countdown-num" id="countdownNum">3</div>
+            </div>
+        </div>
+
+        <!-- Result message -->
+        <div class="result-msg" id="resultMsg"></div>
+
+        <!-- Buttons -->
+        <button class="btn-capture" id="captureBtn" disabled>
+            <span id="btnIcon">📸</span>
+            <span id="btnText">Capture Face</span>
+            <div class="spinner" id="spinner"></div>
+        </button>
+
+        <a href="/accounts/login/" class="btn-skip" id="skipBtn">
+            Skip for now &amp; login with email/password →
+        </a>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('captureBtn');
+        const statusBadge = document.getElementById('statusBadge');
+        const resultMsg = document.getElementById('resultMsg');
+        const spinner = document.getElementById('spinner');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        const countdownWrap = document.getElementById('countdownWrap');
+        const countdownCircle = document.getElementById('countdownCircle');
+        const countdownNum = document.getElementById('countdownNum');
+
+        const CSRF_TOKEN = '{{ csrf_token }}';
+        let stream = null;
+        let capturing = false;
+
+        // Start camera
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' }
+                });
+                video.srcObject = stream;
+                video.onloadedmetadata = () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    statusBadge.textContent = '✅ Camera ready — center your face';
+                    captureBtn.disabled = false;
+                };
+            } catch (err) {
+                statusBadge.textContent = '❌ Camera access denied';
+                statusBadge.style.background = 'rgba(239,68,68,0.7)';
+                showResult(false, 'Camera access was denied. Please allow camera access in your browser and refresh the page.');
+                captureBtn.disabled = true;
+            }
+        }
+
+        // Countdown then capture
+        captureBtn.addEventListener('click', () => {
+            if (capturing) return;
+            capturing = true;
+            captureBtn.disabled = true;
+
+            // 3-second countdown
+            let count = 3;
+            countdownWrap.style.display = 'block';
+            countdownNum.textContent = count;
+            const totalDash = 113;
+            countdownCircle.style.strokeDashoffset = 0;
+
+            const interval = setInterval(() => {
+                count--;
+                countdownNum.textContent = count;
+                countdownCircle.style.strokeDashoffset = ((3 - count) / 3) * totalDash;
+
+                if (count <= 0) {
+                    clearInterval(interval);
+                    countdownWrap.style.display = 'none';
+                    doCapture();
+                }
+            }, 1000);
+        });
+
+        function doCapture() {
+            statusBadge.textContent = '🔍 Processing face…';
+            btnText.textContent = 'Uploading…';
+            btnIcon.style.display = 'none';
+            spinner.style.display = 'block';
+
+            // Draw current video frame to canvas
+            const ctx = canvas.getContext('2d');
+            // Mirror back so server gets un-mirrored image
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            ctx.restore();
+
+            const b64 = canvas.toDataURL('image/jpeg', 0.9);
+
+            fetch('{% url "accounts:face_enroll" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': CSRF_TOKEN,
+                },
+                body: JSON.stringify({ image: b64 }),
+            })
+            .then(r => r.json())
+            .then(data => {
+                spinner.style.display = 'none';
+                btnText.textContent = 'Capture Face';
+                btnIcon.style.display = 'inline';
+
+                if (data.success) {
+                    statusBadge.textContent = '✅ Face registered!';
+                    showResult(true, '🎉 ' + data.message + ' Redirecting to login…');
+                    // Stop camera
+                    if (stream) stream.getTracks().forEach(t => t.stop());
+                    captureBtn.disabled = true;
+                    setTimeout(() => {
+                        window.location.href = data.redirect || '/accounts/login/';
+                    }, 2000);
+                } else {
+                    statusBadge.textContent = '⚠️ Try again';
+                    showResult(false, '⚠️ ' + data.message);
+                    capturing = false;
+                    captureBtn.disabled = false;
+                }
+            })
+            .catch(err => {
+                spinner.style.display = 'none';
+                btnText.textContent = 'Capture Face';
+                btnIcon.style.display = 'inline';
+                showResult(false, '❌ Network error. Please try again.');
+                statusBadge.textContent = '❌ Error';
+                capturing = false;
+                captureBtn.disabled = false;
+            });
+        }
+
+        function showResult(success, msg) {
+            resultMsg.className = 'result-msg ' + (success ? 'success' : 'error');
+            resultMsg.textContent = msg;
+            resultMsg.style.display = 'block';
+        }
+
+        startCamera();
+    </script>
+</body>
+</html>

@@ -97,13 +97,48 @@ def accounts_register(request):
         # Sync to myapp register model
         sync_register_user(new_user)
 
+        # Store user_id in session so face_enroll knows who to enroll
+        request.session['enroll_user_id'] = new_user.id
+
         messages.success(
             request,
-            "Account created successfully! You can now log in.",
+            "Account created! Now register your face to enable Face Login.",
         )
-        return redirect("accounts:login")
+        return redirect("accounts:face_enroll")
 
     return render(request, "accounts/register.html", {"form": form})
+
+
+def face_enroll_view(request):
+    """Browser-based face enrollment using the webcam via JavaScript."""
+    user_id = request.session.get('enroll_user_id')
+    if not user_id:
+        messages.error(request, "Session expired. Please register again.")
+        return redirect("accounts:register")
+
+    if request.method == "POST":
+        import json
+        try:
+            data = json.loads(request.body)
+            b64_image = data.get("image", "")
+        except Exception:
+            b64_image = request.POST.get("image", "")
+
+        if not b64_image:
+            from django.http import JsonResponse
+            return JsonResponse({"success": False, "message": "No image received."})
+
+        success, message = faceRecognition.enroll_face_from_image(user_id, b64_image)
+
+        from django.http import JsonResponse
+        if success:
+            # Clear session key — enrollment done
+            request.session.pop('enroll_user_id', None)
+            return JsonResponse({"success": True, "message": message, "redirect": "/accounts/login/"})
+        else:
+            return JsonResponse({"success": False, "message": message})
+
+    return render(request, "accounts/face_enroll.html", {"user_id": user_id})
 
 
 

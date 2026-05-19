@@ -1,3 +1,4 @@
+import base64
 import time
 from pathlib import Path
 
@@ -92,6 +93,41 @@ class FaceRecognition:
                 cam.release()
                 close_cv_windows()
                 return False, "Face registration timed out."
+
+    def enroll_face_from_image(self, user_id, b64_image_string):
+        """
+        Enroll a face from a base64-encoded image captured by the browser webcam.
+        Returns (success: bool, message: str)
+        """
+        if face_recognition is None:
+            return False, "face_library_missing"
+
+        try:
+            # Strip the data-URL prefix if present (e.g. "data:image/jpeg;base64,...")
+            if "," in b64_image_string:
+                b64_image_string = b64_image_string.split(",", 1)[1]
+
+            img_bytes = base64.b64decode(b64_image_string)
+            np_arr = np.frombuffer(img_bytes, dtype=np.uint8)
+            frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+            if frame is None:
+                return False, "Could not decode image."
+
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            locations = face_recognition.face_locations(rgb)
+            encodings = face_recognition.face_encodings(rgb, locations)
+
+            if not encodings:
+                return False, "No face detected in the image. Please try again."
+
+            # Use the first (largest) face found
+            encoding = encodings[0]
+            np.save(self.encoding_dir / f"{user_id}.npy", encoding)
+            return True, "Face registered successfully."
+
+        except Exception as exc:
+            return False, f"Face enrollment error: {exc}"
 
     def recognize_face(self, tolerance=0.45, timeout_seconds=20):
         if face_recognition is None:
