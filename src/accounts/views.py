@@ -146,55 +146,45 @@ def accounts_login(request):
     if request.method != "POST":
         return redirect("accounts:login")
 
+    import json
+    from django.http import JsonResponse
     try:
-        face_id, reason = faceRecognition.recognize_face()
+        data = json.loads(request.body)
+        b64_image = data.get("image", "")
+    except Exception:
+        b64_image = request.POST.get("image", "")
+
+    if not b64_image:
+        return JsonResponse({"success": False, "message": "No image received."})
+
+    try:
+        face_id, reason = faceRecognition.recognize_face_from_image(b64_image)
 
         if face_id is None:
             if reason == "no_known_faces":
-                messages.error(request, "No registered face data found. Please sign up first.")
-                return redirect(reverse("accounts:login") + "?auto_register=1")
-
+                return JsonResponse({"success": False, "message": "No registered face data found. Please sign up first."})
             elif reason == "face_library_missing":
-                messages.error(request, FACE_LIB_SETUP_MSG)
-
-            elif reason == "camera_error":
-                messages.error(request, "Unable to access camera. Check camera permission and try again.")
-
+                return JsonResponse({"success": False, "message": FACE_LIB_SETUP_MSG})
             elif reason == "face_not_matched":
-                messages.error(request, "Face detected but it did not match any active account.")
-                return redirect(reverse("accounts:login") + "?auto_register=1")
-
-            elif reason == "canceled":
-                messages.error(request, "Face login was canceled.")
-
+                return JsonResponse({"success": False, "message": "Face detected but it did not match any active account."})
             elif reason == "no_face_detected":
-                messages.error(request, FACE_NOT_DETECTED_MSG)
-                return redirect("accounts:register")
-
+                return JsonResponse({"success": False, "message": FACE_NOT_DETECTED_MSG})
             else:
-                messages.error(request, FACE_NOT_DETECTED_MSG)
-
-            return redirect("accounts:login")
+                return JsonResponse({"success": False, "message": f"Verification failed: {reason}"})
 
         user = User.objects.filter(id=face_id, is_active=True).first()
 
         if user:
             login(request, user)
-
             if user.email:
                 request.session["email"] = user.email
                 sync_register_user(user)
-
-            # IMPORTANT FIX HERE 👇
-            return redirect("home")   # make sure this exists in urls.py
-
+            return JsonResponse({"success": True, "message": "Successfully logged in!", "redirect": reverse("home")})
         else:
-            messages.error(request, "Face not matched with any active account.")
-            return redirect(reverse("accounts:login") + "?auto_register=1")
+            return JsonResponse({"success": False, "message": "Face matched but user is inactive or not found."})
 
     except Exception as e:
-        messages.error(request, f"Login failed: {str(e)}")
-        return redirect("accounts:login")
+        return JsonResponse({"success": False, "message": f"Login failed: {str(e)}"})
 
 def accounts_logout(request):
     request.session.pop("email", None)

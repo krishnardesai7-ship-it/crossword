@@ -48,13 +48,12 @@
                             Login Now
                         </button>
                     </form>
-                    <form method="post" action="{% url 'accounts:login_face' %}" class="mt-4">
-                        {% csrf_token %}
-                        <button type="submit"
+                    <div class="mt-4">
+                        <button id="startFaceLoginBtn" type="button"
                             class="text-white border border-white hover:bg-white hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
                             Use Face Login
                         </button>
-                    </form>
+                    </div>
                     <p class="mt-4 text-sm text-white">
                         New here? <a href="{% url 'accounts:register' %}" class="font-semibold underline">Create an account</a>
                     </p>
@@ -65,6 +64,204 @@
             </div>
         </div>
     </section>
+
+    <!-- Face Login Modal -->
+    <div id="faceLoginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(15px); z-index: 100; justify-content: center; align-items: center;">
+        <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 24px; padding: 30px; width: 90%; max-width: 450px; text-align: center; color: #fff; box-shadow: 0 20px 50px rgba(0,0,0,0.5); font-family: 'Inter', system-ui, sans-serif;">
+            <h2 class="text-2xl font-bold mb-2">Face ID Verification</h2>
+            <p class="text-sm text-gray-300 mb-6">Align your face inside the scanner. The system will automatically scan your face.</p>
+            
+            <div style="position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; background: #000; border: 2px solid rgba(255,255,255,0.2); margin-bottom: 20px;">
+                <video id="webcamVideo" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+                <canvas id="webcamCanvas" style="display: none;"></canvas>
+                
+                <!-- Oval scanner guide -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 55%; height: 75%; border: 3px dashed rgba(20, 240, 180, 0.7); border-radius: 50%; pointer-events: none; animation: pulse-guide 1.5s infinite alternate;"></div>
+                
+                <!-- Glowing scanning laser line -->
+                <div style="position: absolute; width: 100%; height: 4px; background: linear-gradient(to right, transparent, #14f0b4, transparent); box-shadow: 0 0 12px #14f0b4; top: 0; animation: scan-line-anim 2s linear infinite; pointer-events: none;"></div>
+                
+                <div id="modalStatus" style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.75); color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; white-space: nowrap; backdrop-filter: blur(5px);">Initializing camera...</div>
+                
+                <!-- Countdown overlay -->
+                <div id="modalCountdown" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; background: rgba(20, 240, 180, 0.9); color: #000; font-size: 2rem; font-weight: bold; line-height: 60px; text-align: center; box-shadow: 0 0 20px #14f0b4;">3</div>
+            </div>
+            
+            <div id="modalResultMsg" style="display: none; padding: 10px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 15px;"></div>
+            
+            <div class="flex gap-4 justify-center">
+                <button id="modalCaptureBtn" disabled class="bg-gradient-to-r from-teal-400 to-teal-600 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition hover:scale-105 active:scale-95 disabled:opacity-50">
+                    Scan Face
+                </button>
+                <button id="modalCloseBtn" class="border border-white/30 hover:bg-white/10 text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes scan-line-anim {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+        @keyframes pulse-guide {
+            from { transform: translate(-50%, -50%) scale(0.98); opacity: 0.6; }
+            to { transform: translate(-50%, -50%) scale(1.02); opacity: 1; border-color: rgba(99, 255, 200, 0.9); }
+        }
+        .modal-msg-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #6ee7b7;
+        }
+        .modal-msg-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startBtn = document.getElementById('startFaceLoginBtn');
+            const modal = document.getElementById('faceLoginModal');
+            const closeBtn = document.getElementById('modalCloseBtn');
+            const captureBtn = document.getElementById('modalCaptureBtn');
+            const video = document.getElementById('webcamVideo');
+            const canvas = document.getElementById('webcamCanvas');
+            const statusBadge = document.getElementById('modalStatus');
+            const resultMsg = document.getElementById('modalResultMsg');
+            const countdownOverlay = document.getElementById('modalCountdown');
+            
+            const CSRF_TOKEN = '{{ csrf_token }}';
+            let stream = null;
+            let scanning = false;
+
+            startBtn.addEventListener('click', async () => {
+                modal.style.display = 'flex';
+                resultMsg.style.display = 'none';
+                statusBadge.textContent = '📷 Accessing camera...';
+                captureBtn.disabled = true;
+                scanning = false;
+
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' }
+                    });
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        statusBadge.textContent = '✅ Camera ready — scan your face';
+                        captureBtn.disabled = false;
+                        
+                        // Auto start verification countdown after 1 second
+                        setTimeout(() => {
+                            if (stream && !scanning) {
+                                startCountdownAndCapture();
+                            }
+                        }, 1000);
+                    };
+                } catch (err) {
+                    statusBadge.textContent = '❌ Camera access denied';
+                    showResultMsg(false, 'Please allow camera permissions and try again.');
+                }
+            });
+
+            function startCountdownAndCapture() {
+                if (scanning) return;
+                scanning = true;
+                captureBtn.disabled = true;
+
+                let count = 3;
+                countdownOverlay.style.display = 'block';
+                countdownOverlay.textContent = count;
+
+                const timer = setInterval(() => {
+                    count--;
+                    countdownOverlay.textContent = count;
+                    if (count <= 0) {
+                        clearInterval(timer);
+                        countdownOverlay.style.display = 'none';
+                        captureAndVerify();
+                    }
+                }, 1000);
+            }
+
+            captureBtn.addEventListener('click', () => {
+                startCountdownAndCapture();
+            });
+
+            function captureAndVerify() {
+                statusBadge.textContent = '🔍 Verifying face ID...';
+                
+                const ctx = canvas.getContext('2d');
+                // Mirror back for the server
+                ctx.save();
+                ctx.scale(-1, 1);
+                ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+                ctx.restore();
+
+                const b64 = canvas.toDataURL('image/jpeg', 0.9);
+
+                fetch('{% url "accounts:login_face" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': CSRF_TOKEN,
+                    },
+                    body: JSON.stringify({ image: b64 }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        statusBadge.textContent = '✅ Verification match found!';
+                        showResultMsg(true, '🎉 Login successful! Redirecting...');
+                        if (stream) stream.getTracks().forEach(t => t.stop());
+                        setTimeout(() => {
+                            window.location.href = data.redirect || '/myapp/';
+                        }, 1500);
+                    } else {
+                        statusBadge.textContent = '⚠️ Try again';
+                        showResultMsg(false, '⚠️ ' + data.message);
+                        scanning = false;
+                        captureBtn.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    statusBadge.textContent = '❌ Network error';
+                    showResultMsg(false, '❌ Network error during face verification. Please try again.');
+                    scanning = false;
+                    captureBtn.disabled = false;
+                });
+            }
+
+            function showResultMsg(success, msg) {
+                resultMsg.className = success ? 'modal-msg-success' : 'modal-msg-error';
+                resultMsg.style.padding = '10px';
+                resultMsg.style.borderRadius = '8px';
+                resultMsg.style.fontSize = '0.88rem';
+                resultMsg.style.marginBottom = '15px';
+                resultMsg.textContent = msg;
+                resultMsg.style.display = 'block';
+            }
+
+            function stopCamera() {
+                if (stream) {
+                    stream.getTracks().forEach(t => t.stop());
+                    stream = null;
+                }
+                video.srcObject = null;
+            }
+
+            closeBtn.addEventListener('click', () => {
+                stopCamera();
+                modal.style.display = 'none';
+            });
+        });
+    </script>
+
     {% if request.GET.auto_register == "1" %}
     <script>
         setTimeout(function () {
@@ -74,5 +271,4 @@
     {% endif %}
     {% include '../base-static/scripts.html' %}
 </body>
-
 </html>

@@ -129,6 +129,46 @@ class FaceRecognition:
         except Exception as exc:
             return False, f"Face enrollment error: {exc}"
 
+    def recognize_face_from_image(self, b64_image_string, tolerance=0.45):
+        if face_recognition is None:
+            return None, "face_library_missing"
+
+        try:
+            if "," in b64_image_string:
+                b64_image_string = b64_image_string.split(",", 1)[1]
+
+            img_bytes = base64.b64decode(b64_image_string)
+            np_arr = np.frombuffer(img_bytes, dtype=np.uint8)
+            frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+            if frame is None:
+                return None, "Could not decode image."
+
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            locations = face_recognition.face_locations(rgb)
+            encodings = face_recognition.face_encodings(rgb, locations)
+
+            if not encodings:
+                return None, "no_face_detected"
+
+            known_ids, known_encodings = self._load_known_faces()
+            if not known_ids:
+                return None, "no_known_faces"
+
+            face_encoding = encodings[0]
+            distances = face_recognition.face_distance(known_encodings, face_encoding)
+            best_index = int(np.argmin(distances))
+            best_distance = float(distances[best_index])
+
+            if best_distance <= tolerance:
+                matched_user_id = known_ids[best_index]
+                return matched_user_id, "matched"
+            else:
+                return None, "face_not_matched"
+
+        except Exception as exc:
+            return None, f"error: {exc}"
+
     def recognize_face(self, tolerance=0.45, timeout_seconds=20):
         if face_recognition is None:
             return None, "face_library_missing"
