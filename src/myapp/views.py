@@ -302,6 +302,7 @@ def checkout(request):
         address = request.POST.get('address', '').strip()
         city = request.POST.get('city', '').strip()
         pincode = request.POST.get('pincode', '').strip()
+        payment_method = request.POST.get('payment_method', 'card').strip()
 
         full_name = f"{first_name} {last_name}".strip()
 
@@ -310,32 +311,57 @@ def checkout(request):
         elif not cart_items:
             messages.error(request, 'Your cart is empty. Add products before checkout.')
         else:
-            # Create Razorpay order
-            amount_paise = total * 100
-            try:
-                if razorpay is None:
-                    raise RuntimeError("Razorpay package is not installed.")
-                client = razorpay.Client(
-                    auth=('rzp_test_bilBagOBVTi4lE', '77yKq3N9Wul97JVQcjtIVB5z')
-                )
-                razorpay_response = client.order.create({
-                    'amount': amount_paise,
-                    'currency': 'INR',
-                    'payment_capture': 1
-                })
+            if payment_method == 'cod':
+                # Cash on Delivery: create checkout immediately
+                for item in cart_items:
+                    checkout_model.objects.create(
+                        register=uid,
+                        name=full_name,
+                        email=email,
+                        address=f"{address}, {city} - {pincode}",
+                        phone=phone,
+                        product_name=item.product_name,
+                        image=item.image.name if hasattr(item.image, 'name') else item.image,
+                        price=item.price,
+                        quantity=item.quantity,
+                        total=item.total,
+                        status='Pending'
+                    )
+                    item.order_status = True
+                    item.save()
 
-                # Store billing info in session for use after payment
-                request.session['billing_info'] = {
-                    'full_name': full_name,
-                    'email': email,
-                    'phone': phone,
-                    'address': address,
-                    'city': city,
-                    'pincode': pincode,
-                }
-            except Exception as e:
-                print(f"Razorpay error: {e}")
-                messages.error(request, "Could not initiate Razorpay payment. Please try again.")
+                if 'coupon_id' in request.session:
+                    del request.session['coupon_id']
+
+                messages.success(request, 'Order placed successfully via Cash on Delivery!')
+                return redirect('shop')
+            else:
+                # Create Razorpay order
+                amount_paise = total * 100
+                try:
+                    if razorpay is None:
+                        raise RuntimeError("Razorpay package is not installed.")
+                    client = razorpay.Client(
+                        auth=('rzp_test_bilBagOBVTi4lE', '77yKq3N9Wul97JVQcjtIVB5z')
+                    )
+                    razorpay_response = client.order.create({
+                        'amount': amount_paise,
+                        'currency': 'INR',
+                        'payment_capture': 1
+                    })
+
+                    # Store billing info in session for use after payment
+                    request.session['billing_info'] = {
+                        'full_name': full_name,
+                        'email': email,
+                        'phone': phone,
+                        'address': f"{address}, {city} - {pincode}",
+                        'city': city,
+                        'pincode': pincode,
+                    }
+                except Exception as e:
+                    print(f"Razorpay error: {e}")
+                    messages.error(request, "Could not initiate Razorpay payment. Please try again.")
 
     context = {
         'cart_items': cart_items,

@@ -83,24 +83,23 @@
 
     <div class="page-content">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-7 mb-4">
-                    <h2>Billing Details</h2>
+            <form method="post" action="{% url 'checkout' %}" class="checkout-form" novalidate id="checkoutForm">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-7 mb-4">
+                        <h2>Billing Details</h2>
 
-                    {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert"
-                        style="margin-bottom: 20px;">
-                        <strong>{% if message.tags == 'error' %}Error:{% else %}Success:{% endif %}</strong> {{ message
-                        }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert"
+                            style="margin-bottom: 20px;">
+                            <strong>{% if message.tags == 'error' %}Error:{% else %}Success:{% endif %}</strong> {{ message
+                            }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
 
-                    <form method="post" action="{% url 'checkout' %}" class="checkout-form" novalidate
-                        id="checkoutForm">
-                        {% csrf_token %}
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="first_name" class="form-label">First Name <span
@@ -156,88 +155,88 @@
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">Continue to payment</button>
                         </div>
-                    </form>
 
-                    <script>
-                        (function () {
-                            'use strict';
-                            window.addEventListener('load', function () {
-                                var form = document.getElementById('checkoutForm');
-                                form.addEventListener('submit', function (event) {
-                                    if (form.checkValidity() === false) {
-                                        event.preventDefault();
-                                        event.stopPropagation();
-                                    }
-                                    form.classList.add('was-validated');
+                        <script>
+                            (function () {
+                                'use strict';
+                                window.addEventListener('load', function () {
+                                    var form = document.getElementById('checkoutForm');
+                                    form.addEventListener('submit', function (event) {
+                                        if (form.checkValidity() === false) {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                        }
+                                        form.classList.add('was-validated');
+                                    }, false);
                                 }, false);
-                            }, false);
-                        }());
-                    </script>
-                </div>
+                            }());
+                        </script>
+                    </div>
 
-                <div class="col-lg-5">
-                    <div class="order-summary">
-                        <h2>Your Order</h2>
-                        <table class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th class="text-end">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if cart_items and cart_items.count > 0 %}
-                                {% for item in cart_items %}
-                                <tr>
-                                    <td style="color: #c96">{{ item.product_name }}</td>
-                                    <td class="text-end" style="color: #c96">&#8377;{{ item.total }}</td>
-                                </tr>
-                                {% endfor %}
-                                {% else %}
-                                <tr>
-                                    <td colspan="2">Your cart is empty.</td>
-                                </tr>
-                                {% endif %}
-                            </tbody>
-                            <tfoot>
-                                <tr style="color: #c96">
-                                    <th>Subtotal</th>
-                                    <th class="text-end">&#8377;{{ subtotal }}</th>
-                                </tr>
-                                <tr style="color: #c96">
-                                    <th>Shipping</th>
-                                    <th class="text-end">&#8377;{{ shipping }}</th>
-                                </tr>
-                                {% if discount > 0 %}
-                                <tr style="color: #c96">
-                                    <th>Discount</th>
-                                    <th class="text-end">-&#8377;{{ discount }}</th>
-                                </tr>
-                                {% endif %}
-                                <tr style="color: #c96">
-                                    <th>Total</th>
-                                    <th class="text-end"><strong>&#8377;{{ total }}</strong></th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                    <div class="col-lg-5">
+                        <div class="order-summary">
+                            <h2>Your Order</h2>
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th class="text-end">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if cart_items and cart_items.count > 0 %}
+                                    {% for item in cart_items %}
+                                    <tr>
+                                        <td style="color: #c96">{{ item.product_name }}</td>
+                                        <td class="text-end" style="color: #c96">&#8377;{{ item.total }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="2">Your cart is empty.</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                                <tfoot>
+                                    <tr style="color: #c96">
+                                        <th>Subtotal</th>
+                                        <th class="text-end">&#8377;{{ subtotal }}</th>
+                                    </tr>
+                                    <tr style="color: #c96">
+                                        <th>Shipping</th>
+                                        <th class="text-end">&#8377;{{ shipping }}</th>
+                                    </tr>
+                                    {% if discount > 0 %}
+                                    <tr style="color: #c96">
+                                        <th>Discount</th>
+                                        <th class="text-end">-&#8377;{{ discount }}</th>
+                                    </tr>
+                                    {% endif %}
+                                    <tr style="color: #c96">
+                                        <th>Total</th>
+                                        <th class="text-end"><strong>&#8377;{{ total }}</strong></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
 
-                        <div class="payment-methods mt-4">
-                            <h3>Payment</h3>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_card"
-                                    value="card" checked>
-                                <label class="form-check-label" for="payment_card">Credit / Debit Card</label>
+                            <div class="payment-methods mt-4">
+                                <h3>Payment</h3>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_card"
+                                        value="card" checked>
+                                    <label class="form-check-label" for="payment_card">Credit / Debit Card</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_cod"
+                                        value="cod">
+                                    <label class="form-check-label" for="payment_cod">Cash on Delivery</label>
+                                </div>
+
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_cod"
-                                    value="cod">
-                                <label class="form-check-label" for="payment_cod">Cash on Delivery</label>
-                            </div>
-
                         </div>
                     </div>
-                </div>
-            </div><!-- End .row -->
+                </div><!-- End .row -->
+            </form>
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
