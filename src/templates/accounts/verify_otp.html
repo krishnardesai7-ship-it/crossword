@@ -10,7 +10,7 @@
         </h2>
 
         <p class="mb-4 text-gray-500">
-            Enter the OTP sent to your email
+            Enter the OTP sent to your mobile number
         </p>
 
         {% include "components/messages.html" %}
@@ -32,7 +32,12 @@
                 font-medium rounded-lg text-sm px-5 py-2.5">
                 Verify OTP
             </button>
-           
+            
+            <div class="mt-4">
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Didn't receive code? <a href="{% url 'accounts:resend_otp' %}" class="text-blue-600 hover:underline">Resend OTP</a>
+                </p>
+            </div>
         </form>
 
     </div>

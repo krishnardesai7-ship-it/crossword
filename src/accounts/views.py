@@ -79,14 +79,14 @@ def accounts_register(request):
                     )
                 return render(request, "accounts/register.html", {"form": form})
 
-            # Send OTP to user's email and redirect to verification
-            otp = send_otp(new_user.email)
+            # Send OTP to user's phone number and redirect to verification
+            otp = send_otp(new_user.phone_number, is_phone=True)
             request.session['otp'] = otp
             request.session['user_id'] = new_user.id
 
             messages.success(
                 request,
-                f"Account created successfully! An OTP has been sent to {new_user.email}.",
+                f"Account created successfully! An OTP has been sent to your mobile number.",
             )
             return redirect("accounts:verify_otp")
         except Exception as e:
@@ -203,32 +203,47 @@ def accounts_login_page(request):
 
 import threading
 
-def send_otp(email):
+def send_otp(contact_info, is_phone=False):
     otp = random.randint(100000, 999999)
 
     print("\n" + "="*50)
-    print(f"OTP GENERATED FOR {email}: {otp}")
+    print(f"OTP GENERATED FOR {contact_info}: {otp}")
     print("="*50 + "\n")
 
-    # Force IPv4 to prevent IPv6 hanging (which causes 30s timeouts and 500 errors)
-    old_getaddrinfo = socket.getaddrinfo
-    def new_getaddrinfo(*args, **kwargs):
-        responses = old_getaddrinfo(*args, **kwargs)
-        return [response for response in responses if response[0] == socket.AF_INET]
-    socket.getaddrinfo = new_getaddrinfo
+    if is_phone:
+        # TODO: Implement real SMS gateway here (like Fast2SMS, Twilio, MSG91)
+        # Example using Fast2SMS:
+        # import requests
+        # url = "https://www.fast2sms.com/dev/bulkV2"
+        # payload = f"variables_values={otp}&route=otp&numbers={contact_info}"
+        # headers = {
+        #     'authorization': "YOUR_FAST2SMS_API_KEY",
+        #     'Content-Type': "application/x-www-form-urlencoded"
+        # }
+        # requests.request("POST", url, data=payload, headers=headers)
+        
+        # For now, we simulate SMS sending (check your terminal for the OTP)
+        print(f"--- MOCK SMS --- Sent OTP {otp} to Mobile Number: {contact_info}")
+    else:
+        # Force IPv4 to prevent IPv6 hanging (which causes 30s timeouts and 500 errors)
+        old_getaddrinfo = socket.getaddrinfo
+        def new_getaddrinfo(*args, **kwargs):
+            responses = old_getaddrinfo(*args, **kwargs)
+            return [response for response in responses if response[0] == socket.AF_INET]
+        socket.getaddrinfo = new_getaddrinfo
 
-    try:
-        send_mail(
-            'Your OTP Code',
-            f'Your OTP is {otp}',
-            settings.EMAIL_HOST_USER,
-            [email],
-            fail_silently=False,
-        )
-    except Exception as e:
-        print(f"Error sending email to {email}: {e}")
-    finally:
-        socket.getaddrinfo = old_getaddrinfo
+        try:
+            send_mail(
+                'Your OTP Code',
+                f'Your OTP is {otp}',
+                settings.EMAIL_HOST_USER,
+                [contact_info],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Error sending email to {contact_info}: {e}")
+        finally:
+            socket.getaddrinfo = old_getaddrinfo
 
     return otp
 
@@ -268,10 +283,11 @@ def resend_otp(request):
 
     user = User.objects.get(id=user_id)
 
-    otp = send_otp(user.email)
+    # Send to phone number
+    otp = send_otp(user.phone_number, is_phone=True)
 
     request.session['otp'] = otp
 
-    messages.success(request, "New OTP sent to your email.")
+    messages.success(request, "New OTP sent to your mobile number.")
 
     return redirect("accounts:verify_otp")
