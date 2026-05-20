@@ -86,7 +86,7 @@ def accounts_register(request):
 
             messages.success(
                 request,
-                f"Account created successfully! An OTP has been sent to {new_user.email}. (Demo OTP: {otp})",
+                f"Account created successfully! An OTP has been sent to {new_user.email}. (Your OTP: {otp})",
             )
             return redirect("accounts:verify_otp")
         except Exception as e:
