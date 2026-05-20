@@ -77,11 +77,11 @@ class UserCreationForm(forms.ModelForm):
         placeholders = {
             'first_name':    'Enter your first name',
             'last_name':     'Enter your last name',
-            'username':      'Choose a username',
+            'username':      'Choose a username include @',
             'email':         'you@example.com',
             'phone_number':  'e.g. 9876543210',
             'country':       'e.g. India',
-            'password1':     'Min. 8 characters',
+            'password1':     'min 8 characters and include $',
             'password2':     'Repeat your password',
         }
         for field_name, placeholder in placeholders.items():
