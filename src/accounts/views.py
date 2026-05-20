@@ -249,19 +249,19 @@ def verify_otp(request):
     return render(request, "accounts/verify_otp.html")
 
 
-# def resend_otp(request):
-#     user_id = request.session.get('user_id')
+def resend_otp(request):
+    user_id = request.session.get('user_id')
 
-#     if not user_id:
-#         messages.error(request, "Session expired. Please register again.")
-#         return redirect("accounts:register")
+    if not user_id:
+        messages.error(request, "Session expired. Please register again.")
+        return redirect("accounts:register")
 
-#     user = User.objects.get(id=user_id)
+    user = User.objects.get(id=user_id)
 
-#     otp = send_otp(user.email)
+    otp = send_otp(user.email)
 
-#     request.session['otp'] = otp
+    request.session['otp'] = otp
 
-#     messages.success(request, "New OTP sent to your email.")
+    messages.success(request, "New OTP sent to your email.")
 
-#     return redirect("accounts:verify_otp")
+    return redirect("accounts:verify_otp")
