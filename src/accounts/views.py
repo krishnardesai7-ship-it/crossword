@@ -211,19 +211,30 @@ def send_otp(contact_info, is_phone=False):
     print("="*50 + "\n")
 
     if is_phone:
-        # TODO: Implement real SMS gateway here (like Fast2SMS, Twilio, MSG91)
-        # Example using Fast2SMS:
-        # import requests
-        # url = "https://www.fast2sms.com/dev/bulkV2"
-        # payload = f"variables_values={otp}&route=otp&numbers={contact_info}"
-        # headers = {
-        #     'authorization': "YOUR_FAST2SMS_API_KEY",
-        #     'Content-Type': "application/x-www-form-urlencoded"
-        # }
-        # requests.request("POST", url, data=payload, headers=headers)
+        import requests
+        # ==============================================================
+        # અગત્યની નોંધ: સાચો SMS મોકલવા માટે તમારે API_KEY બદલવી પડશે
+        # 1. fast2sms.com પર જઈને ફ્રી એકાઉન્ટ બનાવો.
+        # 2. ત્યાંથી API (Authorization) Key કોપી કરીને નીચે મૂકો.
+        # ==============================================================
+        API_KEY = "qT2QSDdujgYGvL8Hn95aMVipsbJRhxt0eorCkz3KyfwZPFOUW6eIw0F57D6UakmCYjAScTQNRZW4xBdf"
         
-        # For now, we simulate SMS sending (check your terminal for the OTP)
-        print(f"--- MOCK SMS --- Sent OTP {otp} to Mobile Number: {contact_info}")
+        url = "https://www.fast2sms.com/dev/bulkV2"
+        payload = f"variables_values={otp}&route=otp&numbers={contact_info}"
+        headers = {
+            'authorization': API_KEY,
+            'Content-Type': "application/x-www-form-urlencoded"
+        }
+        
+        try:
+            # જો API key સાચી હશે તો અહીથી SMS જશે
+            response = requests.request("POST", url, data=payload, headers=headers)
+            print(f"SMS Response: {response.text}")
+        except Exception as e:
+            print(f"SMS Error: {e}")
+            
+        # ટેસ્ટિંગ માટે કન્સોલ (ટર્મિનલ) માં પણ પ્રિન્ટ કરેલ છે
+        print(f"--- OTP {otp} for {contact_info} (Check console if SMS API is missing) ---")
     else:
         # Force IPv4 to prevent IPv6 hanging (which causes 30s timeouts and 500 errors)
         old_getaddrinfo = socket.getaddrinfo
