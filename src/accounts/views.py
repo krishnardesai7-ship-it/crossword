@@ -86,7 +86,7 @@ def accounts_register(request):
 
             messages.success(
                 request,
-                f"Account created successfully! An OTP has been sent to {new_user.email}.",
+                f"Account created successfully! An OTP has been sent to {new_user.email}. (Demo OTP: {otp})",
             )
             return redirect("accounts:verify_otp")
         except Exception as e:
@@ -210,25 +210,31 @@ def send_otp(email):
     print(f"OTP GENERATED FOR {email}: {otp}")
     print("="*50 + "\n")
 
-    # Force IPv4 to prevent IPv6 hanging (which causes 30s timeouts and 500 errors)
-    old_getaddrinfo = socket.getaddrinfo
-    def new_getaddrinfo(*args, **kwargs):
-        responses = old_getaddrinfo(*args, **kwargs)
-        return [response for response in responses if response[0] == socket.AF_INET]
-    socket.getaddrinfo = new_getaddrinfo
+    def _send_email_bg():
+        # Force IPv4 to prevent IPv6 hanging
+        old_getaddrinfo = socket.getaddrinfo
+        def new_getaddrinfo(*args, **kwargs):
+            responses = old_getaddrinfo(*args, **kwargs)
+            return [response for response in responses if response[0] == socket.AF_INET]
+        socket.getaddrinfo = new_getaddrinfo
 
-    try:
-        send_mail(
-            'Your OTP Code',
-            f'Your OTP is {otp}',
-            settings.EMAIL_HOST_USER,
-            [email],
-            fail_silently=False,
-        )
-    except Exception as e:
-        print(f"Error sending email to {email}: {e}")
-    finally:
-        socket.getaddrinfo = old_getaddrinfo
+        try:
+            send_mail(
+                'Your OTP Code',
+                f'Your OTP is {otp}',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Error sending email to {email}: {e}")
+        finally:
+            socket.getaddrinfo = old_getaddrinfo
+
+    # Run in background thread to avoid Render 30s timeout (500 Error)
+    thread = threading.Thread(target=_send_email_bg)
+    thread.daemon = True
+    thread.start()
 
     return otp
 
@@ -273,6 +279,6 @@ def resend_otp(request):
 
     request.session['otp'] = otp
 
-    messages.success(request, "New OTP sent to your email.")
+    messages.success(request, f"New OTP sent to your email. (Demo OTP: {otp})")
 
     return redirect("accounts:verify_otp")
