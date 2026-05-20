@@ -209,22 +209,16 @@ def send_otp(email):
     print(f"OTP GENERATED FOR {email}: {otp}")
     print("="*50 + "\n")
 
-    def _send_email_bg():
-        try:
-            send_mail(
-                'Your OTP Code',
-                f'Your OTP is {otp}',
-                settings.EMAIL_HOST_USER,
-                [email],
-                fail_silently=False,
-            )
-        except Exception as e:
-            print(f"Error sending email to {email}: {e}")
-
-    # Run email sending in a background thread to prevent server timeout (500 Error)
-    thread = threading.Thread(target=_send_email_bg)
-    thread.daemon = True
-    thread.start()
+    try:
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP is {otp}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print(f"Error sending email to {email}: {e}")
 
     return otp
 
