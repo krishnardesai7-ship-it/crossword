@@ -79,14 +79,14 @@ def accounts_register(request):
                     )
                 return render(request, "accounts/register.html", {"form": form})
 
-            # Send OTP to user's phone number and redirect to verification
-            otp = send_otp(new_user.phone_number, is_phone=True)
+            # Send OTP to user's email and redirect to verification
+            otp = send_otp(new_user.email)
             request.session['otp'] = otp
             request.session['user_id'] = new_user.id
 
             messages.success(
                 request,
-                f"Account created successfully! An OTP has been sent to your mobile number.",
+                f"Account created successfully! An OTP has been sent to {new_user.email}.",
             )
             return redirect("accounts:verify_otp")
         except Exception as e:
@@ -203,58 +203,32 @@ def accounts_login_page(request):
 
 import threading
 
-def send_otp(contact_info, is_phone=False):
+def send_otp(email):
     otp = random.randint(100000, 999999)
 
     print("\n" + "="*50)
-    print(f"OTP GENERATED FOR {contact_info}: {otp}")
+    print(f"OTP GENERATED FOR {email}: {otp}")
     print("="*50 + "\n")
 
-    if is_phone:
-        import requests
-        # ==============================================================
-        # અગત્યની નોંધ: સાચો SMS મોકલવા માટે તમારે API_KEY બદલવી પડશે
-        # 1. fast2sms.com પર જઈને ફ્રી એકાઉન્ટ બનાવો.
-        # 2. ત્યાંથી API (Authorization) Key કોપી કરીને નીચે મૂકો.
-        # ==============================================================
-        API_KEY = "qT2QSDdujgYGvL8Hn95aMVipsbJRhxt0eorCkz3KyfwZPFOUW6eIw0F57D6UakmCYjAScTQNRZW4xBdf"
-        
-        url = "https://www.fast2sms.com/dev/bulkV2"
-        payload = f"variables_values={otp}&route=otp&numbers={contact_info}"
-        headers = {
-            'authorization': API_KEY,
-            'Content-Type': "application/x-www-form-urlencoded"
-        }
-        
-        try:
-            # જો API key સાચી હશે તો અહીથી SMS જશે
-            response = requests.request("POST", url, data=payload, headers=headers)
-            print(f"SMS Response: {response.text}")
-        except Exception as e:
-            print(f"SMS Error: {e}")
-            
-        # ટેસ્ટિંગ માટે કન્સોલ (ટર્મિનલ) માં પણ પ્રિન્ટ કરેલ છે
-        print(f"--- OTP {otp} for {contact_info} (Check console if SMS API is missing) ---")
-    else:
-        # Force IPv4 to prevent IPv6 hanging (which causes 30s timeouts and 500 errors)
-        old_getaddrinfo = socket.getaddrinfo
-        def new_getaddrinfo(*args, **kwargs):
-            responses = old_getaddrinfo(*args, **kwargs)
-            return [response for response in responses if response[0] == socket.AF_INET]
-        socket.getaddrinfo = new_getaddrinfo
+    # Force IPv4 to prevent IPv6 hanging (which causes 30s timeouts and 500 errors)
+    old_getaddrinfo = socket.getaddrinfo
+    def new_getaddrinfo(*args, **kwargs):
+        responses = old_getaddrinfo(*args, **kwargs)
+        return [response for response in responses if response[0] == socket.AF_INET]
+    socket.getaddrinfo = new_getaddrinfo
 
-        try:
-            send_mail(
-                'Your OTP Code',
-                f'Your OTP is {otp}',
-                settings.EMAIL_HOST_USER,
-                [contact_info],
-                fail_silently=False,
-            )
-        except Exception as e:
-            print(f"Error sending email to {contact_info}: {e}")
-        finally:
-            socket.getaddrinfo = old_getaddrinfo
+    try:
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP is {otp}',
+            settings.EMAIL_HOST_USER,
+            [email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print(f"Error sending email to {email}: {e}")
+    finally:
+        socket.getaddrinfo = old_getaddrinfo
 
     return otp
 
@@ -294,11 +268,11 @@ def resend_otp(request):
 
     user = User.objects.get(id=user_id)
 
-    # Send to phone number
-    otp = send_otp(user.phone_number, is_phone=True)
+    # Send to email
+    otp = send_otp(user.email)
 
     request.session['otp'] = otp
 
-    messages.success(request, "New OTP sent to your mobile number.")
+    messages.success(request, "New OTP sent to your email.")
 
     return redirect("accounts:verify_otp")
