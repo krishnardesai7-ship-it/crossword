@@ -11,6 +11,7 @@ from .detection import FaceRecognition
 from django.urls import reverse
 
 import random
+import socket
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import IntegrityError
@@ -209,6 +210,13 @@ def send_otp(email):
     print(f"OTP GENERATED FOR {email}: {otp}")
     print("="*50 + "\n")
 
+    # Force IPv4 to prevent IPv6 hanging (which causes 30s timeouts and 500 errors)
+    old_getaddrinfo = socket.getaddrinfo
+    def new_getaddrinfo(*args, **kwargs):
+        responses = old_getaddrinfo(*args, **kwargs)
+        return [response for response in responses if response[0] == socket.AF_INET]
+    socket.getaddrinfo = new_getaddrinfo
+
     try:
         send_mail(
             'Your OTP Code',
@@ -219,6 +227,8 @@ def send_otp(email):
         )
     except Exception as e:
         print(f"Error sending email to {email}: {e}")
+    finally:
+        socket.getaddrinfo = old_getaddrinfo
 
     return otp
 
