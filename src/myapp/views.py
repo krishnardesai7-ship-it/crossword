@@ -1242,8 +1242,14 @@ def get_book_image_url(request, book):
 
 def render_book_card(request, book, language="English"):
     image_url = get_book_image_url(request, book)
+    
+    title = getattr(book, 'title', getattr(book, 'name', ''))
+    author = getattr(book, 'author', getattr(book, 'author_name', 'N/A'))
+    stock = getattr(book, 'stock', 10)
+    category_str = str(book.category).replace('_', ' ').title()
+    
     image_html = (
-        f'<img class="book-cover" src="{escape(image_url)}" alt="{escape(book.title)} cover">'
+        f'<img class="book-cover" src="{escape(image_url)}" alt="{escape(title)} cover">'
         if image_url
         else f'<div class="book-cover-placeholder">{escape(t(language, "no_image"))}</div>'
     )
@@ -1252,11 +1258,11 @@ def render_book_card(request, book, language="English"):
 <div class="book-card">
     {image_html}
     <div class="book-info">
-        <div>&#128218; {escape(t(language, "title"))}: {escape(book.title)}</div>
-        <div>&#9997; {escape(t(language, "author"))}: {escape(getattr(book, "author", "N/A"))}</div>
-        <div>&#128193; {escape(t(language, "category"))}: {escape(book.category)}</div>
+        <div>&#128218; {escape(t(language, "title"))}: {escape(title)}</div>
+        <div>&#9997; {escape(t(language, "author"))}: {escape(author)}</div>
+        <div>&#128193; {escape(t(language, "category"))}: {escape(category_str)}</div>
         <div>&#128176; {escape(t(language, "price"))}: &#8377;{book.price}</div>
-        <div>&#128230; {escape(t(language, "stock"))}: {book.stock} {escape(t(language, "available"))}</div>
+        <div>&#128230; {escape(t(language, "stock"))}: {stock} {escape(t(language, "available"))}</div>
     </div>
 </div>
 """
@@ -1407,7 +1413,7 @@ def recommend_books_by_mood(request, mood, name=None, language="English"):
     for category in mood_categories.get(mood, []):
         category_query |= Q(category__icontains=category)
 
-    books = Book.objects.filter(category_query)[:5] if category_query else []
+    books = product_model.objects.filter(category_query)[:5] if category_query else []
 
     response = f"""
 <div class="book-info">
@@ -1417,13 +1423,16 @@ def recommend_books_by_mood(request, mood, name=None, language="English"):
 
     if books:
         for book in books:
-            title = book.title
+            title = getattr(book, 'title', getattr(book, 'name', ''))
+            author = getattr(book, 'author', getattr(book, 'author_name', 'N/A'))
+            category_str = str(book.category).replace('_', ' ').title()
+            
             response += f"""
 <div class="book-card">
     <div class="book-info">
-        <div>&#128218; <strong>{escape(book.title)}</strong></div>
-        <div>&#9997; {escape(t(language, "author"))}: {escape(getattr(book, "author", "N/A"))}</div>
-        <div>&#128193; {escape(t(language, "category"))}: {escape(book.category)}</div>
+        <div>&#128218; <strong>{escape(title)}</strong></div>
+        <div>&#9997; {escape(t(language, "author"))}: {escape(author)}</div>
+        <div>&#128193; {escape(t(language, "category"))}: {escape(category_str)}</div>
         <div>&#128176; {escape(t(language, "price"))}: &#8377;{book.price}</div>
         <div>&#128279; {escape(t(language, "buy"))}: {render_purchase_links(title)}</div>
     </div>
@@ -1806,10 +1815,31 @@ def get_category_label(slug):
 
 
 def find_books_for_category(slug):
+    slug_to_category = {
+        "love-stories": "love_story",
+        "fantasy": "fantasy",
+        "juvenile-literature": "juvenile_literature",
+        "mystery": "mystery",
+        "thriller": "thrillers",
+        "self-health-personal-growth": "self_health_and_personal_growth",
+        "health-fitness-wellness": "health_fitness_and_wellness",
+        "spirituality-philosophy": "spirituality_and_philosophy",
+        "science-natural-technology": "science_natural_and_technology",
+        "leadership-management": "leadership_and_management",
+        "productivity-time-management": "productivity_and_time_management",
+        "career-professional-development": "career_professional_development",
+        "holy-books-religious-texts-scriptures": "holy_books_religious_texts_or_scriptures",
+    }
+    
+    category = slug_to_category.get(slug)
+    if category:
+        return product_model.objects.filter(category=category).order_by("name")
+    
+    # Fallback to general search
     category_query = Q()
     for term in CATEGORY_SEARCH_TERMS.get(slug, [slug.replace("-", " ")]):
         category_query |= Q(category__icontains=term)
-    return Book.objects.filter(category_query).order_by("title") if category_query else Book.objects.none()
+    return product_model.objects.filter(category_query).order_by("name") if category_query else product_model.objects.none()
 
 
 def render_category_books_response(request, category_label, books, name=None, language="English"):
@@ -1885,7 +1915,7 @@ def chatbot_api(request):
 
     if msg.startswith("genre:"):
         genre = msg.split(":", 1)[1]
-        books = Book.objects.filter(category__icontains=genre)[:5]
+        books = product_model.objects.filter(category__icontains=genre)[:5]
         return JsonResponse(
             {
                 "response": render_books_with_menu(
@@ -1924,10 +1954,11 @@ def chatbot_api(request):
             }
         )
 
-    book = Book.objects.filter(title__icontains=msg).first()
+    book = product_model.objects.filter(name__icontains=msg).first()
 
     if book:
-        if book.stock > 0:
+        stock = getattr(book, 'stock', 10)
+        if stock > 0:
             response = render_book_card(request, book, language)
             response += render_choice_buttons(
                 [
@@ -1939,14 +1970,19 @@ def chatbot_api(request):
             )
             return JsonResponse({"response": response})
 
-        recs = Book.objects.filter(category=book.category).exclude(id=book.id)[:3]
-        rec_names = ", ".join([escape(b.title) for b in recs]) if recs else t(language, "no_similar")
+        recs = product_model.objects.filter(category=book.category).exclude(id=book.id)[:3]
+        rec_names = ", ".join([escape(getattr(b, 'title', getattr(b, 'name', ''))) for b in recs]) if recs else t(language, "no_similar")
+        
+        title = getattr(book, 'title', getattr(book, 'name', ''))
+        author = getattr(book, 'author', getattr(book, 'author_name', 'N/A'))
+        category_str = str(book.category).replace('_', ' ').title()
+        
         response = f"""
 <div class="book-card">
     <div class="book-info">
-        <div>&#128218; {escape(t(language, "out_of_stock", title=book.title))} &#10060;</div>
-        <div>&#128193; {escape(t(language, "category"))}: {escape(book.category)}</div>
-        <div>&#9997; {escape(t(language, "author"))}: {escape(getattr(book, "author", "N/A"))}</div>
+        <div>&#128218; {escape(t(language, "out_of_stock", title=title))} &#10060;</div>
+        <div>&#128193; {escape(t(language, "category"))}: {escape(category_str)}</div>
+        <div>&#9997; {escape(t(language, "author"))}: {escape(author)}</div>
         <div>&#128073; {escape(t(language, "try_similar"))}: {rec_names}</div>
     </div>
 </div>
@@ -1978,7 +2014,7 @@ def chatbot_api(request):
     for term in get_category_terms(msg):
         category_query |= Q(category__icontains=term)
 
-    books = Book.objects.filter(category_query)[:5]
+    books = product_model.objects.filter(category_query)[:5]
 
     if books:
         response = f'<strong>&#128218; {escape(t(language, "books_in_category"))}</strong>'
