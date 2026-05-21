@@ -81,6 +81,9 @@
                                                 <a href="{% url 'track_order' order.id %}"
                                                     class="btn btn-outline-primary-2 btn-sm"
                                                     style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Track</a>
+                                                <button onclick="downloadReceipt('{{ order.order_date|date:'Y-m-d H:i' }}', '{{ order.name|escapejs }}', '{{ order.email|escapejs }}', '{{ order.phone|escapejs }}', '{{ order.address|escapejs }}', '{{ order.status|escapejs }}', '{{ order.product_name|escapejs }}', '{{ order.price }}', '{{ order.quantity }}', '{{ order.total }}')" 
+                                                    class="btn btn-outline-primary-2 btn-sm" 
+                                                    style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Receipt</button>
                                             </div>
                                         </td>
                                         <td class="date-col" style="color: #c96">{{ order.order_date|date:"d M Y" }}
@@ -142,6 +145,9 @@
                                                 <a href="{% url 'track_order' order.id %}"
                                                     class="btn btn-outline-primary-2 btn-sm"
                                                     style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Details</a>
+                                                <button onclick="downloadReceipt('{{ order.order_date|date:'Y-m-d H:i' }}', '{{ order.name|escapejs }}', '{{ order.email|escapejs }}', '{{ order.phone|escapejs }}', '{{ order.address|escapejs }}', '{{ order.status|escapejs }}', '{{ order.product_name|escapejs }}', '{{ order.price }}', '{{ order.quantity }}', '{{ order.total }}')" 
+                                                    class="btn btn-outline-primary-2 btn-sm" 
+                                                    style="padding: 2px 4px; font-size: 10px; min-width: auto; height: auto; text-transform: uppercase;">Receipt</button>
                                             </div>
                                         </td>
                                         <td class="date-col" style="color: #c96">{{ order.order_date|date:"d M Y" }}
@@ -624,6 +630,105 @@
                 }
             });
         });
+
+        window.downloadReceipt = function(dateStr, name, email, phone, address, status, productName, price, qty, total) {
+            const receiptWindow = window.open('', '_blank', 'width=800,height=700');
+            
+            const receiptHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Order Receipt - Crossword</title>
+                <style>
+                    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6; padding: 40px; }
+                    .receipt-container { max-width: 700px; margin: 0 auto; border: 1px solid #ddd; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+                    .header { text-align: center; border-bottom: 2px solid #f4f4f4; padding-bottom: 20px; margin-bottom: 30px; }
+                    .header h1 { color: #c9954c; margin: 0 0 10px 0; font-size: 28px; }
+                    .header p { margin: 0; color: #666; }
+                    .section { margin-bottom: 30px; }
+                    .section h3 { color: #555; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 15px; }
+                    .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+                    .detail-item { margin-bottom: 10px; }
+                    .detail-item strong { display: inline-block; width: 120px; color: #666; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+                    th { text-align: left; padding: 12px; background-color: #f9f9f9; border-bottom: 2px solid #ddd; color: #555; }
+                    .totals-container { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; text-align: right; }
+                    .totals-row { margin-bottom: 10px; font-size: 15px; }
+                    .totals-row.grand-total { font-size: 20px; font-weight: bold; color: #c9954c; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
+                    .totals-label { display: inline-block; width: 150px; }
+                    .totals-value { display: inline-block; width: 100px; }
+                    @media print {
+                        body { padding: 0; }
+                        .receipt-container { border: none; box-shadow: none; padding: 20px; }
+                        .no-print { display: none !important; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="receipt-container">
+                    <div class="header">
+                        <h1>Crossword Store</h1>
+                        <p>Order Receipt</p>
+                        <p>Date: ${dateStr}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Customer Details</h3>
+                        <div class="details-grid">
+                            <div>
+                                <div class="detail-item"><strong>Name:</strong> ${name || 'N/A'}</div>
+                                <div class="detail-item"><strong>Email:</strong> ${email || 'N/A'}</div>
+                                <div class="detail-item"><strong>Phone:</strong> ${phone || 'N/A'}</div>
+                            </div>
+                            <div>
+                                <div class="detail-item"><strong>Address:</strong> ${address || 'N/A'}</div>
+                                <div class="detail-item"><strong>Status:</strong> ${status || 'Completed'}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Order Details</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th style="text-align: right;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: left;">${productName}</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: left;">${qty}</td>
+                                    <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right;">₹${total}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="totals-container">
+                            <div class="totals-row grand-total">
+                                <span class="totals-label">Total:</span>
+                                <span class="totals-value">₹${total}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="no-print" style="text-align: center; margin-top: 50px;">
+                        <button onclick="window.print()" style="background: #c9954c; color: white; border: none; padding: 10px 25px; border-radius: 5px; font-size: 16px; cursor: pointer; margin-right: 10px;">Download Receipt (PDF)</button>
+                        <button onclick="window.close()" style="background: #666; color: white; border: none; padding: 10px 25px; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
+                    </div>
+                </div>
+                <script>
+                    window.onload = function() { setTimeout(() => window.print(), 500); }
+                <\\/script>
+            </body>
+            </html>
+            `;
+            
+            receiptWindow.document.write(receiptHTML);
+            receiptWindow.document.close();
+        }
     });
 </script>
 {% endblock %}
