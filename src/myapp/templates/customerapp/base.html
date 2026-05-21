@@ -571,14 +571,21 @@
                         <li>
                             <a href="#">Links</a>
                             <ul>
-                                <li><a href="tel:#"><i class="icon-phone" style="color:#c9954c !important"></i>Call: +91
-                                        7202963777</a></li>
-                                <li><a href="{% url 'wishlist' %}"><i class="icon-heart-o"
-                                            style="color:#c9954c !important"></i>Wishlist <span({{
-                                            wishlist_count|default:0 }})>
-                                            </span></a></li>
-                                <li><a href="{% url 'profile' %}"><i class="icon-user"
-                                            style="color:#c9954c !important"></i>Profile</a></li>
+                                <li>
+                                    <a href="tel:#" style="color:#c9954c !important;">
+                                        <i class="icon-phone" style="color:#c9954c !important; margin-right:5px;"></i>Call: +91 7202963777
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'wishlist' %}" style="color:#c9954c !important;">
+                                        <i class="icon-heart-o" style="color:#c9954c !important; margin-right:5px;"></i>Wishlist <span>({{ wishlist_count|default:0 }})</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'profile' %}" style="color:#c9954c !important;">
+                                        <i class="icon-user" style="color:#c9954c !important; margin-right:5px;"></i>Profile
+                                    </a>
+                                </li>
                                 <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul"
                                         style="color:red !important;">Logout</a></li>
                                 <li class="theme-switcher-container">

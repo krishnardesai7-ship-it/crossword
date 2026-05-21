@@ -232,6 +232,11 @@
                                     <label class="form-check-label" for="payment_cod">Cash on Delivery</label>
                                 </div>
 
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-outline-primary btn-block" onclick="generateReceipt()" style="border-color: #c9954c; color: #c9954c; width: 100%; padding: 10px; font-weight: bold; text-transform: uppercase;">
+                                        <i class="icon-file-text"></i> Generate Receipt
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -240,4 +245,144 @@
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
+
+<template id="receipt-items-template" style="display: none;">
+    {% for item in cart_items %}
+    <tr>
+        <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: left;">{{ item.product_name }}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right;">₹{{ item.total }}</td>
+    </tr>
+    {% endfor %}
+</template>
+
+<script>
+    function generateReceipt() {
+        const firstName = document.getElementById('first_name').value || 'N/A';
+        const lastName = document.getElementById('last_name').value || '';
+        const email = document.getElementById('email').value || 'N/A';
+        const phone = document.getElementById('phone').value || 'N/A';
+        const address = document.getElementById('address').value || 'N/A';
+        const city = document.getElementById('city').value || 'N/A';
+        const pincode = document.getElementById('pincode').value || 'N/A';
+        const customerName = (firstName + ' ' + lastName).trim() || '{{ uid.username }}';
+
+        const paymentMethodEl = document.querySelector('input[name="payment_method"]:checked');
+        const paymentMethod = paymentMethodEl ? paymentMethodEl.nextElementSibling.innerText : 'N/A';
+
+        const orderItemsHTML = document.getElementById('receipt-items-template').innerHTML;
+
+        const receiptWindow = window.open('', '_blank', 'width=800,height=700');
+        
+        const receiptHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Order Receipt - Crossword</title>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6; padding: 40px; }
+                .receipt-container { max-width: 700px; margin: 0 auto; border: 1px solid #ddd; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+                .header { text-align: center; border-bottom: 2px solid #f4f4f4; padding-bottom: 20px; margin-bottom: 30px; }
+                .header h1 { color: #c9954c; margin: 0 0 10px 0; font-size: 28px; }
+                .header p { margin: 0; color: #666; }
+                .section { margin-bottom: 30px; }
+                .section h3 { color: #555; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 15px; }
+                .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+                .detail-item { margin-bottom: 10px; }
+                .detail-item strong { display: inline-block; width: 120px; color: #666; }
+                table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+                th { text-align: left; padding: 12px; background-color: #f9f9f9; border-bottom: 2px solid #ddd; color: #555; }
+                .totals-container { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; text-align: right; }
+                .totals-row { margin-bottom: 10px; font-size: 15px; }
+                .totals-row.grand-total { font-size: 20px; font-weight: bold; color: #c9954c; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
+                .totals-label { display: inline-block; width: 150px; }
+                .totals-value { display: inline-block; width: 100px; }
+                @media print {
+                    body { padding: 0; }
+                    .receipt-container { border: none; box-shadow: none; padding: 20px; }
+                    .no-print { display: none !important; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-container">
+                <div class="header">
+                    <h1>Crossword Store</h1>
+                    <p>Order Receipt</p>
+                    <p>Date: ${new Date().toLocaleString()}</p>
+                </div>
+                
+                <div class="section">
+                    <h3>Customer Details</h3>
+                    <div class="details-grid">
+                        <div>
+                            <div class="detail-item"><strong>Name:</strong> ${customerName}</div>
+                            <div class="detail-item"><strong>Email:</strong> ${email}</div>
+                            <div class="detail-item"><strong>Phone:</strong> ${phone}</div>
+                        </div>
+                        <div>
+                            <div class="detail-item"><strong>Address:</strong> ${address}</div>
+                            <div class="detail-item"><strong>City:</strong> ${city}</div>
+                            <div class="detail-item"><strong>Pincode:</strong> ${pincode}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Transaction Method</h3>
+                    <div class="detail-item"><strong>Payment Mode:</strong> ${paymentMethod}</div>
+                    <div class="detail-item"><strong>Status:</strong> Pending (To be paid)</div>
+                </div>
+
+                <div class="section">
+                    <h3>Order Details</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${orderItemsHTML}
+                        </tbody>
+                    </table>
+
+                    <div class="totals-container">
+                        <div class="totals-row">
+                            <span class="totals-label">Subtotal:</span>
+                            <span class="totals-value">₹{{ subtotal }}</span>
+                        </div>
+                        <div class="totals-row">
+                            <span class="totals-label">Shipping:</span>
+                            <span class="totals-value">₹{{ shipping }}</span>
+                        </div>
+                        {% if discount > 0 %}
+                        <div class="totals-row">
+                            <span class="totals-label">Discount:</span>
+                            <span class="totals-value">-₹{{ discount }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="totals-row grand-total">
+                            <span class="totals-label">Total:</span>
+                            <span class="totals-value">₹{{ total }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="no-print" style="text-align: center; margin-top: 50px;">
+                    <button onclick="window.print()" style="background: #c9954c; color: white; border: none; padding: 10px 25px; border-radius: 5px; font-size: 16px; cursor: pointer; margin-right: 10px;">Print Receipt</button>
+                    <button onclick="window.close()" style="background: #666; color: white; border: none; padding: 10px 25px; border-radius: 5px; font-size: 16px; cursor: pointer;">Close</button>
+                </div>
+            </div>
+            <script>
+                window.onload = function() { setTimeout(() => window.print(), 500); }
+            <\/script>
+        </body>
+        </html>
+        `;
+        
+        receiptWindow.document.write(receiptHTML);
+        receiptWindow.document.close();
+    }
+</script>
 {% endblock content %}
