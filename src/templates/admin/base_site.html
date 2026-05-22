@@ -150,6 +150,7 @@
     /* ── List Table — Compact No-Scroll ────────────── */
     #changelist {
         overflow-x: auto !important;
+        width: 100% !important;
     }
 
     #result_list {
@@ -159,28 +160,26 @@
         border: 1px solid #1e2533 !important;
         box-shadow: 0 4px 24px rgba(0,0,0,0.3) !important;
         width: 100% !important;
-        table-layout: fixed !important;
-        font-size: 0.72rem !important;
+        table-layout: auto !important;
+        font-size: 0.75rem !important;
     }
 
     #result_list thead th {
         background: linear-gradient(90deg, #0d4f5c, #1a7a8c) !important;
         color: #e2e8f0 !important;
-        padding: 7px 8px !important;
-        font-size: 0.7rem !important;
+        padding: 8px 12px !important;
+        font-size: 0.75rem !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.05em !important;
         border: none !important;
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
     }
 
     #result_list thead th a,
     #result_list thead th.sorted a {
         color: #fff !important;
-        font-size: 0.7rem !important;
+        font-size: 0.75rem !important;
     }
 
     #result_list thead th.sorted {
@@ -190,8 +189,8 @@
     /* Checkbox column — narrow */
     #result_list thead th:first-child,
     #result_list tbody td:first-child {
-        width: 28px !important;
-        padding: 5px 6px !important;
+        width: 35px !important;
+        padding: 8px !important;
     }
 
     #result_list tbody tr {
@@ -212,11 +211,12 @@
     }
 
     #result_list td {
-        padding: 5px 8px !important;
-        font-size: 0.72rem !important;
+        padding: 8px 12px !important;
+        font-size: 0.75rem !important;
         color: #cbd5e1 !important;
         border: none !important;
         vertical-align: middle !important;
+        white-space: nowrap !important;
     }
 
     #result_list td a {
@@ -224,6 +224,7 @@
         font-weight: 500 !important;
         text-decoration: none !important;
         transition: color 0.2s !important;
+        font-size: 0.75rem !important;
     }
 
     #result_list td a:hover {
