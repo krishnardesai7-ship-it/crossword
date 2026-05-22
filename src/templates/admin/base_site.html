@@ -6,7 +6,7 @@
 {% block branding %}
 <h1 id="site-name">
     <a href="{% url 'admin:index' %}">
-        📚 Crossword Admin
+        Crossword Admin
     </a>
 </h1>
 {% endblock %}
@@ -16,9 +16,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
     /* ── Base ───────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; }
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
 
-    body, html {
+    body,
+    html {
         font-family: 'Inter', sans-serif !important;
         background: #0f1117 !important;
         color: #e2e8f0 !important;
@@ -31,11 +36,12 @@
         height: 60px !important;
         display: flex !important;
         align-items: center !important;
-        box-shadow: 0 2px 20px rgba(0,200,200,0.15) !important;
-        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+        box-shadow: 0 2px 20px rgba(0, 200, 200, 0.15) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
 
-    #header a:link, #header a:visited {
+    #header a:link,
+    #header a:visited {
         color: #ffffff !important;
         text-decoration: none !important;
     }
@@ -49,7 +55,7 @@
 
     #user-tools {
         font-size: 0.82rem !important;
-        color: rgba(255,255,255,0.85) !important;
+        color: rgba(255, 255, 255, 0.85) !important;
     }
 
     #user-tools a {
@@ -81,11 +87,13 @@
     }
 
     /* ── Content Area ───────────────────────────────── */
-    #content-main, #content {
+    #content-main,
+    #content {
         background: transparent !important;
     }
 
-    #content-main h1, #content h1 {
+    #content-main h1,
+    #content h1 {
         color: #e2e8f0 !important;
         font-size: 1.5rem !important;
         font-weight: 600 !important;
@@ -93,12 +101,15 @@
     }
 
     /* ── Sidebar / Nav ──────────────────────────────── */
-    #nav-sidebar, .toggle-nav-sidebar {
+    #nav-sidebar,
+    .toggle-nav-sidebar {
         background: #111827 !important;
         border-right: 1px solid #1e2533 !important;
     }
 
-    .module > h2, .module > caption, #nav-sidebar .module > h2 {
+    .module>h2,
+    .module>caption,
+    #nav-sidebar .module>h2 {
         background: linear-gradient(90deg, #0d4f5c, #1a7a8c) !important;
         color: #fff !important;
         padding: 10px 16px !important;
@@ -118,7 +129,7 @@
         border-radius: 10px !important;
         overflow: hidden !important;
         margin-bottom: 1.5rem !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
     }
 
     .module table {
@@ -142,7 +153,7 @@
         border-radius: 10px !important;
         overflow: hidden !important;
         border: 1px solid #1e2533 !important;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.3) !important;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3) !important;
         width: 100% !important;
     }
 
@@ -184,7 +195,8 @@
         background: #1e2d3d !important;
     }
 
-    #result_list td, #result_list th {
+    #result_list td,
+    #result_list th {
         padding: 11px 16px !important;
         font-size: 0.85rem !important;
         color: #cbd5e1 !important;
@@ -215,7 +227,8 @@
         gap: 10px !important;
     }
 
-    .actions select, .actions input[type="submit"] {
+    .actions select,
+    .actions input[type="submit"] {
         background: #0d1117 !important;
         border: 1px solid #2d3748 !important;
         color: #e2e8f0 !important;
@@ -253,7 +266,7 @@
     #searchbar:focus {
         outline: none !important;
         border-color: #1a7a8c !important;
-        box-shadow: 0 0 0 3px rgba(26,122,140,0.2) !important;
+        box-shadow: 0 0 0 3px rgba(26, 122, 140, 0.2) !important;
     }
 
     #toolbar input[type="submit"] {
@@ -278,7 +291,7 @@
         border: 1px solid #1e2533 !important;
         border-radius: 10px !important;
         overflow: hidden !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
     }
 
     #changelist-filter h2 {
@@ -318,7 +331,11 @@
     }
 
     /* ── Buttons ────────────────────────────────────── */
-    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+    .button,
+    input[type=submit],
+    input[type=button],
+    .submit-row input,
+    a.button {
         background: linear-gradient(135deg, #0d4f5c, #1a7a8c) !important;
         color: #fff !important;
         border: none !important;
@@ -331,12 +348,14 @@
         text-decoration: none !important;
     }
 
-    .button:hover, input[type=submit]:hover {
+    .button:hover,
+    input[type=submit]:hover {
         opacity: 0.85 !important;
         transform: translateY(-1px) !important;
     }
 
-    .deletelink, .button.default {
+    .deletelink,
+    .button.default {
         background: #7f1d1d !important;
     }
 
@@ -349,7 +368,9 @@
         transition: color 0.2s !important;
     }
 
-    .addlink:hover { color: #86efac !important; }
+    .addlink:hover {
+        color: #86efac !important;
+    }
 
     .changelink {
         color: #38bdf8 !important;
@@ -359,7 +380,9 @@
         transition: color 0.2s !important;
     }
 
-    .changelink:hover { color: #7dd3e8 !important; }
+    .changelink:hover {
+        color: #7dd3e8 !important;
+    }
 
     /* ── Fieldsets / Detail View ────────────────────── */
     fieldset {
@@ -387,7 +410,9 @@
         padding: 10px 20px !important;
     }
 
-    .form-row:last-child { border-bottom: none !important; }
+    .form-row:last-child {
+        border-bottom: none !important;
+    }
 
     label {
         color: #94a3b8 !important;
@@ -402,8 +427,12 @@
         font-size: 0.9rem !important;
     }
 
-    input[type=text], input[type=email], input[type=password],
-    input[type=number], select, textarea {
+    input[type=text],
+    input[type=email],
+    input[type=password],
+    input[type=number],
+    select,
+    textarea {
         background: #0d1117 !important;
         border: 1px solid #2d3748 !important;
         border-radius: 6px !important;
@@ -413,10 +442,12 @@
         transition: border-color 0.2s !important;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input:focus,
+    select:focus,
+    textarea:focus {
         outline: none !important;
         border-color: #1a7a8c !important;
-        box-shadow: 0 0 0 3px rgba(26,122,140,0.2) !important;
+        box-shadow: 0 0 0 3px rgba(26, 122, 140, 0.2) !important;
     }
 
     /* ── Pagination ─────────────────────────────────── */
@@ -490,15 +521,35 @@
     }
 
     /* ── Scrollbar ──────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0d1117; }
-    ::-webkit-scrollbar-thumb { background: #1a7a8c; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #0d4f5c; }
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #0d1117;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #1a7a8c;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #0d4f5c;
+    }
 
     /* ── Responsive ─────────────────────────────────── */
     @media (max-width: 767px) {
-        #header { padding: 0 12px !important; }
-        #result_list td, #result_list th { padding: 8px 10px !important; font-size: 0.78rem !important; }
+        #header {
+            padding: 0 12px !important;
+        }
+
+        #result_list td,
+        #result_list th {
+            padding: 8px 10px !important;
+            font-size: 0.78rem !important;
+        }
     }
 </style>
 {% endblock %}
