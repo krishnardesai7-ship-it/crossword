@@ -1,7 +1,17 @@
 from django.contrib import admin
 from .models import Book, Category, register, contact as contact_model, product, wishlist, add_to_cart, checkout, comment, ProductReview, Coupon
 # Register your models here.
-admin.site.register(register)
+class RegisterAdmin(admin.ModelAdmin):
+    list_display  = ['username', 'email', 'gender', 'phone', 'address', 'education', 's_name']
+    list_filter   = ['gender']
+    search_fields = ['username', 'email', 'phone', 'address']
+    readonly_fields = ['username', 'email', 'password', 'confirm_password', 'otp',
+                       'gender', 'phone', 'address', 'education', 's_name', 'image']
+
+    def has_add_permission(self, request):
+        return False
+
+admin.site.register(register, RegisterAdmin)
 admin.site.register(wishlist)
 admin.site.register(add_to_cart)
 admin.site.register(comment)
