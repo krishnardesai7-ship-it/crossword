@@ -1,0 +1,422 @@
+[
+{
+  "model": "myapp.book",
+  "pk": 1,
+  "fields": {
+    "title": "BEFORE WE WERE STRANGER",
+    "author": "RENEE CARLINO",
+    "category": "LOVE STORY",
+    "price": 877.0,
+    "stock": 4,
+    "image": "books/BEFORE_WE_WERE_STRANGER.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 2,
+  "fields": {
+    "title": "CALL ME BE YOUR NAME",
+    "author": "ANDRE AAMAN",
+    "category": "LOVE STORY",
+    "price": 392.0,
+    "stock": 3,
+    "image": "books/CALL_ME_BY_YOUR_NAME.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 3,
+  "fields": {
+    "title": "IT ENDS WITH US",
+    "author": "COLLEEN HOOVER",
+    "category": "LOVE STORY",
+    "price": 135.0,
+    "stock": 2,
+    "image": "books/IT_ENDS_WITH_US.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 4,
+  "fields": {
+    "title": "LOVE STORY",
+    "author": "ERICH SEGAL",
+    "category": "LOVE SOTRY",
+    "price": 170.0,
+    "stock": 2,
+    "image": "books/LOVE_STORY.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 5,
+  "fields": {
+    "title": "ME BEFORE YOU",
+    "author": "JOJO MOYES",
+    "category": "LOVE STORY",
+    "price": 159.0,
+    "stock": 6,
+    "image": "books/ME_BEFORE_YOU.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 6,
+  "fields": {
+    "title": "NOTE BOOK",
+    "author": "NICHOLAS SPARK",
+    "category": "LOVE STORY",
+    "price": 499.0,
+    "stock": 3,
+    "image": ""
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 7,
+  "fields": {
+    "title": "OUTLANDER",
+    "author": "DIANA GABALDON",
+    "category": "LOVE STORY",
+    "price": 399.0,
+    "stock": 5,
+    "image": "books/OUTLANDER.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 8,
+  "fields": {
+    "title": "THE FAULT IN OUR STARS",
+    "author": "JOHN GREEN",
+    "category": "LOVE STORY",
+    "price": 154.0,
+    "stock": 5,
+    "image": "books/THE_FAULT_IN_OUR_STARS.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 9,
+  "fields": {
+    "title": "THE TIME TRAVELLER'S WIFE",
+    "author": "AUDREY NIFFTENEGGER",
+    "category": "LOVE STORY",
+    "price": 175.0,
+    "stock": 6,
+    "image": "books/THE_TIME_TRAVELERS_WIFE.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 10,
+  "fields": {
+    "title": "TWILIGHT",
+    "author": "STEPHERE MEYER",
+    "category": "LOVE STIRY",
+    "price": 372.0,
+    "stock": 3,
+    "image": "books/TWILIGHT.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 11,
+  "fields": {
+    "title": "A GAME OF THRONES",
+    "author": "GEORGE R. R. MARTIN",
+    "category": "FANTASY",
+    "price": 415.0,
+    "stock": 6,
+    "image": "books/A_GAME_OF_THRONES.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 12,
+  "fields": {
+    "title": "AMERICAN GODS",
+    "author": "NEIL GAIMAN",
+    "category": "FANASY",
+    "price": 322.0,
+    "stock": 3,
+    "image": "books/AMERICAN_GODS.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 13,
+  "fields": {
+    "title": "PERCY JACKSON",
+    "author": "RICK RIORDAN",
+    "category": "JUVENILE LITERATURE",
+    "price": 316.0,
+    "stock": 5,
+    "image": "books/PERCY_JACKSON.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 14,
+  "fields": {
+    "title": "WINNIIW THW POOH",
+    "author": "A. A. MILNE",
+    "category": "JUVENILE LITREATURE",
+    "price": 299.0,
+    "stock": 6,
+    "image": "books/WINNIETHE_POOH.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 15,
+  "fields": {
+    "title": "A STUDY IN SCARLET",
+    "author": "ARTHUR CONAN DOYEL",
+    "category": "MYSTERY",
+    "price": 151.0,
+    "stock": 8,
+    "image": "books/A_STUDY_IN_SCARLET.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 16,
+  "fields": {
+    "title": "GONE GIRL",
+    "author": "GILLIAN FLYNN",
+    "category": "MYSTERY",
+    "price": 173.0,
+    "stock": 5,
+    "image": "books/GONE_GIRL.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 17,
+  "fields": {
+    "title": "EYE OF NEEDLE",
+    "author": "TERESA DRISCOLL",
+    "category": "THRILLER",
+    "price": 377.0,
+    "stock": 3,
+    "image": "books/EYE_OF_THE_NEEDLE.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 18,
+  "fields": {
+    "title": "THE COUPLE NEXT DOOR",
+    "author": "SHARI LAPENA",
+    "category": "THRILLER",
+    "price": 400.0,
+    "stock": 7,
+    "image": "books/THE_COUPLE_NEXT_DOOR.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 19,
+  "fields": {
+    "title": "DEEP WORK",
+    "author": "CAL NEWPORT",
+    "category": "SELF HEALTH ADN PERSONAL GROWTH",
+    "price": 146.0,
+    "stock": 4,
+    "image": "books/DEEP_WORK.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 20,
+  "fields": {
+    "title": "ATOMIC HABITS",
+    "author": "JAMES CLEAR",
+    "category": "SALEF HEALTH AND PERSONAL GRWOTH",
+    "price": 444.0,
+    "stock": 6,
+    "image": "books/ATOMIC_HABITS.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 21,
+  "fields": {
+    "title": "BREATH",
+    "author": "JAMES NESTOR",
+    "category": "HEALTH FITNESS AND WELLNESS",
+    "price": 189.0,
+    "stock": 2,
+    "image": "books/BREATH.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 22,
+  "fields": {
+    "title": "BURN",
+    "author": "HERMAN PONTZER",
+    "category": "HEATH FITNESS AND WELLNESS",
+    "price": 450.0,
+    "stock": 3,
+    "image": "books/BURN.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 23,
+  "fields": {
+    "title": "THE POWER OF NOW",
+    "author": "ECKHART TOLLE",
+    "category": "SPIRITUALITY AND PHILOSOPHY",
+    "price": 389.0,
+    "stock": 2,
+    "image": "books/THE_POWER_OF_NOW.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 24,
+  "fields": {
+    "title": "BEYOND GOOD AND EVIL",
+    "author": "FRIEDRICH NIETZSCHE",
+    "category": "SPIRITUALITY AND PHILOSOPHY",
+    "price": 121.0,
+    "stock": 5,
+    "image": "books/BEYOND_GOOD_AND_EVIL.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 25,
+  "fields": {
+    "title": "HOMO DEUS",
+    "author": "YUVAL NOAH HARARI",
+    "category": "SCIENCE NATURAL AND TECHNOLOGY",
+    "price": 179.0,
+    "stock": 2,
+    "image": "books/HOMO_DEUS.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 26,
+  "fields": {
+    "title": "A BRIEF HISTORY PF TIME",
+    "author": "STEPHEN HAWKING",
+    "category": "SCIENCE NATURAL AND TECHNOLOGY",
+    "price": 147.0,
+    "stock": 6,
+    "image": "books/A_BRIEF_HISTORY_OF_TIME.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 27,
+  "fields": {
+    "title": "DARE TO LEAD",
+    "author": "BRENE BRWON",
+    "category": "LEADERSHIP AND MANAGEMENT",
+    "price": 249.0,
+    "stock": 5,
+    "image": "books/DARE_TO_LEAD.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 28,
+  "fields": {
+    "title": "DRIVE",
+    "author": "DANIEL H. PINK",
+    "category": "LEADERSHIP AND MANAGEMENT",
+    "price": 295.0,
+    "stock": 5,
+    "image": "books/DRIVE.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 29,
+  "fields": {
+    "title": "EAT THAT FROG",
+    "author": "BRAIN TRACY",
+    "category": "PRODUCTIVITY AND TIME MANAGEMENT",
+    "price": 287.0,
+    "stock": 5,
+    "image": "books/EAT_THAT_FROG.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 30,
+  "fields": {
+    "title": "ESSENTIALISM",
+    "author": "GREG MCKEOWN",
+    "category": "PRODUCTIVITY AND TIME MANAGEMENT",
+    "price": 271.0,
+    "stock": 5,
+    "image": "books/ESSENTIALISM.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 31,
+  "fields": {
+    "title": "DESIGN YOUR LIFE",
+    "author": "BILL BURNETT AND DAVE EVANS",
+    "category": "CARREER PROFESSIONAL DEVELOPMENT",
+    "price": 151.0,
+    "stock": 4,
+    "image": "books/DESIGNING_YOUR_LIFE.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 32,
+  "fields": {
+    "title": "OUTLIERS",
+    "author": "MALCOLM GLADWELL",
+    "category": "CARREER PROFESSIONAL DEVELOPMENT",
+    "price": 250.0,
+    "stock": 6,
+    "image": "books/OUTLIERS.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 33,
+  "fields": {
+    "title": "RAMAYANA",
+    "author": "RISWHI VALMIKI",
+    "category": "holy books religious texts scriptures",
+    "price": 200.0,
+    "stock": 5,
+    "image": "books/RAMAYAN.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 34,
+  "fields": {
+    "title": "SHIV PURAN",
+    "author": "MAHARSHI VYASA",
+    "category": "holy books religious texts scriptures",
+    "price": 350.0,
+    "stock": 6,
+    "image": "books/SHIV_PURAN.jpg"
+  }
+},
+{
+  "model": "myapp.book",
+  "pk": 35,
+  "fields": {
+    "title": "MAHABHRAT",
+    "author": "MAHARSHI VYAS",
+    "category": "holy books religious texts scriptures",
+    "price": 500.0,
+    "stock": 4,
+    "image": "books/MAHABHARAT.jpg"
+  }
+}
+]
