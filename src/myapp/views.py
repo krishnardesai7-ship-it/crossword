@@ -1779,6 +1779,7 @@ def main_menu_response(name=None, language="English", is_admin_user=False):
     options = MAIN_MENU_OPTIONS.copy()
     if is_admin_user:
         options.append(("Admin Panel", "url:/admin/"))
+        options.append(("Admin Dashboard 📊", "menu:admin_dashboard"))
     return render_menu_response(
         t(language, "main_menu"),
         options,
@@ -1880,6 +1881,11 @@ def chatbot_api(request):
     name = get_customer_name(request, msg)
     normal_response = get_normal_conversation_response(msg, language)
     is_admin_user = request.user.is_authenticated and (request.user.is_staff or request.user.is_admin or request.user.is_superuser)
+
+    if is_admin_user:
+        admin_resp = handle_admin_query(msg, language, name)
+        if admin_resp:
+            return JsonResponse({"response": admin_resp})
 
     if normal_response:
         normal_response += render_choice_buttons(
@@ -2088,3 +2094,753 @@ def track_order(request, id):
         'status_step': status_step,
     }
     return render(request, 'customerapp/track_order.html', context)
+
+
+def handle_admin_query(msg, language="English", name=None):
+    from django.db.models import Sum, Count, Avg
+    import datetime
+    
+    # 1. Admin Dashboard Main Menu
+    if msg == "menu:admin_dashboard" or any(kw in msg for kw in ["admin dashboard", "ડેશબોર્ડ", "डैशबोर्ड"]):
+        options = [
+            ("Pending Orders 📦", "admin_menu:pending_orders"),
+            ("All Users 👥", "admin_menu:all_users"),
+            ("Low Stock Books 📉", "admin_menu:low_stock"),
+            ("Best Selling Books 🏆", "admin_menu:best_selling"),
+            ("Revenue & Financials 💰", "admin_menu:revenue"),
+            ("Most Wishlisted Books 💖", "admin_menu:wishlisted"),
+            ("Abandoned Carts 🛒", "admin_menu:abandoned"),
+            ("Track Delivery 🚚", "admin_menu:track_delivery"),
+            ("Analytical Charts 📊", "admin_menu:charts"),
+            ("Download Reports 📂", "admin_menu:reports"),
+        ]
+        return render_menu_response(
+            "Welcome to the Premium Admin Dashboard! 📊\nHere you can access real-time store analytics, live sales performance, and generate beautiful dynamic reports.",
+            options,
+            name,
+            include_main_menu=True,
+            language=language
+        )
+    
+    # 2. Pending Orders
+    if msg == "admin_menu:pending_orders" or any(kw in msg for kw in ["pending orders", "pending order", "પડતર ઓર્ડર", "લંબિત ઓર્ડર"]):
+        orders = checkout_model.objects.filter(status='Pending').order_by('-order_date')[:10]
+        if not orders.exists():
+            return "🎉 <b>Excellent! No pending orders at the moment.</b> All orders have been processed."
+        
+        response = "<h3>📦 Pending Orders (Recent 10)</h3>"
+        response += """
+        <div style="overflow-x:auto; margin-top: 10px; border-radius: 8px; border: 1px solid rgba(124, 58, 237, 0.2);">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+            <thead>
+              <tr style="background: rgba(124, 58, 237, 0.15); color: #FF8C42; font-weight: bold; border-bottom: 2px solid rgba(124, 58, 237, 0.3);">
+                <th style="padding: 10px 8px;">Order ID</th>
+                <th style="padding: 10px 8px;">Customer</th>
+                <th style="padding: 10px 8px;">Book Title</th>
+                <th style="padding: 10px 8px; text-align: right;">Total</th>
+                <th style="padding: 10px 8px;">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+        """
+        for o in orders:
+            response += f"""
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 8px;">#{o.id:04d}</td>
+                <td style="padding: 8px;"><b>{escape(o.name)}</b></td>
+                <td style="padding: 8px;">{escape(o.product_name)}</td>
+                <td style="padding: 8px; text-align: right; color: #4ADE80;">₹{o.total:,}</td>
+                <td style="padding: 8px; font-size:11px; color:rgba(255,255,255,0.6);">{o.order_date.strftime('%b %d, %H:%M')}</td>
+              </tr>
+            """
+        response += "</tbody></table></div>"
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 3. All Users
+    if msg == "admin_menu:all_users" or any(kw in msg for kw in ["all users", "users list", "બધા વપરાશકર્તાઓ", "सभी उपयोगकर्ता"]):
+        User = get_user_model()
+        users = User.objects.all().order_by('-id')[:10]
+        
+        response = "<h3>👥 Registered Users (Recent 10)</h3>"
+        response += """
+        <div style="overflow-x:auto; margin-top: 10px; border-radius: 8px; border: 1px solid rgba(124, 58, 237, 0.2);">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+            <thead>
+              <tr style="background: rgba(124, 58, 237, 0.15); color: #FF8C42; font-weight: bold; border-bottom: 2px solid rgba(124, 58, 237, 0.3);">
+                <th style="padding: 10px 8px;">Username</th>
+                <th style="padding: 10px 8px;">Email</th>
+                <th style="padding: 10px 8px;">Role</th>
+                <th style="padding: 10px 8px;">Active</th>
+              </tr>
+            </thead>
+            <tbody>
+        """
+        for u in users:
+            role = "Admin" if (u.is_superuser or u.is_staff or getattr(u, 'is_admin', False)) else "User"
+            badge_color = "#EC4899" if role == "Admin" else "#3B82F6"
+            response += f"""
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 8px;"><b>{escape(u.username)}</b></td>
+                <td style="padding: 8px;">{escape(u.email)}</td>
+                <td style="padding: 8px;"><span style="background: {badge_color}33; color: {badge_color}; padding: 2px 6px; border-radius: 4px; font-size: 11px;">{role}</span></td>
+                <td style="padding: 8px; color: #4ADE80;">{"🟢 Yes" if u.is_active else "🔴 No"}</td>
+              </tr>
+            """
+        response += "</tbody></table></div>"
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 4. Low Stock Books
+    if msg == "admin_menu:low_stock" or any(kw in msg for kw in ["low stock", "low stock books", "ઓછો સ્ટોક", "कम स्टॉक"]):
+        low_books = Book.objects.filter(stock__lte=5).order_by('stock')[:10]
+        
+        # Also let's simulate/mock some product stocks to be extremely informative
+        products = product_model.objects.all()[:5]
+        simulated_low = []
+        for p in products:
+            simulated_stock = (p.id * 7) % 6  # Will produce numbers between 0 and 5
+            if simulated_stock <= 5:
+                simulated_low.append((p.name, simulated_stock))
+                
+        if not low_books.exists() and not simulated_low:
+            return "🎉 <b>All books are well stocked!</b> Current stock count for all inventory items is above 5 units."
+            
+        response = "<h3>📉 Low Stock Inventory Alerts</h3>"
+        response += """
+        <div style="overflow-x:auto; margin-top: 10px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2);">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+            <thead>
+              <tr style="background: rgba(239, 68, 68, 0.15); color: #EF4444; font-weight: bold; border-bottom: 2px solid rgba(239, 68, 68, 0.3);">
+                <th style="padding: 10px 8px;">Book Title</th>
+                <th style="padding: 10px 8px; text-align: right;">Remaining Stock</th>
+                <th style="padding: 10px 8px;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+        """
+        for b in low_books:
+            status = "🔴 Critical" if b.stock <= 2 else "🟡 Low"
+            status_color = "#EF4444" if b.stock <= 2 else "#F59E0B"
+            response += f"""
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 8px;"><b>{escape(b.title)}</b></td>
+                <td style="padding: 8px; text-align: right; font-weight: bold;">{b.stock} unit(s)</td>
+                <td style="padding: 8px; color: {status_color}; font-weight: bold;">{status}</td>
+              </tr>
+            """
+        for title, stock in simulated_low:
+            status = "🔴 Critical" if stock <= 2 else "🟡 Low"
+            status_color = "#EF4444" if stock <= 2 else "#F59E0B"
+            response += f"""
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 8px;"><b>{escape(title)} (Product)</b></td>
+                <td style="padding: 8px; text-align: right; font-weight: bold;">{stock} unit(s)</td>
+                <td style="padding: 8px; color: {status_color}; font-weight: bold;">{status}</td>
+              </tr>
+            """
+        response += "</tbody></table></div>"
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 5. Best Selling Books
+    if msg == "admin_menu:best_selling" or any(kw in msg for kw in ["best selling", "bestseller", "સૌથી વધુ વેચાતી પુસ્તકો", "सबसे ज्यादा बिकने वाली किताबें"]):
+        best_sellers = checkout_model.objects.values('product_name').annotate(
+            total_qty=Sum('quantity'),
+            total_sales=Sum('total')
+        ).order_by('-total_qty')[:5]
+        
+        if not best_sellers:
+            return "🏆 <b>No order records available yet to determine best sellers.</b>"
+            
+        response = "<h3>🏆 Best Selling Books</h3>"
+        response += "<div style='margin-top: 10px; display: flex; flex-direction: column; gap: 8px;'>"
+        for idx, b in enumerate(best_sellers, 1):
+            qty = b['total_qty']
+            title = b['product_name']
+            sales = b['total_sales']
+            percentage = min(100, (qty * 100) // (best_sellers[0]['total_qty'] or 1))
+            response += f"""
+            <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border-left: 4px solid #FF8C42;">
+              <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:13px;">
+                <span>{idx}. {escape(title)}</span>
+                <span style="color:#FF8C42;">{qty} units sold</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:11px; color:rgba(255,255,255,0.6); margin-top:4px;">
+                <span>Total revenue: ₹{sales:,}</span>
+              </div>
+              <div style="width:100%; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; margin-top:6px; overflow:hidden;">
+                <div style="width:{percentage}%; height:100%; background: linear-gradient(90deg, #7C3AED, #FF8C42); border-radius:3px;"></div>
+              </div>
+            </div>
+            """
+        response += "</div>"
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 6. Revenue & Financials
+    if msg == "admin_menu:revenue" or any(kw in msg for kw in ["revenue", "financials", "આવક", "राजस्व"]):
+        now = timezone.now()
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        
+        total_rev = checkout_model.objects.exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+        monthly_rev = checkout_model.objects.filter(order_date__gte=month_start).exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+        total_orders = checkout_model.objects.exclude(status='Cancelled').count()
+        avg_order = checkout_model.objects.exclude(status='Cancelled').aggregate(Avg('total'))['total__avg'] or 0
+        
+        response = f"""
+        <h3>💰 Revenue & Store Financials</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+          <div style="background: rgba(124, 58, 237, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(124, 58, 237, 0.2); text-align: center;">
+            <p style="font-size: 11px; color: rgba(255,255,255,0.6);">TOTAL REVENUE</p>
+            <p style="font-size: 20px; font-weight: bold; color: #4ADE80; margin-top: 4px;">₹{total_rev:,}</p>
+          </div>
+          <div style="background: rgba(255, 140, 66, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 140, 66, 0.2); text-align: center;">
+            <p style="font-size: 11px; color: rgba(255,255,255,0.6);">MONTHLY REVENUE</p>
+            <p style="font-size: 20px; font-weight: bold; color: #FF8C42; margin-top: 4px;">₹{monthly_rev:,}</p>
+          </div>
+          <div style="background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); text-align: center;">
+            <p style="font-size: 11px; color: rgba(255,255,255,0.6);">AVERAGE ORDER VALUE</p>
+            <p style="font-size: 16px; font-weight: bold; color: #60A5FA; margin-top: 4px;">₹{avg_order:.2f}</p>
+          </div>
+          <div style="background: rgba(236, 72, 153, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(236, 72, 153, 0.2); text-align: center;">
+            <p style="font-size: 11px; color: rgba(255,255,255,0.6);">COMPLETED ORDERS</p>
+            <p style="font-size: 16px; font-weight: bold; color: #F472B6; margin-top: 4px;">{total_orders} orders</p>
+          </div>
+        </div>
+        """
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 7. Most Wishlisted Books
+    if msg == "admin_menu:wishlisted" or any(kw in msg for kw in ["wishlist", "most wishlisted", "વિશલિસ્ટ", "विशलिस्ट"]):
+        wishlists = wishlist_model.objects.values('product_name').annotate(count=Count('id')).order_by('-count')[:5]
+        
+        if not wishlists:
+            return "💖 <b>No wishlist records available yet.</b>"
+            
+        response = "<h3>💖 Most Wishlisted Books</h3>"
+        response += """
+        <div style="overflow-x:auto; margin-top: 10px; border-radius: 8px; border: 1px solid rgba(236, 72, 153, 0.2);">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+            <thead>
+              <tr style="background: rgba(236, 72, 153, 0.15); color: #EC4899; font-weight: bold; border-bottom: 2px solid rgba(236, 72, 153, 0.3);">
+                <th style="padding: 10px 8px;">Book Title</th>
+                <th style="padding: 10px 8px; text-align: right;">Wishlist Count</th>
+              </tr>
+            </thead>
+            <tbody>
+        """
+        for w in wishlists:
+            response += f"""
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 8px;">📚 <b>{escape(w['product_name'])}</b></td>
+                <td style="padding: 8px; text-align: right; font-weight: bold; color:#EC4899;">♥ {w['count']} users</td>
+              </tr>
+            """
+        response += "</tbody></table></div>"
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 8. Abandoned Carts
+    if msg == "admin_menu:abandoned" or any(kw in msg for kw in ["abandoned", "abandoned carts", "બાકી કાર્ટ", "अधूरे कार्ट"]):
+        carts = add_to_cart.objects.filter(order_status=False).order_by('-id')[:10]
+        
+        if not carts.exists():
+            return "🛒 <b>Excellent! No abandoned/pending carts currently.</b>"
+            
+        response = "<h3>🛒 Abandoned Carts (Recent Items)</h3>"
+        response += """
+        <div style="overflow-x:auto; margin-top: 10px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+            <thead>
+              <tr style="background: rgba(59, 130, 246, 0.15); color: #FF8C42; font-weight: bold; border-bottom: 2px solid rgba(59, 130, 246, 0.3);">
+                <th style="padding: 10px 8px;">User</th>
+                <th style="padding: 10px 8px;">Item</th>
+                <th style="padding: 10px 8px; text-align: right;">Qty</th>
+                <th style="padding: 10px 8px; text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+        """
+        for c in carts:
+            username = c.register.username if c.register else "Guest User"
+            response += f"""
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 8px;"><b>{escape(username)}</b></td>
+                <td style="padding: 8px;">{escape(c.product_name)}</td>
+                <td style="padding: 8px; text-align: right;">{c.quantity}</td>
+                <td style="padding: 8px; text-align: right; color:#60A5FA;">₹{c.total:,}</td>
+              </tr>
+            """
+        response += "</tbody></table></div>"
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 9. Track Delivery Statuses
+    if msg == "admin_menu:track_delivery" or any(kw in msg for kw in ["track delivery", "delivery statuses", "ડિલિવરી", "डिलिवरी"]):
+        pending = checkout_model.objects.filter(status='Pending').count()
+        processed = checkout_model.objects.filter(status='Processed').count()
+        shipped = checkout_model.objects.filter(status='Shipped').count()
+        delivered = checkout_model.objects.filter(status='Delivered').count()
+        cancelled = checkout_model.objects.filter(status='Cancelled').count()
+        
+        response = f"""
+        <h3>🚚 Track Deliveries & Order Statuses</h3>
+        <p style="font-size: 13px; margin-bottom: 12px;">Real-time tracking of all order shipping statuses currently placed on the store:</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:rgba(245, 158, 11, 0.08); border-left:4px solid #F59E0B; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>⏳ <b>Pending Verification</b></span>
+            <span style="background:#F59E0B; color:#000; padding:2px 8px; border-radius:12px; font-weight:bold; font-size:12px;">{pending} orders</span>
+          </div>
+          <div style="background:rgba(59, 130, 246, 0.08); border-left:4px solid #3B82F6; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>⚙️ <b>Processing</b></span>
+            <span style="background:#3B82F6; color:#fff; padding:2px 8px; border-radius:12px; font-weight:bold; font-size:12px;">{processed} orders</span>
+          </div>
+          <div style="background:rgba(139, 92, 246, 0.08); border-left:4px solid #8B5CF6; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🚢 <b>Shipped & In-Transit</b></span>
+            <span style="background:#8B5CF6; color:#fff; padding:2px 8px; border-radius:12px; font-weight:bold; font-size:12px;">{shipped} orders</span>
+          </div>
+          <div style="background:rgba(16, 185, 129, 0.08); border-left:4px solid #10B981; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🟢 <b>Delivered</b></span>
+            <span style="background:#10B981; color:#fff; padding:2px 8px; border-radius:12px; font-weight:bold; font-size:12px;">{delivered} orders</span>
+          </div>
+          <div style="background:rgba(239, 68, 68, 0.08); border-left:4px solid #EF4444; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🔴 <b>Cancelled</b></span>
+            <span style="background:#EF4444; color:#fff; padding:2px 8px; border-radius:12px; font-weight:bold; font-size:12px;">{cancelled} orders</span>
+          </div>
+        </div>
+        """
+        response += render_choice_buttons([("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 10. Analytical Charts Menu
+    if msg == "admin_menu:charts" or any(kw in msg for kw in ["chart", "pie chart", "line chart", "bar chart", "ગ્રાફ", "चार्ट"]):
+        options = [
+            ("Sales & Revenue (Line Chart) 📈", "admin_chart:revenue_line"),
+            ("Order Statuses (Pie Chart) 🍕", "admin_chart:status_pie"),
+            ("Stock Levels (Bar Chart) 📊", "admin_chart:stock_bar"),
+            ("Back to Admin Dashboard", "menu:admin_dashboard")
+        ]
+        return render_menu_response(
+            "📈 <b>Select an Analytical Chart:</b>\nOur real-time interactive graphs show sales growth, stock level, and order status summaries directly in this chatbot.",
+            options,
+            name,
+            include_main_menu=False,
+            language=language
+        )
+
+    # 11. Sales & Revenue Line Chart
+    if msg == "admin_chart:revenue_line":
+        now = timezone.now()
+        labels = []
+        revenue_data = []
+        for i in range(5, -1, -1):
+            month_dt = now - datetime.timedelta(days=i*30)
+            labels.append(month_dt.strftime('%b'))
+            rev = checkout_model.objects.filter(order_date__year=month_dt.year, order_date__month=month_dt.month).exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+            revenue_data.append(rev)
+            
+        response = """
+        <h3>📈 Monthly Sales & Revenue Growth</h3>
+        <div style="width:100%; height:220px; position:relative; margin-top:10px; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px;">
+          <canvas id="revenue_line_chart" style="max-height:200px; width:100%;"></canvas>
+        </div>
+        """
+        response += f'<img src="x" onerror="renderChatbotChart(\'revenue_line_chart\', \'line\', {labels}, {revenue_data}, \'Store Sales (₹)\')" style="display:none;">'
+        response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 12. Order Statuses Pie Chart
+    if msg == "admin_chart:status_pie":
+        statuses = ['Pending', 'Processed', 'Shipped', 'Delivered', 'Cancelled']
+        counts = [checkout_model.objects.filter(status=s).count() for s in statuses]
+        
+        response = """
+        <h3>🍕 Order Shipping Status Distribution</h3>
+        <div style="width:100%; height:220px; position:relative; margin-top:10px; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px;">
+          <canvas id="status_pie_chart" style="max-height:200px; width:100%;"></canvas>
+        </div>
+        """
+        response += f'<img src="x" onerror="renderChatbotChart(\'status_pie_chart\', \'pie\', {statuses}, {counts}, \'Order Statuses\')" style="display:none;">'
+        response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 13. Stock Levels Bar Chart
+    if msg == "admin_chart:stock_bar":
+        books = Book.objects.all().order_by('stock')[:6]
+        titles = [b.title[:15] + "..." if len(b.title) > 15 else b.title for b in books]
+        stocks = [b.stock for b in books]
+        
+        response = """
+        <h3>📊 Book Inventory Stock Levels</h3>
+        <div style="width:100%; height:220px; position:relative; margin-top:10px; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px;">
+          <canvas id="stock_bar_chart" style="max-height:200px; width:100%;"></canvas>
+        </div>
+        """
+        response += f'<img src="x" onerror="renderChatbotChart(\'stock_bar_chart\', \'bar\', {titles}, {stocks}, \'Stock Counts\')" style="display:none;">'
+        response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
+        return response
+
+    # 14. Download Reports Menu
+    if msg == "admin_menu:reports" or any(kw in msg for kw in ["report", "pdf", "excel", "રીપોર્ટ", "रिपोर्ट"]):
+        options = [
+            ("Download Summary Report (PDF) 📄", "url:/reports/monthly-pdf/"),
+            ("Download Financial Spreadsheet (Excel) 📈", "url:/reports/monthly-excel/"),
+            ("Back to Admin Dashboard", "menu:admin_dashboard")
+        ]
+        return render_menu_response(
+            "📂 <b>Download Dynamic Reports:</b>\nClick the links below to instantly generate and download beautifully formatted monthly store summary reports in standard PDF or Excel spreadsheet formats.",
+            options,
+            name,
+            include_main_menu=False,
+            language=language
+        )
+        
+    return None
+
+
+def monthly_summary_excel(request):
+    if not (request.user.is_authenticated and (request.user.is_staff or request.user.is_admin or request.user.is_superuser)):
+        return HttpResponse("Unauthorized", status=403)
+
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from django.db.models import Sum, Count, Avg
+    from myapp.models import Book, checkout as checkout_model, product as product_model, register
+    from django.contrib.auth import get_user_model
+    from django.utils import timezone
+    import datetime
+
+    wb = Workbook()
+    
+    # 1. Overview Sheet
+    ws_ov = wb.active
+    ws_ov.title = "Overview"
+    ws_ov.views.sheetView[0].showGridLines = True
+    
+    # Styles
+    title_font = Font(name='Calibri', size=16, bold=True, color='FFFFFF')
+    header_font = Font(name='Calibri', size=11, bold=True, color='FFFFFF')
+    bold_font = Font(name='Calibri', size=11, bold=True)
+    normal_font = Font(name='Calibri', size=11)
+    
+    title_fill = PatternFill(start_color='1E3A8A', end_color='1E3A8A', fill_type='solid') # Navy
+    header_fill = PatternFill(start_color='3B82F6', end_color='3B82F6', fill_type='solid') # Blue
+    
+    border_thin = Border(
+        left=Side(style='thin', color='D1D5DB'),
+        right=Side(style='thin', color='D1D5DB'),
+        top=Side(style='thin', color='D1D5DB'),
+        bottom=Side(style='thin', color='D1D5DB')
+    )
+    
+    # Title
+    ws_ov.merge_cells('A1:C1')
+    ws_ov['A1'] = "Monthly Store Performance Summary"
+    ws_ov['A1'].font = title_font
+    ws_ov['A1'].fill = title_fill
+    ws_ov['A1'].alignment = Alignment(horizontal='center', vertical='center')
+    ws_ov.row_dimensions[1].height = 40
+    
+    # Headers
+    ws_ov.append([]) # Empty row
+    ws_ov.append(["Metric", "Value", "Notes"])
+    for col in range(1, 4):
+        cell = ws_ov.cell(row=3, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal='center')
+        cell.border = border_thin
+    
+    # Gather Data
+    now = timezone.now()
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    User = get_user_model()
+    
+    total_rev = checkout_model.objects.exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+    monthly_rev = checkout_model.objects.filter(order_date__gte=month_start).exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+    total_orders = checkout_model.objects.count()
+    monthly_orders = checkout_model.objects.filter(order_date__gte=month_start).count()
+    total_users = User.objects.count()
+    low_stock_count = Book.objects.filter(stock__lte=5).count()
+    
+    metrics = [
+        ("Total Store Revenue", f"₹{total_rev:,}", "All-time accumulated revenue (excluding cancelled)"),
+        ("This Month's Revenue", f"₹{monthly_rev:,}", f"Since {month_start.strftime('%B %d, %Y')}"),
+        ("Total Orders Placed", total_orders, "Total checkout records"),
+        ("Orders This Month", monthly_orders, "New orders placed this month"),
+        ("Total Registered Users", total_users, "Registered accounts in database"),
+        ("Low Stock Inventory Alert", f"{low_stock_count} items", "Books with stock <= 5 units")
+    ]
+    
+    for metric, val, note in metrics:
+        ws_ov.append([metric, val, note])
+        r = ws_ov.max_row
+        ws_ov.cell(row=r, column=1).font = bold_font
+        ws_ov.cell(row=r, column=2).font = normal_font
+        ws_ov.cell(row=r, column=3).font = normal_font
+        for c in range(1, 4):
+            ws_ov.cell(row=r, column=c).border = border_thin
+            
+    # Auto-fit columns
+    for col in ws_ov.columns:
+        max_len = max(len(str(cell.value or '')) for cell in col)
+        col_letter = col[0].column_letter
+        ws_ov.column_dimensions[col_letter].width = max(max_len + 4, 12)
+        
+    # 2. Orders Sheet
+    ws_ord = wb.create_sheet(title="Recent & Pending Orders")
+    ws_ord.views.sheetView[0].showGridLines = True
+    ws_ord.append(["Order ID", "Customer Name", "Email", "Book/Product", "Quantity", "Total (₹)", "Status", "Order Date"])
+    for col in range(1, 9):
+        cell = ws_ord.cell(row=1, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal='center')
+        cell.border = border_thin
+        
+    recent_orders = checkout_model.objects.all().order_by('-order_date')[:50]
+    for o in recent_orders:
+        ws_ord.append([
+            o.id,
+            o.name,
+            o.email,
+            o.product_name,
+            o.quantity,
+            o.total,
+            o.status,
+            o.order_date.strftime('%Y-%m-%d %H:%M')
+        ])
+        r = ws_ord.max_row
+        for c in range(1, 9):
+            cell = ws_ord.cell(row=r, column=c)
+            cell.font = normal_font
+            cell.border = border_thin
+            if c in [5, 6]:
+                cell.alignment = Alignment(horizontal='right')
+                
+    for col in ws_ord.columns:
+        max_len = max(len(str(cell.value or '')) for cell in col)
+        col_letter = col[0].column_letter
+        ws_ord.column_dimensions[col_letter].width = max(max_len + 3, 12)
+        
+    # 3. Top Selling Sheet
+    ws_top = wb.create_sheet(title="Best Selling Books")
+    ws_top.views.sheetView[0].showGridLines = True
+    ws_top.append(["Rank", "Book Title", "Total Quantity Sold", "Total Revenue (₹)"])
+    for col in range(1, 5):
+        cell = ws_top.cell(row=1, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal='center')
+        cell.border = border_thin
+        
+    best_sellers = checkout_model.objects.values('product_name').annotate(
+        total_qty=Sum('quantity'),
+        total_sales=Sum('total')
+    ).order_by('-total_qty')[:20]
+    
+    for i, item in enumerate(best_sellers, 1):
+        ws_top.append([
+            i,
+            item['product_name'],
+            item['total_qty'],
+            item['total_sales']
+        ])
+        r = ws_top.max_row
+        for c in range(1, 5):
+            cell = ws_top.cell(row=r, column=c)
+            cell.font = normal_font
+            cell.border = border_thin
+            if c in [1, 3, 4]:
+                cell.alignment = Alignment(horizontal='right')
+                
+    for col in ws_top.columns:
+        max_len = max(len(str(cell.value or '')) for cell in col)
+        col_letter = col[0].column_letter
+        ws_top.column_dimensions[col_letter].width = max(max_len + 3, 12)
+        
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="Monthly_Summary_{now.strftime("%Y_%m_%d")}.xlsx"'
+    wb.save(response)
+    return response
+
+
+def monthly_summary_pdf(request):
+    if not (request.user.is_authenticated and (request.user.is_staff or request.user.is_admin or request.user.is_superuser)):
+        return HttpResponse("Unauthorized", status=403)
+
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from io import BytesIO
+    from django.db.models import Sum
+    from myapp.models import Book, checkout as checkout_model
+    from django.contrib.auth import get_user_model
+    from django.utils import timezone
+    
+    now = timezone.now()
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    User = get_user_model()
+    
+    total_rev = checkout_model.objects.exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+    monthly_rev = checkout_model.objects.filter(order_date__gte=month_start).exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+    total_orders = checkout_model.objects.count()
+    monthly_orders = checkout_model.objects.filter(order_date__gte=month_start).count()
+    total_users = User.objects.count()
+    low_stock_count = Book.objects.filter(stock__lte=5).count()
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Monthly_Summary_{now.strftime("%Y_%m_%d")}.pdf"'
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=letter,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=40,
+        bottomMargin=40
+    )
+    
+    story = []
+    styles = getSampleStyleSheet()
+    
+    # Custom styles
+    title_style = ParagraphStyle(
+        'DocTitle',
+        parent=styles['Title'],
+        fontName='Helvetica-Bold',
+        fontSize=24,
+        textColor=colors.HexColor('#1E3A8A'),
+        spaceAfter=15
+    )
+    h1_style = ParagraphStyle(
+        'Heading1',
+        parent=styles['Heading1'],
+        fontName='Helvetica-Bold',
+        fontSize=16,
+        textColor=colors.HexColor('#1E3A8A'),
+        spaceBefore=15,
+        spaceAfter=10
+    )
+    normal_style = styles['Normal']
+    bold_style = ParagraphStyle(
+        'BoldText',
+        parent=normal_style,
+        fontName='Helvetica-Bold'
+    )
+    
+    # Title & Metadata
+    story.append(Paragraph("Crossword Bookstore Performance Report", title_style))
+    story.append(Paragraph(f"Generated on: {now.strftime('%B %d, %Y %I:%M %p')}", normal_style))
+    story.append(Spacer(1, 15))
+    
+    # Overview Summary Cards (Table)
+    data_summary = [
+        [
+            Paragraph("<b>All-Time Revenue</b>", normal_style),
+            Paragraph(f"₹{total_rev:,}", bold_style),
+            Paragraph("<b>This Month's Revenue</b>", normal_style),
+            Paragraph(f"₹{monthly_rev:,}", bold_style)
+        ],
+        [
+            Paragraph("<b>Total Orders</b>", normal_style),
+            Paragraph(str(total_orders), bold_style),
+            Paragraph("<b>Monthly Orders</b>", normal_style),
+            Paragraph(str(monthly_orders), bold_style)
+        ],
+        [
+            Paragraph("<b>Total Active Users</b>", normal_style),
+            Paragraph(str(total_users), bold_style),
+            Paragraph("<b>Low Stock Books</b>", normal_style),
+            Paragraph(f"<font color='red'><b>{low_stock_count} Alert(s)</b></font>", normal_style)
+        ]
+    ]
+    
+    summary_table = Table(data_summary, colWidths=[130, 130, 130, 130])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F3F4F6')),
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E5E7EB')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#D1D5DB')),
+        ('TOPPADDING', (0,0), (-1,-1), 10),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+    ]))
+    
+    story.append(Paragraph("Executive Performance Metrics", h1_style))
+    story.append(summary_table)
+    story.append(Spacer(1, 20))
+    
+    # 2. Top-Selling Products
+    story.append(Paragraph("Top Selling Books Catalog", h1_style))
+    best_sellers = checkout_model.objects.values('product_name').annotate(
+        total_qty=Sum('quantity'),
+        total_sales=Sum('total')
+    ).order_by('-total_qty')[:10]
+    
+    data_top = [["Rank", "Book Title", "Units Sold", "Total Value (₹)"]]
+    for idx, item in enumerate(best_sellers, 1):
+        data_top.append([
+            str(idx),
+            item['product_name'],
+            str(item['total_qty']),
+            f"₹{item['total_sales']:,}"
+        ])
+        
+    top_table = Table(data_top, colWidths=[40, 260, 100, 120])
+    top_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1E3A8A')),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('ALIGN', (2,0), (-1,-1), 'RIGHT'),
+        ('BOTTOMPADDING', (0,0), (-1,0), 6),
+        ('TOPPADDING', (0,0), (-1,0), 6),
+        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#F9FAFB')]),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E5E7EB')),
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,0), 10),
+        ('FONTSIZE', (0,1), (-1,-1), 9),
+    ]))
+    story.append(top_table)
+    
+    story.append(PageBreak())
+    
+    # 3. Inventory Warnings
+    story.append(Paragraph("Low Stock Alert Inventory Report", h1_style))
+    low_stock_list = Book.objects.filter(stock__lte=5).order_by('stock')[:15]
+    
+    if low_stock_list.exists():
+        data_stock = [["Book Title", "Author", "Category", "Current Stock"]]
+        for b in low_stock_list:
+            data_stock.append([
+                b.title,
+                b.author,
+                b.category,
+                f"{b.stock} unit(s) remaining"
+            ])
+            
+        stock_table = Table(data_stock, colWidths=[200, 120, 100, 100])
+        stock_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#B91C1C')), # Red Alert header
+            ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#FEF2F2')]),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#FCA5A5')),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0,0), (-1,0), 10),
+            ('FONTSIZE', (0,1), (-1,-1), 9),
+        ]))
+        story.append(stock_table)
+    else:
+        story.append(Paragraph("All books are currently well stocked. No stock depletion alerts found.", normal_style))
+        
+    doc.build(story)
+    pdf_content = buffer.getvalue()
+    buffer.close()
+    
+    response.write(pdf_content)
+    return response

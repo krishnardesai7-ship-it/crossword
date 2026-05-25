@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>📚 Book Chatbot</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -900,6 +901,77 @@
 
 
     <script>
+        function renderChatbotChart(canvasId, type, labels, dataPoints, title) {
+            setTimeout(() => {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                
+                const isLight = document.body.classList.contains('light-mode');
+                const textColor = isLight ? '#172033' : '#e0e0e0';
+                const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+                
+                let backgroundColors, borderColors;
+                if (type === 'pie') {
+                    backgroundColors = [
+                        'rgba(124, 58, 237, 0.75)',
+                        'rgba(255, 107, 107, 0.75)',
+                        'rgba(255, 140, 66, 0.75)',
+                        'rgba(100, 181, 246, 0.75)',
+                        'rgba(74, 222, 128, 0.75)',
+                        'rgba(236, 72, 153, 0.75)'
+                    ];
+                    borderColors = [
+                        'rgba(124, 58, 237, 1)',
+                        'rgba(255, 107, 107, 1)',
+                        'rgba(255, 140, 66, 1)',
+                        'rgba(100, 181, 246, 1)',
+                        'rgba(74, 222, 128, 1)',
+                        'rgba(236, 72, 153, 1)'
+                    ];
+                } else {
+                    backgroundColors = 'rgba(124, 58, 237, 0.2)';
+                    borderColors = 'rgba(124, 58, 237, 1)';
+                }
+                
+                new Chart(ctx, {
+                    type: type,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: title,
+                            data: dataPoints,
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
+                            borderWidth: 2,
+                            fill: type === 'line',
+                            tension: type === 'line' ? 0.3 : 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: type === 'pie',
+                                labels: { color: textColor, font: { family: 'Segoe UI', size: 11 } }
+                            },
+                            title: {
+                                display: true,
+                                text: title,
+                                color: textColor,
+                                font: { family: 'Segoe UI', size: 14, weight: 'bold' }
+                            }
+                        },
+                        scales: type === 'pie' ? {} : {
+                            x: { grid: { color: gridColor }, ticks: { color: textColor } },
+                            y: { grid: { color: gridColor }, ticks: { color: textColor }, beginAtZero: true }
+                        }
+                    }
+                });
+            }, 100);
+        }
+
         function getSelectedLanguage() {
             const languageSelect = document.getElementById("language");
             return languageSelect ? languageSelect.value : "English";
