@@ -93,18 +93,18 @@
                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
                 {{form.gender}}
             </div>
-            {% if is_admin_creator %}
             <div class="sm:col-span-2">
-                <label for="role"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Account Type
-                    <span class="ml-2 text-xs font-semibold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/30 px-2 py-0.5 rounded-full">🔐 Admin Only</span>
-                </label>
+                <label for="id_role"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Account Type</label>
                 {{form.role}}
             </div>
-            {% else %}
-            {# Regular users always register as User — hidden field prevents tampering #}
-            <input type="hidden" name="role" value="user">
-            {% endif %}
+            <div class="sm:col-span-2" id="admin_passcode_container" style="display: none;">
+                <label for="id_admin_passcode"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Admin Verification Key
+                    <span class="ml-2 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded-full">🔐 Secret Key Required</span>
+                </label>
+                {{form.admin_passcode}}
+            </div>
         </div>
         <div class="w-full text-center">
             <button type="submit"
@@ -113,4 +113,25 @@
     </form>
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const roleSelect = document.getElementById("id_role");
+        const passcodeContainer = document.getElementById("admin_passcode_container");
+
+        function togglePasscode() {
+            if (roleSelect && roleSelect.value === "admin") {
+                passcodeContainer.style.display = "block";
+            } else {
+                passcodeContainer.style.display = "none";
+            }
+        }
+
+        if (roleSelect) {
+            roleSelect.addEventListener("change", togglePasscode);
+            // Run on load in case of validation errors
+            togglePasscode();
+        }
+    });
+</script>
 {% endblock %}

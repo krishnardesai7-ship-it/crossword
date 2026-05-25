@@ -16,20 +16,31 @@ class UserCreationForm(forms.ModelForm):
 
     ROLE_CHOICES = (
         ('user', 'User'),
+        ('admin', 'Admin'),
     )
     role = forms.ChoiceField(choices=ROLE_CHOICES, label='Account Type', initial='user')
+    admin_passcode = forms.CharField(
+        label='Admin Verification Key',
+        required=False,
+        widget=forms.PasswordInput
+    )
 
     class Meta:
         model = NewUser
         fields = ('email', 'username', 'first_name', 'country','last_name', 'gender', 'phone_number' ,'id_image')
 
-    def clean_role(self):
-        role = self.cleaned_data.get('role', 'user')
-        # Server-side security: only an authenticated admin can create another admin
-        # Even if someone tampers with the form HTML, this will block them
-        if role == 'admin' and not getattr(self, '_request_user_is_admin', False):
-            raise ValidationError("You do not have permission to create an Admin account.")
-        return role
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get('role', 'user')
+        admin_passcode = cleaned_data.get('admin_passcode', '')
+
+        if role == 'admin':
+            if not admin_passcode:
+                self.add_error('admin_passcode', "Admin Verification Key is required to register as Admin.")
+            elif admin_passcode != 'Admin@123':
+                self.add_error('admin_passcode', "Invalid Admin Verification Key.")
+        
+        return cleaned_data
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -79,23 +90,9 @@ class UserCreationForm(forms.ModelForm):
     #     return firstname, lastname, username
 
     def __init__(self, *args, **kwargs):
-        # Extract the request_user kwarg (passed from the view) before calling super()
-        request_user = kwargs.pop('request_user', None)
+        # Pop request_user to keep compatibility, though not strictly needed anymore
+        kwargs.pop('request_user', None)
         super(UserCreationForm, self).__init__(*args, **kwargs)
-
-        # Store whether the requester is an admin for use in clean_role()
-        self._request_user_is_admin = (
-            request_user is not None
-            and request_user.is_authenticated
-            and (request_user.is_superuser or getattr(request_user, 'is_admin', False) or request_user.is_staff)
-        )
-
-        # Dynamically add Admin option ONLY if the creator is already an admin
-        if self._request_user_is_admin:
-            self.fields['role'].choices = (
-                ('user', 'User'),
-                ('admin', 'Admin'),
-            )
 
         # Apply Tailwind style + cursor text to all fields
         for field in self.fields.values():
@@ -112,6 +109,7 @@ class UserCreationForm(forms.ModelForm):
             'country':       'e.g. India',
             'password1':     'min 8 characters and include $',
             'password2':     'Repeat your password',
+            'admin_passcode': 'Required only for Admin role',
         }
         for field_name, placeholder in placeholders.items():
             if field_name in self.fields:
@@ -124,7 +122,7 @@ class UserCreationForm(forms.ModelForm):
         
         # Apply permissions based on validated role
         role = self.cleaned_data.get('role', 'user')
-        if role == 'admin' and getattr(self, '_request_user_is_admin', False):
+        if role == 'admin':
             user.is_staff = True
             user.is_admin = True
             user.is_superuser = True
