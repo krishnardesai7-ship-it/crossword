@@ -58,7 +58,7 @@ def accounts_home(request):
 
 
 def accounts_register(request):
-    form = UserCreationForm(request.POST or None, request.FILES or None)
+    form = UserCreationForm(request.POST or None, request.FILES or None, request_user=request.user)
 
     if form.is_valid():
         try:
@@ -77,7 +77,7 @@ def accounts_register(request):
                         None,
                         "Could not create account due to duplicate data. Please try different values.",
                     )
-                return render(request, "accounts/register.html", {"form": form})
+                return render(request, "accounts/register.html", {"form": form, "is_admin_creator": request.user.is_authenticated and request.user.is_staff})
 
             # Send OTP to user's email and redirect to verification
             otp = send_otp(new_user.email)
@@ -93,7 +93,8 @@ def accounts_register(request):
             messages.error(request, f"Server Error during registration: {str(e)}")
             return render(request, "accounts/register.html", {"form": form})
 
-    return render(request, "accounts/register.html", {"form": form})
+    ctx = {"form": form, "is_admin_creator": request.user.is_authenticated and request.user.is_staff}
+    return render(request, "accounts/register.html", ctx)
 
 
 def face_enroll_view(request):

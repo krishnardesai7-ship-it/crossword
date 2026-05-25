@@ -24,8 +24,12 @@ class UserCreationForm(forms.ModelForm):
         fields = ('email', 'username', 'first_name', 'country','last_name', 'gender', 'phone_number' ,'id_image')
 
     def clean_role(self):
-        # Strictly enforce regular user role at backend to prevent tampering
-        return 'user'
+        role = self.cleaned_data.get('role', 'user')
+        # Server-side security: only an authenticated admin can create another admin
+        # Even if someone tampers with the form HTML, this will block them
+        if role == 'admin' and not getattr(self, '_request_user_is_admin', False):
+            raise ValidationError("You do not have permission to create an Admin account.")
+        return role
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -75,7 +79,23 @@ class UserCreationForm(forms.ModelForm):
     #     return firstname, lastname, username
 
     def __init__(self, *args, **kwargs):
+        # Extract the request_user kwarg (passed from the view) before calling super()
+        request_user = kwargs.pop('request_user', None)
         super(UserCreationForm, self).__init__(*args, **kwargs)
+
+        # Store whether the requester is an admin for use in clean_role()
+        self._request_user_is_admin = (
+            request_user is not None
+            and request_user.is_authenticated
+            and (request_user.is_superuser or getattr(request_user, 'is_admin', False) or request_user.is_staff)
+        )
+
+        # Dynamically add Admin option ONLY if the creator is already an admin
+        if self._request_user_is_admin:
+            self.fields['role'].choices = (
+                ('user', 'User'),
+                ('admin', 'Admin'),
+            )
 
         # Apply Tailwind style + cursor text to all fields
         for field in self.fields.values():
@@ -102,10 +122,16 @@ class UserCreationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         
-        # Strictly enforce regular user permissions for all signups (only existing/configured admins allowed)
-        user.is_staff = False
-        user.is_admin = False
-        user.is_superuser = False
+        # Apply permissions based on validated role
+        role = self.cleaned_data.get('role', 'user')
+        if role == 'admin' and getattr(self, '_request_user_is_admin', False):
+            user.is_staff = True
+            user.is_admin = True
+            user.is_superuser = True
+        else:
+            user.is_staff = False
+            user.is_admin = False
+            user.is_superuser = False
 
         if commit:
             user.save()
