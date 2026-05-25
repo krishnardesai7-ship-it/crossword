@@ -1072,7 +1072,12 @@
             document.addEventListener("click", event => {
                 const choice = event.target.closest(".choice-btn");
                 if (choice) {
-                    sendChatMessage(choice.dataset.message, choice.dataset.label || choice.textContent.trim());
+                    const msg = choice.dataset.message;
+                    if (msg && msg.startsWith("url:")) {
+                        window.top.location.href = msg.substring(4);
+                        return;
+                    }
+                    sendChatMessage(msg, choice.dataset.label || choice.textContent.trim());
                     return;
                 }
 

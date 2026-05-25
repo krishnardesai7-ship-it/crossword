@@ -923,6 +923,7 @@ LABEL_TRANSLATIONS = {
         "Add to Wishlist": "विशलिस्ट में जोड़ें",
         "Find by Title": "शीर्षक से खोजें",
         "Find by Author": "लेखक से खोजें",
+        "Admin Panel": "एडमिन पैनल",
     },
     "Gujarati": {
         "Recommendations": "ભલામણો",
@@ -980,6 +981,7 @@ LABEL_TRANSLATIONS = {
         "Add to Wishlist": "વિશલિસ્ટમાં ઉમેરો",
         "Find by Title": "શીર્ષકથી શોધો",
         "Find by Author": "લેખકથી શોધો",
+        "Admin Panel": "એડમિન પેનલ",
     },
 }
 
@@ -1773,12 +1775,15 @@ def render_menu_response(message, options, name=None, include_main_menu=True, la
 """
 
 
-def main_menu_response(name=None, language="English"):
+def main_menu_response(name=None, language="English", is_admin_user=False):
+    options = MAIN_MENU_OPTIONS.copy()
+    if is_admin_user:
+        options.append(("Admin Panel", "url:/admin/"))
     return render_menu_response(
         t(language, "main_menu"),
-        MAIN_MENU_OPTIONS,
+        options,
         name,
-        include_main_menu=True,
+        include_main_menu=False if is_admin_user else True,
         language=language,
     )
 
@@ -1874,6 +1879,7 @@ def chatbot_api(request):
     msg = request.GET.get("message", "").lower().strip()
     name = get_customer_name(request, msg)
     normal_response = get_normal_conversation_response(msg, language)
+    is_admin_user = request.user.is_authenticated and (request.user.is_staff or request.user.is_admin or request.user.is_superuser)
 
     if normal_response:
         normal_response += render_choice_buttons(
@@ -1891,10 +1897,10 @@ def chatbot_api(request):
         })
 
     if not msg:
-        return JsonResponse({"response": main_menu_response(name, language)})
+        return JsonResponse({"response": main_menu_response(name, language, is_admin_user)})
 
     if msg == "menu:main":
-        return JsonResponse({"response": main_menu_response(name, language)})
+        return JsonResponse({"response": main_menu_response(name, language, is_admin_user)})
 
     if msg in MENU_FLOWS:
         message, options = MENU_FLOWS[msg]

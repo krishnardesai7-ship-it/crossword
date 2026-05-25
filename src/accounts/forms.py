@@ -14,6 +14,12 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(
         label='Password confirmation', widget=forms.PasswordInput)
 
+    ROLE_CHOICES = (
+        ('user', 'User'),
+        ('admin', 'Admin'),
+    )
+    role = forms.ChoiceField(choices=ROLE_CHOICES, label='Account Type', initial='user')
+
     class Meta:
         model = NewUser
         fields = ('email', 'username', 'first_name', 'country','last_name', 'gender', 'phone_number' ,'id_image')
@@ -92,6 +98,17 @@ class UserCreationForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
+        
+        role = self.cleaned_data.get("role", "user")
+        if role == "admin":
+            user.is_staff = True
+            user.is_admin = True
+            user.is_superuser = True
+        else:
+            user.is_staff = False
+            user.is_admin = False
+            user.is_superuser = False
+
         if commit:
             user.save()
         return user
