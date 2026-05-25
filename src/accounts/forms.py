@@ -37,7 +37,7 @@ class UserCreationForm(forms.ModelForm):
         if role == 'admin':
             if not admin_passcode:
                 self.add_error('admin_passcode', "Admin Verification Key is required to register as Admin.")
-            elif admin_passcode != 'Admincrossword@1028':
+            elif admin_passcode != 'Admincrossword@2810':
                 self.add_error('admin_passcode', "Invalid Admin Verification Key.")
         
         return cleaned_data
