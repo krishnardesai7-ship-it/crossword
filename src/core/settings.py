@@ -178,3 +178,30 @@ CELERY_TIMEZONE = TIME_ZONE
 #Razorpay
 RAZORPAY_KEY_ID = 'rzp_test_q3456789012345'
 RAZORPAY_KEY_SECRET = 'rzp_test_q3456789012345'
+
+# Console logging configuration to capture 500 errors in Render Logs even when DEBUG = False
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+
