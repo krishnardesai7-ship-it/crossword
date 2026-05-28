@@ -2441,13 +2441,18 @@ def handle_admin_query(msg, language="English", name=None):
             rev = checkout_model.objects.filter(order_date__year=month_dt.year, order_date__month=month_dt.month).exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
             revenue_data.append(rev)
             
+        import base64
+        import json
+        labels_b64 = base64.b64encode(json.dumps(labels).encode('utf-8')).decode('utf-8')
+        revenue_b64 = base64.b64encode(json.dumps(revenue_data).encode('utf-8')).decode('utf-8')
+        
         response = """
         <h3>📈 Monthly Sales & Revenue Growth</h3>
         <div style="width:100%; height:220px; position:relative; margin-top:10px; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px;">
           <canvas id="revenue_line_chart" style="max-height:200px; width:100%;"></canvas>
         </div>
         """
-        response += f'<img src="x" onerror="renderChatbotChart(\'revenue_line_chart\', \'line\', {labels}, {revenue_data}, \'Store Sales (₹)\')" style="display:none;">'
+        response += f'<img src="x" onerror="renderChatbotChart(\'revenue_line_chart\', \'line\', \'{labels_b64}\', \'{revenue_b64}\', \'Store Sales (₹)\')" style="display:none;">'
         response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
         return response
 
@@ -2456,13 +2461,18 @@ def handle_admin_query(msg, language="English", name=None):
         statuses = ['Pending', 'Processed', 'Shipped', 'Delivered', 'Cancelled']
         counts = [checkout_model.objects.filter(status=s).count() for s in statuses]
         
+        import base64
+        import json
+        statuses_b64 = base64.b64encode(json.dumps(statuses).encode('utf-8')).decode('utf-8')
+        counts_b64 = base64.b64encode(json.dumps(counts).encode('utf-8')).decode('utf-8')
+        
         response = """
         <h3>🍕 Order Shipping Status Distribution</h3>
         <div style="width:100%; height:220px; position:relative; margin-top:10px; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px;">
           <canvas id="status_pie_chart" style="max-height:200px; width:100%;"></canvas>
         </div>
         """
-        response += f'<img src="x" onerror="renderChatbotChart(\'status_pie_chart\', \'pie\', {statuses}, {counts}, \'Order Statuses\')" style="display:none;">'
+        response += f'<img src="x" onerror="renderChatbotChart(\'status_pie_chart\', \'pie\', \'{statuses_b64}\', \'{counts_b64}\', \'Order Statuses\')" style="display:none;">'
         response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
         return response
 
@@ -2472,13 +2482,18 @@ def handle_admin_query(msg, language="English", name=None):
         titles = [b.title[:15] + "..." if len(b.title) > 15 else b.title for b in books]
         stocks = [b.stock for b in books]
         
+        import base64
+        import json
+        titles_b64 = base64.b64encode(json.dumps(titles).encode('utf-8')).decode('utf-8')
+        stocks_b64 = base64.b64encode(json.dumps(stocks).encode('utf-8')).decode('utf-8')
+        
         response = """
         <h3>📊 Book Inventory Stock Levels</h3>
         <div style="width:100%; height:220px; position:relative; margin-top:10px; padding:10px; background:rgba(255,255,255,0.02); border-radius:8px;">
           <canvas id="stock_bar_chart" style="max-height:200px; width:100%;"></canvas>
         </div>
         """
-        response += f'<img src="x" onerror="renderChatbotChart(\'stock_bar_chart\', \'bar\', {titles}, {stocks}, \'Stock Counts\')" style="display:none;">'
+        response += f'<img src="x" onerror="renderChatbotChart(\'stock_bar_chart\', \'bar\', \'{titles_b64}\', \'{stocks_b64}\', \'Stock Counts\')" style="display:none;">'
         response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
         return response
 

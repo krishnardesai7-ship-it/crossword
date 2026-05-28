@@ -902,6 +902,22 @@
 
     <script>
         function renderChatbotChart(canvasId, type, labels, dataPoints, title) {
+            // Support Base64 encoded labels/datapoints to avoid string quoting conflicts
+            if (typeof labels === 'string') {
+                try {
+                    labels = JSON.parse(atob(labels));
+                } catch(e) {
+                    console.error("Error decoding labels base64:", e);
+                }
+            }
+            if (typeof dataPoints === 'string') {
+                try {
+                    dataPoints = JSON.parse(atob(dataPoints));
+                } catch(e) {
+                    console.error("Error decoding dataPoints base64:", e);
+                }
+            }
+            
             setTimeout(() => {
                 const canvas = document.getElementById(canvasId);
                 if (!canvas) return;
@@ -1146,7 +1162,7 @@
                 if (choice) {
                     const msg = choice.dataset.message;
                     if (msg && msg.startsWith("url:")) {
-                        window.top.location.href = msg.substring(4);
+                        window.open(msg.substring(4), '_blank');
                         return;
                     }
                     sendChatMessage(msg, choice.dataset.label || choice.textContent.trim());
