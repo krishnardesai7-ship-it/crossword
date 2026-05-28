@@ -139,7 +139,9 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
+# On Render, we can mount a Persistent Disk and define the mount path in this environment variable.
+PERSISTENT_DIR = config('PERSISTENT_STORAGE_DIR', default=os.path.dirname(BASE_DIR))
+MEDIA_ROOT = os.path.join(PERSISTENT_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

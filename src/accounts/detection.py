@@ -9,7 +9,7 @@ try:
 except ModuleNotFoundError:
     face_recognition = None
 
-from core.settings import BASE_DIR
+from django.conf import settings
 
 
 def close_cv_windows():
@@ -21,7 +21,7 @@ def close_cv_windows():
 
 class FaceRecognition:
     def __init__(self):
-        self.encoding_dir = Path(BASE_DIR) / "media" / "encodings"
+        self.encoding_dir = Path(settings.MEDIA_ROOT) / "encodings"
         self.encoding_dir.mkdir(parents=True, exist_ok=True)
 
     def _load_known_faces(self):
