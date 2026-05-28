@@ -714,7 +714,7 @@ def profile(request):
                 }
                 auth_user.username = username
                 auth_user.email = email
-                auth_user.phone_number = int(phone) if phone.isdigit() else None
+                auth_user.phone_number = phone if phone else None
                 if gender in gender_map:
                     auth_user.gender = gender_map[gender]
                 if image:

@@ -84,7 +84,7 @@ class NewUser(PermissionsMixin, AbstractBaseUser):
     id_image = models.ImageField(upload_to="id-images/", null=True, blank=True)
     country = models.CharField(max_length=125, blank=True, null=True)
     gender = models.CharField(max_length=10, choices=GENDER.choices)
-    phone_number = models.IntegerField(null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     
     is_active = models.BooleanField(default=True)
