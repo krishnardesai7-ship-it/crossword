@@ -573,17 +573,21 @@
                             <ul>
                                 <li>
                                     <a href="tel:#" style="color:#c9954c !important;">
-                                        <i class="icon-phone" style="color:#c9954c !important; margin-right:5px;"></i>Call: +91 7202963777
+                                        <i class="icon-phone"
+                                            style="color:#c9954c !important; margin-right:5px;"></i>Call: +91 7202963777
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{% url 'wishlist' %}" style="color:#c9954c !important;">
-                                        <i class="icon-heart-o" style="color:#c9954c !important; margin-right:5px;"></i>Wishlist <span>({{ wishlist_count|default:0 }})</span>
+                                        <i class="icon-heart-o"
+                                            style="color:#c9954c !important; margin-right:5px;"></i>Wishlist <span>({{
+                                            wishlist_count|default:0 }})</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{% url 'profile' %}" style="color:#c9954c !important;">
-                                        <i class="icon-user" style="color:#c9954c !important; margin-right:5px;"></i>Profile
+                                        <i class="icon-user"
+                                            style="color:#c9954c !important; margin-right:5px;"></i>Profile
                                     </a>
                                 </li>
                                 <li><a href="{% url 'accounts:logout' %}" class="sf-with-ul"
@@ -615,7 +619,7 @@
                     </a>
 
                     <nav class="main-nav">
-                        <ul class="menu sf-arrows">
+                        <ul>
                             <li class="megamenu-container active">
                                 <a href="{% url 'home' %}" class="sf-with-ul">Home</a>
 
@@ -835,10 +839,11 @@
             <form action="{% url 'search' %}" method="post" class="mobile-search">
                 {% csrf_token %}
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="search" id="mobile-search" placeholder="Search product ..." required>
+                <input type="search" class="form-control" name="search" id="mobile-search"
+                    placeholder="Search product ..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
-            
+
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
                     <li>
@@ -860,10 +865,14 @@
             </nav><!-- End .mobile-nav -->
 
             <div class="social-icons">
-                <a href="https://www.facebook.com/crosswordbookstores/" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                <a href="https://www.twitter.com/crosswordbookstores/" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                <a href="https://www.instagram.com/crosswordbookstores/" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                <a href="https://www.youtube.com/@CrosswordBookstores/videos" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                <a href="https://www.facebook.com/crosswordbookstores/" class="social-icon" target="_blank"
+                    title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="https://www.twitter.com/crosswordbookstores/" class="social-icon" target="_blank"
+                    title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="https://www.instagram.com/crosswordbookstores/" class="social-icon" target="_blank"
+                    title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="https://www.youtube.com/@CrosswordBookstores/videos" class="social-icon" target="_blank"
+                    title="Youtube"><i class="icon-youtube"></i></a>
             </div><!-- End .social-icons -->
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
