@@ -2452,7 +2452,7 @@ def handle_admin_query(msg, language="English", name=None):
           <canvas id="revenue_line_chart" style="max-height:200px; width:100%;"></canvas>
         </div>
         """
-        response += f'<img src="x" onerror="renderChatbotChart(\'revenue_line_chart\', \'line\', \'{labels_b64}\', \'{revenue_b64}\', \'Store Sales (₹)\')" style="display:none;">'
+        response += f'<img src="x" onerror="renderChatbotChart(this, \'line\', \'{labels_b64}\', \'{revenue_b64}\', \'Store Sales (₹)\')" style="display:none;">'
         response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
         return response
 
@@ -2472,7 +2472,7 @@ def handle_admin_query(msg, language="English", name=None):
           <canvas id="status_pie_chart" style="max-height:200px; width:100%;"></canvas>
         </div>
         """
-        response += f'<img src="x" onerror="renderChatbotChart(\'status_pie_chart\', \'pie\', \'{statuses_b64}\', \'{counts_b64}\', \'Order Statuses\')" style="display:none;">'
+        response += f'<img src="x" onerror="renderChatbotChart(this, \'pie\', \'{statuses_b64}\', \'{counts_b64}\', \'Order Statuses\')" style="display:none;">'
         response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
         return response
 
@@ -2493,7 +2493,7 @@ def handle_admin_query(msg, language="English", name=None):
           <canvas id="stock_bar_chart" style="max-height:200px; width:100%;"></canvas>
         </div>
         """
-        response += f'<img src="x" onerror="renderChatbotChart(\'stock_bar_chart\', \'bar\', \'{titles_b64}\', \'{stocks_b64}\', \'Stock Counts\')" style="display:none;">'
+        response += f'<img src="x" onerror="renderChatbotChart(this, \'bar\', \'{titles_b64}\', \'{stocks_b64}\', \'Stock Counts\')" style="display:none;">'
         response += render_choice_buttons([("Analytical Charts Menu", "admin_menu:charts"), ("Back to Admin Dashboard", "menu:admin_dashboard")], language=language)
         return response
 
@@ -2678,9 +2678,11 @@ def monthly_summary_excel(request):
         col_letter = col[0].column_letter
         ws_top.column_dimensions[col_letter].width = max(max_len + 3, 12)
         
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    from io import BytesIO
+    buffer = BytesIO()
+    wb.save(buffer)
+    response = HttpResponse(buffer.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="Monthly_Summary_{now.strftime("%Y_%m_%d")}.xlsx"'
-    wb.save(response)
     return response
 
 
@@ -3108,8 +3110,9 @@ def daily_sales_excel(request):
         col_letter = col[0].column_letter
         ws.column_dimensions[col_letter].width = max(max_len + 3, 15)
 
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    from io import BytesIO
+    buffer = BytesIO()
+    wb.save(buffer)
+    response = HttpResponse(buffer.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="Daily_Sales_{today.strftime("%Y_%m_%d")}.xlsx"'
-
-    wb.save(response)
     return response

@@ -901,7 +901,7 @@
 
 
     <script>
-        function renderChatbotChart(canvasId, type, labels, dataPoints, title) {
+        function renderChatbotChart(target, type, labels, dataPoints, title) {
             // Support Base64 encoded labels/datapoints to avoid string quoting conflicts
             if (typeof labels === 'string') {
                 try {
@@ -919,8 +919,23 @@
             }
             
             setTimeout(() => {
-                const canvas = document.getElementById(canvasId);
+                let canvas;
+                if (typeof target === 'string') {
+                    canvas = document.getElementById(target);
+                } else if (target instanceof HTMLElement) {
+                    canvas = target.parentElement ? target.parentElement.querySelector('canvas') : null;
+                }
                 if (!canvas) return;
+                
+                try {
+                    const existingChart = Chart.getChart(canvas);
+                    if (existingChart) {
+                        existingChart.destroy();
+                    }
+                } catch(e) {
+                    console.error("Error destroying existing chart:", e);
+                }
+                
                 const ctx = canvas.getContext('2d');
                 
                 const isLight = document.body.classList.contains('light-mode');
