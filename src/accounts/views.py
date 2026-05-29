@@ -26,13 +26,34 @@ FACE_NOT_DETECTED_MSG = "Face not detected. Please center your face and try agai
 
 
 def sync_register_user(user):
-    if user.email and not RegisterUser.objects.filter(email=user.email).exists():
-        RegisterUser.objects.create(
-            username=user.username,
+    """
+    Sync accounts.NewUser data into the legacy myapp.register model
+    used by cart, orders, and wishlist. Uses update_or_create so that
+    existing records are kept up-to-date, not just created once.
+    """
+    if not user.email:
+        return
+    try:
+        # Map NewUser gender choices to myapp.register gender choices
+        gender_map = {'MALE': 'Male', 'FEMALE': 'Female'}
+        gender_value = gender_map.get((user.gender or '').upper(), '')
+
+        full_name = f"{user.first_name or ''} {user.last_name or ''}".strip()
+
+        RegisterUser.objects.update_or_create(
             email=user.email,
-            password=user.password,
-            confirm_password=user.password,
+            defaults={
+                'username': user.username,
+                'password': user.password,
+                'confirm_password': user.password,
+                'gender': gender_value,
+                'phone': user.phone_number or '',
+                'address': user.country or '',
+                's_name': full_name,
+            }
         )
+    except Exception as e:
+        print(f"[sync_register_user] Failed to sync user {user.email}: {e}")
 
 
 def clear_stale_face_login_messages(request):

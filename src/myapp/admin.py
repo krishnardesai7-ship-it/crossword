@@ -1,16 +1,85 @@
 from django.contrib import admin
+from django.contrib import messages
 from .models import Book, Category, register, contact as contact_model, product, wishlist, add_to_cart, checkout, comment, ProductReview, Coupon
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helper: backfill all active NewUser records into myapp.register
+# ──────────────────────────────────────────────────────────────────────────────
+def _do_sync_all_users(modeladmin, request):
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    gender_map = {'MALE': 'Male', 'FEMALE': 'Female'}
+    synced = 0
+    failed = 0
+
+    for user in User.objects.filter(is_active=True):
+        try:
+            gender_value = gender_map.get((user.gender or '').upper(), '')
+            full_name = f"{user.first_name or ''} {user.last_name or ''}".strip()
+            register.objects.update_or_create(
+                email=user.email,
+                defaults={
+                    'username': user.username,
+                    'password': user.password,
+                    'confirm_password': user.password,
+                    'gender': gender_value,
+                    'phone': user.phone_number or '',
+                    'address': user.country or '',
+                    's_name': full_name,
+                }
+            )
+            synced += 1
+        except Exception as e:
+            failed += 1
+            print(f"[Sync] Failed for {user.email}: {e}")
+
+    if synced:
+        modeladmin.message_user(
+            request,
+            f"✅ Successfully synced {synced} user(s) into the Register table.",
+            messages.SUCCESS,
+        )
+    if failed:
+        modeladmin.message_user(
+            request,
+            f"⚠️ {failed} user(s) failed to sync. Check server logs for details.",
+            messages.WARNING,
+        )
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # 1. Custom admin for register model
+# ──────────────────────────────────────────────────────────────────────────────
+@admin.action(description="🔄 Sync ALL Auth Users → Register table (backfill)")
+def sync_all_users_action(modeladmin, request, queryset):
+    _do_sync_all_users(modeladmin, request)
+
+
 class RegisterAdmin(admin.ModelAdmin):
-    list_display  = ['username', 'email', 'gender', 'phone', 'address']
-    list_filter   = ['gender']
-    search_fields = ['username', 'email', 'phone', 'address']
+    list_display   = ['username', 'email', 's_name', 'gender', 'phone', 'address']
+    list_filter    = ['gender']
+    search_fields  = ['username', 'email', 'phone', 'address', 's_name']
     readonly_fields = ['username', 'email', 'password', 'confirm_password', 'otp',
-                       'gender', 'phone', 'address', 'image']
+                       'gender', 'phone', 'address', 'image', 's_name']
+    actions = [sync_all_users_action]
 
     def has_add_permission(self, request):
         return False
+
+    def changelist_view(self, request, extra_context=None):
+        """Show a helpful banner when the register table is empty."""
+        extra_context = extra_context or {}
+        if not register.objects.exists():
+            self.message_user(
+                request,
+                "ℹ️ No registered users found here yet. "
+                "Select the '🔄 Sync ALL Auth Users' action above and click Go to import all existing accounts.",
+                messages.INFO,
+            )
+        return super().changelist_view(request, extra_context=extra_context)
+
 
 admin.site.register(register, RegisterAdmin)
 
