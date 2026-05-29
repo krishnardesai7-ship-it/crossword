@@ -580,8 +580,7 @@
                                 <li>
                                     <a href="{% url 'wishlist' %}" style="color:#c9954c !important;">
                                         <i class="icon-heart-o"
-                                            style="color:#c9954c !important; margin-right:5px;"></i>Wishlist <span>({{
-                                            wishlist_count|default:0 }})</span>
+                                            style="color:#c9954c !important; margin-right:5px;"></i>Wishlist <span>({{ wishlist_count|default:0 }})</span>
                                     </a>
                                 </li>
                                 <li>
@@ -619,7 +618,7 @@
                     </a>
 
                     <nav class="main-nav">
-                        <ul class="menu sf-arrows">
+                        <ul class="menu">
                             <li class="megamenu-container active">
                                 <a href="{% url 'home' %}" class="sf-with-ul">Home</a>
 
