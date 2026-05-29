@@ -2500,12 +2500,14 @@ def handle_admin_query(msg, language="English", name=None):
     # 14. Download Reports Menu
     if msg == "admin_menu:reports" or any(kw in msg for kw in ["report", "pdf", "excel", "રીપોર્ટ", "रिपोर्ट"]):
         options = [
-            ("Download Summary Report (PDF) 📄", "url:/reports/monthly-pdf/"),
-            ("Download Financial Spreadsheet (Excel) 📈", "url:/reports/monthly-excel/"),
+            ("📊 Today's Sales Report (PDF) 📄", "url:/reports/daily-pdf/"),
+            ("📊 Today's Sales Report (Excel) 📈", "url:/reports/daily-excel/"),
+            ("📋 Monthly Summary Report (PDF) 📄", "url:/reports/monthly-pdf/"),
+            ("📋 Monthly Financial Spreadsheet (Excel) 📈", "url:/reports/monthly-excel/"),
             ("Back to Admin Dashboard", "menu:admin_dashboard")
         ]
         return render_menu_response(
-            "📂 <b>Download Dynamic Reports:</b>\nClick the links below to instantly generate and download beautifully formatted monthly store summary reports in standard PDF or Excel spreadsheet formats.",
+            "📂 <b>Download Dynamic Reports:</b>\nClick the links below to instantly generate and download beautifully formatted sales reports in standard PDF or Excel spreadsheet formats.",
             options,
             name,
             include_main_menu=False,
@@ -2858,4 +2860,256 @@ def monthly_summary_pdf(request):
     buffer.close()
     
     response.write(pdf_content)
+    return response
+
+
+def daily_sales_pdf(request):
+    """Generate daily sales report as PDF for today's sales"""
+    if not (request.user.is_authenticated and (request.user.is_staff or request.user.is_admin or request.user.is_superuser)):
+        return HttpResponse("Unauthorized", status=403)
+
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from io import BytesIO
+    from django.db.models import Sum, Count
+    from myapp.models import checkout as checkout_model
+    from django.utils import timezone
+    from datetime import datetime, timedelta
+
+    today = timezone.now().date()
+    today_start = timezone.make_aware(datetime.combine(today, datetime.min.time()))
+    today_end = timezone.make_aware(datetime.combine(today, datetime.max.time()))
+
+    # Get today's sales
+    today_sales = checkout_model.objects.filter(
+        order_date__gte=today_start,
+        order_date__lte=today_end
+    ).exclude(status='Cancelled')
+
+    daily_revenue = today_sales.aggregate(Sum('total'))['total__sum'] or 0
+    daily_orders = today_sales.count()
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Daily_Sales_{today.strftime("%Y_%m_%d")}.pdf"'
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=letter,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=40,
+        bottomMargin=40
+    )
+
+    story = []
+    styles = getSampleStyleSheet()
+
+    # Custom styles
+    title_style = ParagraphStyle(
+        'DocTitle',
+        parent=styles['Title'],
+        fontName='Helvetica-Bold',
+        fontSize=24,
+        textColor=colors.HexColor('#1E3A8A'),
+        spaceAfter=15
+    )
+    h1_style = ParagraphStyle(
+        'Heading1',
+        parent=styles['Heading1'],
+        fontName='Helvetica-Bold',
+        fontSize=16,
+        textColor=colors.HexColor('#1E3A8A'),
+        spaceBefore=15,
+        spaceAfter=10
+    )
+    normal_style = styles['Normal']
+    bold_style = ParagraphStyle(
+        'BoldText',
+        parent=normal_style,
+        fontName='Helvetica-Bold'
+    )
+
+    # Title
+    story.append(Paragraph("Daily Sales Report", title_style))
+    story.append(Paragraph(f"Date: {today.strftime('%B %d, %Y')}", normal_style))
+    story.append(Paragraph(f"Generated on: {timezone.now().strftime('%B %d, %Y %I:%M %p')}", normal_style))
+    story.append(Spacer(1, 15))
+
+    # Summary Cards
+    data_summary = [
+        [
+            Paragraph("<b>Today's Total Revenue</b>", normal_style),
+            Paragraph(f"₹{daily_revenue:,}", bold_style),
+        ],
+        [
+            Paragraph("<b>Total Orders Today</b>", normal_style),
+            Paragraph(str(daily_orders), bold_style),
+        ]
+    ]
+
+    summary_table = Table(data_summary, colWidths=[250, 150])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#F3F4F6')),
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E5E7EB')),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor('#D1D5DB')),
+        ('TOPPADDING', (0,0), (-1,-1), 10),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+    ]))
+
+    story.append(Paragraph("Today's Performance", h1_style))
+    story.append(summary_table)
+    story.append(Spacer(1, 20))
+
+    # Orders Today
+    story.append(Paragraph("Orders Placed Today", h1_style))
+    data_orders = [["Order ID", "Customer", "Product", "Quantity", "Amount (₹)", "Status"]]
+
+    for order in today_sales.order_by('-order_date'):
+        data_orders.append([
+            str(order.id),
+            order.name[:20],
+            order.product_name[:25],
+            str(order.quantity),
+            f"₹{order.total:,}",
+            order.status
+        ])
+
+    if len(data_orders) > 1:
+        orders_table = Table(data_orders, colWidths=[50, 80, 120, 60, 80, 80])
+        orders_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1E3A8A')),
+            ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, colors.HexColor('#F9FAFB')]),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E5E7EB')),
+            ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0,0), (-1,0), 10),
+            ('FONTSIZE', (0,1), (-1,-1), 9),
+        ]))
+        story.append(orders_table)
+    else:
+        story.append(Paragraph("No orders placed today.", normal_style))
+
+    doc.build(story)
+    pdf_content = buffer.getvalue()
+    buffer.close()
+
+    response.write(pdf_content)
+    return response
+
+
+def daily_sales_excel(request):
+    """Generate daily sales report as Excel for today's sales"""
+    if not (request.user.is_authenticated and (request.user.is_staff or request.user.is_admin or request.user.is_superuser)):
+        return HttpResponse("Unauthorized", status=403)
+
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from django.db.models import Sum, Count
+    from myapp.models import checkout as checkout_model
+    from django.utils import timezone
+    from datetime import datetime
+
+    today = timezone.now().date()
+    today_start = timezone.make_aware(datetime.combine(today, datetime.min.time()))
+    today_end = timezone.make_aware(datetime.combine(today, datetime.max.time()))
+
+    # Get today's sales
+    today_sales = checkout_model.objects.filter(
+        order_date__gte=today_start,
+        order_date__lte=today_end
+    ).exclude(status='Cancelled')
+
+    daily_revenue = today_sales.aggregate(Sum('total'))['total__sum'] or 0
+    daily_orders = today_sales.count()
+    avg_order_value = daily_revenue / daily_orders if daily_orders > 0 else 0
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Daily Sales"
+
+    # Styles
+    title_font = Font(name='Calibri', size=16, bold=True, color='FFFFFF')
+    header_font = Font(name='Calibri', size=11, bold=True, color='FFFFFF')
+    bold_font = Font(name='Calibri', size=11, bold=True)
+    normal_font = Font(name='Calibri', size=11)
+
+    title_fill = PatternFill(start_color='1E3A8A', end_color='1E3A8A', fill_type='solid')
+    header_fill = PatternFill(start_color='3B82F6', end_color='3B82F6', fill_type='solid')
+
+    border_thin = Border(
+        left=Side(style='thin', color='D1D5DB'),
+        right=Side(style='thin', color='D1D5DB'),
+        top=Side(style='thin', color='D1D5DB'),
+        bottom=Side(style='thin', color='D1D5DB')
+    )
+
+    # Title
+    ws.merge_cells('A1:F1')
+    ws['A1'] = "Daily Sales Report"
+    ws['A1'].font = title_font
+    ws['A1'].fill = title_fill
+    ws['A1'].alignment = Alignment(horizontal='center', vertical='center')
+    ws.row_dimensions[1].height = 30
+
+    ws.merge_cells('A2:F2')
+    ws['A2'] = f"Date: {today.strftime('%B %d, %Y')}"
+    ws['A2'].font = normal_font
+    ws['A2'].alignment = Alignment(horizontal='center')
+
+    # Summary
+    ws.append([])
+    ws.append(["Metric", "Value", "", "", "", ""])
+    for col in range(1, 7):
+        cell = ws.cell(row=4, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+
+    metrics = [
+        ("Total Revenue Today", f"₹{daily_revenue:,}"),
+        ("Total Orders", str(daily_orders)),
+        ("Average Order Value", f"₹{avg_order_value:,.2f}"),
+    ]
+
+    for metric, val in metrics:
+        ws.append([metric, val, "", "", "", ""])
+        r = ws.max_row
+        ws.cell(row=r, column=1).font = bold_font
+        ws.cell(row=r, column=2).font = normal_font
+
+    ws.append([])
+    ws.append(["Order ID", "Customer Name", "Product", "Quantity", "Amount (₹)", "Status"])
+    for col in range(1, 7):
+        cell = ws.cell(row=ws.max_row, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.border = border_thin
+
+    for order in today_sales.order_by('-order_date'):
+        ws.append([
+            order.id,
+            order.name,
+            order.product_name,
+            order.quantity,
+            order.total,
+            order.status
+        ])
+        r = ws.max_row
+        for c in range(1, 7):
+            ws.cell(row=r, column=c).border = border_thin
+
+    for col in ws.columns:
+        max_len = max(len(str(cell.value or '')) for cell in col)
+        col_letter = col[0].column_letter
+        ws.column_dimensions[col_letter].width = max(max_len + 3, 15)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="Daily_Sales_{today.strftime("%Y_%m_%d")}.xlsx"'
+
+    wb.save(response)
     return response

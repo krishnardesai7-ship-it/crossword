@@ -31,4 +31,6 @@ urlpatterns = [
     path('chatbot/', views.chatbot_api, name='chatbot_api'),
     path('reports/monthly-pdf/', views.monthly_summary_pdf, name='monthly_summary_pdf'),
     path('reports/monthly-excel/', views.monthly_summary_excel, name='monthly_summary_excel'),
+    path('reports/daily-pdf/', views.daily_sales_pdf, name='daily_sales_pdf'),
+    path('reports/daily-excel/', views.daily_sales_excel, name='daily_sales_excel'),
 ]

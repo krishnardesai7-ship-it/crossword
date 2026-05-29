@@ -20,6 +20,8 @@ Django==5.2.12
 dlib-bin>=20.0.0
 face-recognition-models==0.3.0
 filelock==3.29.0
+openpyxl==4.0.1
+reportlab==4.0.9
 fonttools==4.62.1
 gunicorn==26.0.0
 idna==3.11
