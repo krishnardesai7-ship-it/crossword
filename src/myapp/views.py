@@ -17,6 +17,7 @@ from django.shortcuts import render,HttpResponse,redirect
 from .models import register as RegisterUser, contact as contact_model, product as product_model, wishlist as wishlist_model, add_to_cart, checkout as checkout_model, Category, ProductReview, Coupon
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
+from django.conf import settings
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -700,6 +701,7 @@ def profile(request):
             uid.username = username
             uid.email = email
             request.session['email'] = email
+            request.session.set_expiry(settings.SESSION_COOKIE_AGE)
             uid.address = address
             uid.phone = phone
             uid.gender = gender

@@ -56,6 +56,11 @@ def sync_register_user(user):
         print(f"[sync_register_user] Failed to sync user {user.email}: {e}")
 
 
+def keep_session_until_logout(request):
+    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+    request.session.modified = True
+
+
 def clear_stale_face_login_messages(request):
     """Keep face-login failures from appearing on the registration form."""
     storage = get_messages(request)
@@ -185,6 +190,7 @@ def accounts_login(request):
 
         if user:
             login(request, user)
+            keep_session_until_logout(request)
             if user.email:
                 request.session["email"] = user.email
                 sync_register_user(user)
@@ -216,6 +222,7 @@ def accounts_login_page(request):
             return render(request, "accounts/login.html", {"email": email})
 
         login(request, user)
+        keep_session_until_logout(request)
         request.session["email"] = user.email
         sync_register_user(user)
         return redirect("home")
