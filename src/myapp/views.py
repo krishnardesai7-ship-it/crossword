@@ -2417,9 +2417,9 @@ def handle_admin_query(msg, language="English", name=None):
     # 10. Analytical Charts Menu
     if msg == "admin_menu:charts" or any(kw in msg for kw in ["chart", "pie chart", "line chart", "bar chart", "ગ્રાફ", "चार्ट"]):
         options = [
-            ("Sales & Revenue (Line Chart) 📈", "admin_chart:revenue_line"),
-            ("Order Statuses (Pie Chart) 🍕", "admin_chart:status_pie"),
-            ("Stock Levels (Bar Chart) 📊", "admin_chart:stock_bar"),
+            ("Sales & Revenue (Line Chart) 📈", "url:/charts/revenue-line/"),
+            ("Order Statuses (Pie Chart) 🍕", "url:/charts/status-pie/"),
+            ("Stock Levels (Bar Chart) 📊", "url:/charts/stock-bar/"),
             ("Back to Admin Dashboard", "menu:admin_dashboard")
         ]
         return render_menu_response(
@@ -2515,6 +2515,198 @@ def handle_admin_query(msg, language="English", name=None):
         )
         
     return None
+
+
+def _admin_required(request):
+    return request.user.is_authenticated and (
+        request.user.is_staff or
+        getattr(request.user, 'is_admin', False) or
+        request.user.is_superuser
+    )
+
+
+def _chart_page_response(title, chart_url, download_filename):
+    download_url = f"{chart_url}?download=1"
+    return HttpResponse(f"""
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{escape(title)}</title>
+  <style>
+    body {{
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #151026;
+      color: #fff;
+    }}
+    .wrap {{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px;
+    }}
+    .actions {{
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 14px 0 20px;
+    }}
+    a {{
+      display: inline-block;
+      padding: 10px 14px;
+      border: 1px solid #7c3aed;
+      border-radius: 6px;
+      background: #201637;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+    }}
+    img {{
+      width: 100%;
+      max-width: 940px;
+      height: auto;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 8px;
+      background: #fff;
+    }}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h2>{escape(title)}</h2>
+    <div class="actions">
+      <a href="{escape(download_url)}" download="{escape(download_filename)}">Download PNG</a>
+      <a href="/chat/">Back to Chat</a>
+    </div>
+    <img src="{escape(chart_url)}?image=1" alt="{escape(title)}">
+  </main>
+</body>
+</html>
+""")
+
+
+def _send_chart(fig, filename, download=False):
+    from io import BytesIO
+    import matplotlib.pyplot as plt
+
+    buffer = BytesIO()
+    fig.savefig(buffer, format='png', dpi=140, bbox_inches='tight', facecolor=fig.get_facecolor())
+    plt.close(fig)
+    buffer.seek(0)
+    response = HttpResponse(buffer.getvalue(), content_type='image/png')
+    disposition = 'attachment' if download else 'inline'
+    response['Content-Disposition'] = f'{disposition}; filename="{filename}"'
+    return response
+
+
+def revenue_line_chart(request):
+    if not _admin_required(request):
+        return HttpResponse("Unauthorized", status=403)
+
+    chart_url = "/charts/revenue-line/"
+    if request.GET.get('image') != '1' and request.GET.get('download') != '1':
+        return _chart_page_response(
+            "Sales & Revenue (Line Chart)",
+            chart_url,
+            "sales_revenue_line_chart.png"
+        )
+
+    from django.db.models import Sum
+    import datetime
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    now = timezone.now()
+    labels = []
+    revenue_data = []
+    for i in range(5, -1, -1):
+        month_dt = now - datetime.timedelta(days=i * 30)
+        labels.append(month_dt.strftime('%b'))
+        revenue = checkout_model.objects.filter(
+            order_date__year=month_dt.year,
+            order_date__month=month_dt.month
+        ).exclude(status='Cancelled').aggregate(Sum('total'))['total__sum'] or 0
+        revenue_data.append(revenue)
+
+    fig, ax = plt.subplots(figsize=(9, 4.8), facecolor='#ffffff')
+    ax.plot(labels, revenue_data, marker='o', linewidth=3, color='#7c3aed')
+    ax.fill_between(labels, revenue_data, color='#7c3aed', alpha=0.15)
+    ax.set_title('Monthly Sales & Revenue Growth', fontsize=15, fontweight='bold')
+    ax.set_xlabel('Month')
+    ax.set_ylabel('Revenue')
+    ax.grid(True, alpha=0.25)
+    return _send_chart(fig, "sales_revenue_line_chart.png", request.GET.get('download') == '1')
+
+
+def status_pie_chart(request):
+    if not _admin_required(request):
+        return HttpResponse("Unauthorized", status=403)
+
+    chart_url = "/charts/status-pie/"
+    if request.GET.get('image') != '1' and request.GET.get('download') != '1':
+        return _chart_page_response(
+            "Order Statuses (Pie Chart)",
+            chart_url,
+            "order_statuses_pie_chart.png"
+        )
+
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    statuses = ['Pending', 'Processed', 'Shipped', 'Delivered', 'Cancelled']
+    counts = [checkout_model.objects.filter(status=status).count() for status in statuses]
+    if not any(counts):
+        statuses = ['No Orders']
+        counts = [1]
+
+    colors = ['#7c3aed', '#ff8c42', '#64b5f6', '#4ade80', '#ff6b6b']
+    fig, ax = plt.subplots(figsize=(7.5, 5.2), facecolor='#ffffff')
+    ax.pie(
+        counts,
+        labels=statuses,
+        autopct=lambda pct: f'{pct:.1f}%' if pct > 0 else '',
+        startangle=90,
+        colors=colors[:len(statuses)]
+    )
+    ax.set_title('Order Shipping Status Distribution', fontsize=15, fontweight='bold')
+    ax.axis('equal')
+    return _send_chart(fig, "order_statuses_pie_chart.png", request.GET.get('download') == '1')
+
+
+def stock_bar_chart(request):
+    if not _admin_required(request):
+        return HttpResponse("Unauthorized", status=403)
+
+    chart_url = "/charts/stock-bar/"
+    if request.GET.get('image') != '1' and request.GET.get('download') != '1':
+        return _chart_page_response(
+            "Stock Levels (Bar Chart)",
+            chart_url,
+            "stock_levels_bar_chart.png"
+        )
+
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    books = Book.objects.all().order_by('stock')[:10]
+    titles = [book.title[:18] + "..." if len(book.title) > 18 else book.title for book in books]
+    stocks = [book.stock for book in books]
+    if not titles:
+        titles = ['No Books']
+        stocks = [0]
+
+    fig, ax = plt.subplots(figsize=(10, 5.2), facecolor='#ffffff')
+    ax.bar(titles, stocks, color='#3b82f6')
+    ax.set_title('Book Inventory Stock Levels', fontsize=15, fontweight='bold')
+    ax.set_xlabel('Books')
+    ax.set_ylabel('Stock Count')
+    ax.grid(axis='y', alpha=0.25)
+    plt.xticks(rotation=25, ha='right')
+    return _send_chart(fig, "stock_levels_bar_chart.png", request.GET.get('download') == '1')
 
 
 def monthly_summary_excel(request):
