@@ -116,6 +116,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.NewUser'
 
+# Keep users logged in until they click Logout.
+# Render free services can sleep/restart after inactivity; signed-cookie sessions
+# survive those restarts because session data is stored in the browser cookie.
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = True
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -204,4 +212,3 @@ LOGGING = {
         },
     },
 }
-
