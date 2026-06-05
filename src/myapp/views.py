@@ -195,7 +195,12 @@ def faq(request):
 def logout(request):
     if 'email' in request.session:
         del request.session['email']
-    return redirect('accounts:login')
+    from django.contrib.auth import logout as auth_logout
+    from accounts.views import delete_remember_login_cookie
+
+    auth_logout(request)
+    response = redirect('accounts:login')
+    return delete_remember_login_cookie(response)
 
 
 

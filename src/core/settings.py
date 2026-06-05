@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'accounts.middleware.RememberLoginMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -123,6 +124,12 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = True
+REMEMBER_LOGIN_COOKIE_NAME = 'remember_login'
+REMEMBER_LOGIN_SECRET = config(
+    'REMEMBER_LOGIN_SECRET',
+    default='django-face-render-remember-login-v1',
+)
+REMEMBER_LOGIN_SALT = 'accounts.remember_login'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

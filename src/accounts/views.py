@@ -15,6 +15,7 @@ import socket
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db import IntegrityError
+from django.core import signing
 from myapp.models import register as RegisterUser
 
 User = get_user_model()
@@ -59,6 +60,32 @@ def sync_register_user(user):
 def keep_session_until_logout(request):
     request.session.set_expiry(settings.SESSION_COOKIE_AGE)
     request.session.modified = True
+
+
+def set_remember_login_cookie(response, user):
+    token = signing.dumps(
+        user.email,
+        key=settings.REMEMBER_LOGIN_SECRET,
+        salt=settings.REMEMBER_LOGIN_SALT,
+    )
+    response.set_cookie(
+        settings.REMEMBER_LOGIN_COOKIE_NAME,
+        token,
+        max_age=settings.SESSION_COOKIE_AGE,
+        httponly=True,
+        secure=not settings.DEBUG,
+        samesite='Lax',
+    )
+    return response
+
+
+def delete_remember_login_cookie(response):
+    response.delete_cookie(
+        settings.REMEMBER_LOGIN_COOKIE_NAME,
+        secure=not settings.DEBUG,
+        samesite='Lax',
+    )
+    return response
 
 
 def clear_stale_face_login_messages(request):
@@ -194,7 +221,8 @@ def accounts_login(request):
             if user.email:
                 request.session["email"] = user.email
                 sync_register_user(user)
-            return JsonResponse({"success": True, "message": "Successfully logged in!", "redirect": reverse("home")})
+            response = JsonResponse({"success": True, "message": "Successfully logged in!", "redirect": reverse("home")})
+            return set_remember_login_cookie(response, user)
         else:
             return JsonResponse({"success": False, "message": "Face matched but user is inactive or not found."})
 
@@ -204,7 +232,8 @@ def accounts_login(request):
 def accounts_logout(request):
     request.session.pop("email", None)
     logout(request)
-    return redirect("accounts:login")
+    response = redirect("accounts:login")
+    return delete_remember_login_cookie(response)
 
 
 def accounts_login_page(request):
@@ -225,7 +254,8 @@ def accounts_login_page(request):
         keep_session_until_logout(request)
         request.session["email"] = user.email
         sync_register_user(user)
-        return redirect("home")
+        response = redirect("home")
+        return set_remember_login_cookie(response, user)
 
     return render(request, "accounts/login.html")
 
