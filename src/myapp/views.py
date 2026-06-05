@@ -2523,6 +2523,7 @@ def monthly_summary_excel(request):
 
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
     from django.db.models import Sum, Count, Avg
     from myapp.models import Book, checkout as checkout_model, product as product_model, register
     from django.contrib.auth import get_user_model
@@ -2601,9 +2602,9 @@ def monthly_summary_excel(request):
             ws_ov.cell(row=r, column=c).border = border_thin
             
     # Auto-fit columns
-    for col in ws_ov.columns:
+    for col_idx, col in enumerate(ws_ov.columns, 1):
         max_len = max(len(str(cell.value or '')) for cell in col)
-        col_letter = col[0].column_letter
+        col_letter = get_column_letter(col_idx)
         ws_ov.column_dimensions[col_letter].width = max(max_len + 4, 12)
         
     # 2. Orders Sheet
@@ -2637,9 +2638,9 @@ def monthly_summary_excel(request):
             if c in [5, 6]:
                 cell.alignment = Alignment(horizontal='right')
                 
-    for col in ws_ord.columns:
+    for col_idx, col in enumerate(ws_ord.columns, 1):
         max_len = max(len(str(cell.value or '')) for cell in col)
-        col_letter = col[0].column_letter
+        col_letter = get_column_letter(col_idx)
         ws_ord.column_dimensions[col_letter].width = max(max_len + 3, 12)
         
     # 3. Top Selling Sheet
@@ -2673,9 +2674,9 @@ def monthly_summary_excel(request):
             if c in [1, 3, 4]:
                 cell.alignment = Alignment(horizontal='right')
                 
-    for col in ws_top.columns:
+    for col_idx, col in enumerate(ws_top.columns, 1):
         max_len = max(len(str(cell.value or '')) for cell in col)
-        col_letter = col[0].column_letter
+        col_letter = get_column_letter(col_idx)
         ws_top.column_dimensions[col_letter].width = max(max_len + 3, 12)
         
     from io import BytesIO
@@ -3012,6 +3013,7 @@ def daily_sales_excel(request):
 
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
     from django.db.models import Sum, Count
     from myapp.models import checkout as checkout_model
     from django.utils import timezone
@@ -3105,9 +3107,9 @@ def daily_sales_excel(request):
         for c in range(1, 7):
             ws.cell(row=r, column=c).border = border_thin
 
-    for col in ws.columns:
+    for col_idx, col in enumerate(ws.columns, 1):
         max_len = max(len(str(cell.value or '')) for cell in col)
-        col_letter = col[0].column_letter
+        col_letter = get_column_letter(col_idx)
         ws.column_dimensions[col_letter].width = max(max_len + 3, 15)
 
     from io import BytesIO
