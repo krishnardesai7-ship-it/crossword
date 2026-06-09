@@ -404,12 +404,12 @@
 
                 if (data.success) {
                     statusBadge.textContent = '✅ Face registered!';
-                    showResult(true, '🎉 ' + data.message + ' Redirecting to login…');
+                    showResult(true, '🎉 ' + data.message + ' Redirecting to home…');
                     // Stop camera
                     if (stream) stream.getTracks().forEach(t => t.stop());
                     captureBtn.disabled = true;
                     setTimeout(() => {
-                        window.location.href = data.redirect || '/accounts/login/';
+                        window.location.href = data.redirect || '/';
                     }, 2000);
                 } else {
                     statusBadge.textContent = '⚠️ Try again';

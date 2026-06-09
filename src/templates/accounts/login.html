@@ -220,7 +220,7 @@
                         showResultMsg(true, '🎉 Login successful! Redirecting...');
                         if (stream) stream.getTracks().forEach(t => t.stop());
                         setTimeout(() => {
-                            window.location.href = data.redirect || '/myapp/';
+                            window.location.href = data.redirect || '/';
                         }, 1500);
                     } else {
                         statusBadge.textContent = '⚠️ Try again';

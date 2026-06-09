@@ -178,7 +178,16 @@ def face_enroll_view(request):
         if success:
             # Clear session key — enrollment done
             request.session.pop('enroll_user_id', None)
-            return JsonResponse({"success": True, "message": message, "redirect": "/accounts/login/"})
+            # Log the user in directly after enrollment
+            from django.contrib.auth import login as auth_login
+            user = User.objects.filter(id=user_id, is_active=True).first()
+            if user:
+                auth_login(request, user)
+                keep_session_until_logout(request)
+                if user.email:
+                    request.session["email"] = user.email
+                    sync_register_user(user)
+            return JsonResponse({"success": True, "message": message, "redirect": "/"})
         else:
             return JsonResponse({"success": False, "message": message})
 
