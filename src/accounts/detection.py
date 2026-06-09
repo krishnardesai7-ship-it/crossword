@@ -2,11 +2,19 @@ import base64
 import time
 from pathlib import Path
 
-import cv2
-import numpy as np
+try:
+    import cv2
+except (ImportError, ModuleNotFoundError):
+    cv2 = None
+
+try:
+    import numpy as np
+except (ImportError, ModuleNotFoundError):
+    np = None
+
 try:
     import face_recognition
-except ModuleNotFoundError:
+except (ImportError, ModuleNotFoundError):
     face_recognition = None
 
 from django.conf import settings
@@ -102,7 +110,7 @@ class FaceRecognition:
         Enroll a face from a base64-encoded image captured by the browser webcam.
         Returns (success: bool, message: str)
         """
-        if face_recognition is None:
+        if face_recognition is None or cv2 is None or np is None:
             return False, "face_library_missing"
 
         try:
@@ -133,7 +141,7 @@ class FaceRecognition:
             return False, f"Face enrollment error: {exc}"
 
     def recognize_face_from_image(self, b64_image_string, tolerance=0.45):
-        if face_recognition is None:
+        if face_recognition is None or cv2 is None or np is None:
             return None, "face_library_missing"
 
         try:

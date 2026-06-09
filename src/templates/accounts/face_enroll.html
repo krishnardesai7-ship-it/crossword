@@ -404,7 +404,7 @@
 
                 if (data.success) {
                     statusBadge.textContent = '✅ Face registered!';
-                    showResult(true, '🎉 ' + data.message + ' Redirecting to home…');
+                    showResult(true, '🎉 ' + data.message + ' Redirecting to login…');
                     // Stop camera
                     if (stream) stream.getTracks().forEach(t => t.stop());
                     captureBtn.disabled = true;
