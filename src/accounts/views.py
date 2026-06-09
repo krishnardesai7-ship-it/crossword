@@ -41,7 +41,7 @@ def sync_register_user(user):
 
         full_name = f"{user.first_name or ''} {user.last_name or ''}".strip()
 
-        RegisterUser.objects.update_or_create(
+        register_user, created = RegisterUser.objects.update_or_create(
             email=user.email,
             defaults={
                 'username': user.username,
@@ -53,8 +53,11 @@ def sync_register_user(user):
                 's_name': full_name,
             }
         )
+        print(f"[sync_register_user] {'Created' if created else 'Updated'} register user for {user.email}")
+        return register_user
     except Exception as e:
         print(f"[sync_register_user] Failed to sync user {user.email}: {e}")
+        return None
 
 
 def keep_session_until_logout(request):

@@ -31,9 +31,26 @@ except ModuleNotFoundError:
 # Create your views here.
 def home(request):
     if "email" in request.session:
-        uid = RegisterUser.objects.filter(email=request.session['email']).first()
+        email = request.session['email']
+        uid = RegisterUser.objects.filter(email=email).first()
+        
+        # If user not in legacy RegisterUser model, sync from NewUser
         if not uid:
-            # If session exists but user not in DB, clear session and redirect
+            from accounts.views import sync_register_user
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            
+            # Try to get the user from NewUser model and sync
+            try:
+                new_user = User.objects.get(email=email)
+                sync_register_user(new_user)
+                uid = RegisterUser.objects.filter(email=email).first()
+            except User.DoesNotExist:
+                request.session.flush()
+                return redirect("accounts:login")
+        
+        if not uid:
+            # If still no user found, clear session and redirect
             request.session.flush()
             return redirect("accounts:login")
 
@@ -53,7 +70,7 @@ def home(request):
         }
         return render(request, "customerapp/home.html", context)
     else:
-         return render(request, "accounts/login.html")
+         return redirect("accounts:login")
 
 
 def about(request):    
