@@ -62,6 +62,7 @@ class product(models.Model):
     image = models.ImageField(upload_to='products/')
     author_name = models.CharField(max_length=200, blank=True, null=True)
     published_year = models.CharField(max_length=10, blank=True, null=True)
+    summary_pdf = models.FileField(upload_to='book_summaries/', blank=True, null=True, help_text="PDF summary of the book")
 
     # Stored as text in current DB schema (`myapp_product.category`)
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, default="romance")
@@ -69,6 +70,7 @@ class product(models.Model):
     bestseller = models.BooleanField(default=False)
     new_release = models.BooleanField(default=False)
     expert_pick = models.BooleanField(default=False)
+    recommendation_tags = models.CharField(max_length=500, blank=True, null=True, help_text="Comma-separated tags for recommendations (e.g., education, motivation, adventure)")
 
     def __str__(self):
         return self.name
@@ -155,3 +157,35 @@ class Book(models.Model):
     image = models.ImageField(upload_to='books/', null=True, blank=True)
     def __str__(self):
         return self.title
+
+
+class BookPurchase(models.Model):
+    """Track user book purchases for personalization and recommendations"""
+    user = models.ForeignKey(register, on_delete=models.CASCADE, related_name='book_purchases')
+    product = models.ForeignKey(product, on_delete=models.CASCADE, related_name='purchases')
+    order = models.ForeignKey(checkout, on_delete=models.CASCADE, related_name='book_purchases', null=True, blank=True)
+    purchased_date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"
+    
+    class Meta:
+        ordering = ['-purchased_date']
+        unique_together = ('user', 'product', 'purchased_date')
+
+
+class PersonalizedRecommendation(models.Model):
+    """Store personalized book recommendations based on user purchase history"""
+    user = models.ForeignKey(register, on_delete=models.CASCADE, related_name='recommendations')
+    recommended_product = models.ForeignKey(product, on_delete=models.CASCADE)
+    recommendation_reason = models.CharField(max_length=500, help_text="Why this book is recommended")
+    match_score = models.FloatField(default=0.0, help_text="Recommendation match score 0-100")
+    created_at = models.DateTimeField(default=timezone.now)
+    is_viewed = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"Recommendation for {self.user.username} - {self.recommended_product.name}"
+    
+    class Meta:
+        ordering = ['-match_score', '-created_at']
+        unique_together = ('user', 'recommended_product')

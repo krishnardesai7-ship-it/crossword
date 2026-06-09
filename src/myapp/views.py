@@ -319,8 +319,10 @@ def checkout(request):
         else:
             if payment_method == 'cod':
                 # Cash on Delivery: create checkout immediately
+                first_order_id = None
+                
                 for item in cart_items:
-                    checkout_model.objects.create(
+                    order = checkout_model.objects.create(
                         register=uid,
                         name=full_name,
                         email=email,
@@ -333,6 +335,9 @@ def checkout(request):
                         total=item.total,
                         status='Pending'
                     )
+                    if first_order_id is None:
+                        first_order_id = order.id
+                    
                     item.order_status = True
                     item.save()
 
@@ -340,7 +345,12 @@ def checkout(request):
                     del request.session['coupon_id']
 
                 messages.success(request, 'Order placed successfully via Cash on Delivery!')
-                return redirect('shop')
+                
+                # Redirect to recommendations page if order exists
+                if first_order_id:
+                    return redirect('purchase_success_recommendations', order_id=first_order_id)
+                else:
+                    return redirect('shop')
             else:
                 # Create Razorpay order
                 amount_paise = total * 100
@@ -401,8 +411,11 @@ def payment_success(request):
     phone = billing.get('phone', '')
     address = billing.get('address', '')
 
+    # Store the first order ID for redirect to recommendations
+    first_order_id = None
+    
     for item in cart_items:
-        checkout_model.objects.create(
+        order = checkout_model.objects.create(
             register=uid,
             name=full_name,
             email=email,
@@ -414,6 +427,9 @@ def payment_success(request):
             quantity=item.quantity,
             total=item.total,
         )
+        if first_order_id is None:
+            first_order_id = order.id
+        
         item.order_status = True
         item.save()
 
@@ -424,7 +440,12 @@ def payment_success(request):
         del request.session['coupon_id']
 
     messages.success(request, f'Payment successful! Payment ID: {payment_id}. Your order has been placed.')
-    return redirect('shop')
+    
+    # Redirect to new purchase success page with recommendations
+    if first_order_id:
+        return redirect('purchase_success_recommendations', order_id=first_order_id)
+    else:
+        return redirect('shop')
 
 
 def product(request, id):

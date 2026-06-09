@@ -1,5 +1,6 @@
 from django.urls import path
 from myapp import views
+from myapp import book_views
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -36,4 +37,11 @@ urlpatterns = [
     path('reports/monthly-excel/', views.monthly_summary_excel, name='monthly_summary_excel'),
     path('reports/daily-pdf/', views.daily_sales_pdf, name='daily_sales_pdf'),
     path('reports/daily-excel/', views.daily_sales_excel, name='daily_sales_excel'),
+    
+    # Book-specific URLs
+    path('book/<int:product_id>/summary/view/', book_views.view_book_summary_pdf, name='view_book_summary'),
+    path('book/<int:product_id>/summary/download/', book_views.download_book_summary_pdf, name='download_book_summary'),
+    path('purchase-success/<int:order_id>/', book_views.book_purchase_success, name='purchase_success_recommendations'),
+    path('api/recommendations/', book_views.get_recommendations_api, name='get_recommendations_api'),
+    path('track-order-with-recommendations/<int:order_id>/', book_views.track_order_with_recommendations, name='track_order_recommendations'),
 ]
