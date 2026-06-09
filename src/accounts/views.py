@@ -160,6 +160,22 @@ def face_enroll_view(request):
         messages.error(request, "Session expired. Please register again.")
         return redirect("accounts:register")
 
+    # If face_recognition library is not installed (e.g. on Render), skip enrollment
+    # and log the user in directly so they can use the site with email/password login.
+    from accounts.detection import face_recognition as fr_lib
+    if fr_lib is None:
+        request.session.pop('enroll_user_id', None)
+        user = User.objects.filter(id=user_id, is_active=True).first()
+        if user:
+            from django.contrib.auth import login as auth_login
+            auth_login(request, user)
+            keep_session_until_logout(request)
+            if user.email:
+                request.session["email"] = user.email
+                sync_register_user(user)
+            messages.success(request, "Account created successfully! Face login is not available on this server — use email/password to sign in.")
+        return redirect("/")
+
     if request.method == "POST":
         import json
         try:
@@ -188,6 +204,18 @@ def face_enroll_view(request):
                     request.session["email"] = user.email
                     sync_register_user(user)
             return JsonResponse({"success": True, "message": message, "redirect": "/"})
+        elif message == "face_library_missing":
+            # Face recognition not available — log in and redirect to home
+            request.session.pop('enroll_user_id', None)
+            user = User.objects.filter(id=user_id, is_active=True).first()
+            if user:
+                from django.contrib.auth import login as auth_login
+                auth_login(request, user)
+                keep_session_until_logout(request)
+                if user.email:
+                    request.session["email"] = user.email
+                    sync_register_user(user)
+            return JsonResponse({"success": True, "message": "Account ready! Redirecting...", "redirect": "/"})
         else:
             return JsonResponse({"success": False, "message": message})
 

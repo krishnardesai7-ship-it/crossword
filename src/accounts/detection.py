@@ -22,7 +22,10 @@ def close_cv_windows():
 class FaceRecognition:
     def __init__(self):
         self.encoding_dir = Path(settings.MEDIA_ROOT) / "encodings"
-        self.encoding_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            self.encoding_dir.mkdir(parents=True, exist_ok=True)
+        except Exception:
+            pass  # Read-only filesystem (e.g. Render without persistent disk); face enroll/login won't work but app will load
 
     def _load_known_faces(self):
         known_ids = []
