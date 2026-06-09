@@ -221,7 +221,7 @@ def accounts_login(request):
             if user.email:
                 request.session["email"] = user.email
                 sync_register_user(user)
-            response = JsonResponse({"success": True, "message": "Successfully logged in!", "redirect": reverse("home")})
+            response = JsonResponse({"success": True, "message": "Successfully logged in!", "redirect": "/"})
             return set_remember_login_cookie(response, user)
         else:
             return JsonResponse({"success": False, "message": "Face matched but user is inactive or not found."})
@@ -254,7 +254,7 @@ def accounts_login_page(request):
         keep_session_until_logout(request)
         request.session["email"] = user.email
         sync_register_user(user)
-        response = redirect("home")
+        response = redirect("/")  # Redirect to home page (root URL)
         return set_remember_login_cookie(response, user)
 
     return render(request, "accounts/login.html")
